@@ -11,24 +11,7 @@ import {
   Instagram,
   School,
   School2,
-  AlertCircle,
-  Trophy,
-  BookOpen,
-  Briefcase,
-  Coffee,
-  Cpu,
-  FileText,
-  Filter,
-  GitBranch,
-  Layout,
-  MessageSquare,
-  Palette,
-  Search,
-  Server,
-  Smartphone,
-  TrendingUp,
-  Wrench,
-  Rocket,
+  AlertCircle
 } from "lucide-react";
 import { Button } from "../components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../components/ui/card";
@@ -142,7 +125,7 @@ interface SkillProgress {
 }
 
 // ==================== API CONFIGURATION ====================
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "http://localhost:8081/api/v1";
+const API_BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:8000/api/v1";
 
 const axiosInstance: AxiosInstance = axios.create({
   baseURL: API_BASE_URL,
