@@ -663,7 +663,7 @@ const SkillsSection: React.FC = () => {
         { name: 'C++', level: 90, icon: '💻', description: 'Advanced proficiency with STL and OOP' },
         { name: 'Python', level: 70, icon: '🐍', description: 'Data analysis and automation scripts' },
         { name: 'JavaScript', level: 85, icon: '⚡', description: 'ES6+, async programming, DOM manipulation' },
-        { name: 'TypeScript', level: 80, icon: '📜', description: 'Type safety and interface design' },
+        { name: 'TypeScript', level: 60, icon: '📜', description: 'Type safety and interface design' },
       ]
     },
     {
@@ -693,7 +693,7 @@ const SkillsSection: React.FC = () => {
       icon: Terminal,
       color: 'from-red-400 to-orange-500',
       skills: [
-        { name: 'Git/GitHub', level: 90, icon: '🐙', description: 'Version control, branching strategies, CI/CD' },
+        { name: 'Git/GitHub', level: 80, icon: '🐙', description: 'Version control, branching strategies' },
       ]
     },
     {
@@ -1000,8 +1000,8 @@ const ServicesSection: React.FC = () => {
       title: "Programming Tutoring",
       description: "Learn C++, Python, and JavaScript from basics to advanced concepts with personalized sessions",
       features: ["Fundamentals of Programming", "OOP Concepts", "Debugging Techniques", "Project Guidance"],
-      price: "₹500/hr",
-      duration: "1-2 hours/session",
+      price: "Later",
+      duration: "",
       color: "from-amber-500 to-orange-600"
     },
     {
@@ -1009,8 +1009,8 @@ const ServicesSection: React.FC = () => {
       title: "DSA Mentoring",
       description: "Master Data Structures and Algorithms with structured learning and practice",
       features: ["Arrays & Linked Lists", "Sorting & Searching", "Dynamic Programming", "Problem Solving"],
-      price: "₹600/hr",
-      duration: "2 hours/session",
+      price: "Later",
+      duration: "",
       color: "from-blue-500 to-purple-600"
     },
     {
@@ -1018,8 +1018,8 @@ const ServicesSection: React.FC = () => {
       title: "Logic Building",
       description: "Develop strong logical thinking and problem-solving approaches for beginners",
       features: ["Computational Thinking", "Algorithm Design", "Pattern Recognition", "Pseudocode"],
-      price: "₹400/hr",
-      duration: "1 hour/session",
+      price: "Later",
+      duration: "",
       color: "from-green-500 to-emerald-600"
     }
   ];
@@ -1096,10 +1096,10 @@ const ProjectsSection: React.FC = () => {
       description: "Modern responsive portfolio built with React and Tailwind CSS",
       longDescription: "A stunning portfolio website showcasing projects, skills, and professional experience with smooth animations and modern design. This project demonstrates my expertise in React, TypeScript, and responsive design principles.",
       technologies: ["React", "Tailwind CSS", "TypeScript", "Responsive Design"],
-      features: ["Responsive Design", "Smooth Animations", "Contact Form", "Project Gallery"],
+      features: ["Responsive Design", "Smooth Animations", "Contact Form", "Project Showcase", "Resume Download"],
       status: "Completed",
       github: "https://github.com/Suraj1819",
-      live: "#",
+      live: "https://surajzxrt.netlify.app/",
       image: "https://via.placeholder.com/400x250",
       gradient: "from-blue-400 to-purple-600"
     },
@@ -1111,7 +1111,7 @@ const ProjectsSection: React.FC = () => {
       features: ["User Authentication", "Product Management", "Shopping Cart", "Payment Processing"],
       status: "In Progress",
       github: "#",
-      live: "#",
+      live: "2",
       image: "https://via.placeholder.com/400x250",
       gradient: "from-green-400 to-emerald-600"
     }
@@ -1178,7 +1178,13 @@ const ProjectsSection: React.FC = () => {
 
                   <div className="flex gap-2 sm:gap-3 pt-3 sm:pt-4 border-t border-amber-200">
                     <Button size="sm" className="bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white flex-1 text-xs sm:text-sm">
-                      <ExternalLink className="mr-1.5 sm:mr-2 h-3 w-3 sm:h-4 sm:w-4" />
+                      <a href={project.live}
+                         target="_blank"
+                          rel="noopener noreferrer"
+                      >
+                        <ExternalLink className="h-3 w-3 sm:h-4 sm:w-4 mr-1" />
+                        
+                      </a>
                       Live Demo
                     </Button>
                     <Button size="sm" variant="outline" className="border-amber-300 text-gray-700 hover:bg-amber-50">
@@ -1497,7 +1503,7 @@ const ContactSection: React.FC = () => {
                 { icon: Mail, label: "Email", value: "surajkumarraj8888@gmail.com", href: "mailto:surajkumarraj8888@gmail.com" },
                 { icon: Phone, label: "Phone", value: "+91 9507272341", href: "tel:+919507272341" },
                 { icon: MapPin, label: "Location", value: "Vaishali, Bihar, India", href: "https://maps.app.goo.gl/5Cmg979kkJ4EE6dK9" },
-                { icon: Calendar, label: "Available", value: "Mon-Sat, 9AM-6PM", href: "/contact" }
+                { icon: Calendar, label: "Contact Me", value: "Contact", href: "/contact" }
               ].map((item, index) => (
                 <a
                   key={index}

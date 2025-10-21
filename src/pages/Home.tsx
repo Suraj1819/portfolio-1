@@ -565,7 +565,7 @@ const Home: React.FC = () => {
   const skills: Skill[] = [
     {
       name: "React.js",
-      level: 92,
+      level: 72,
       category: "Frontend",
       icon: Code,
       description: "Building interactive UIs with hooks, context, and modern patterns",
@@ -589,7 +589,7 @@ const Home: React.FC = () => {
     },
     {
       name: "Python",
-      level: 95,
+      level: 75,
       category: "Programming",
       icon: Brain,
       description: "Data structures, algorithms, automation, and AI/ML basics",
@@ -597,7 +597,7 @@ const Home: React.FC = () => {
     },
     {
       name: "C++",
-      level: 93,
+      level: 83,
       category: "Programming",
       icon: Zap,
       description: "Competitive programming, DSA, and system-level programming",
@@ -613,7 +613,7 @@ const Home: React.FC = () => {
     },
     {
       name: "JavaScript",
-      level: 90,
+      level: 80,
       category: "Programming",
       icon: Code,
       description: "ES6+, async programming, and modern JS frameworks",
@@ -621,7 +621,7 @@ const Home: React.FC = () => {
     },
     {
       name: "Git & GitHub",
-      level: 88,
+      level: 80,
       category: "Tools",
       icon: Github,
       description: "Version control, collaboration, and project management",
@@ -1436,12 +1436,25 @@ const Home: React.FC = () => {
           </div>
 
           {/* Download Resume Button */}
-          <div className={`text-center animate-on-visible ${isVisible ? 'visible' : ''}`} style={{ transitionDelay: '0.6s' }}>
-            <Button size="lg" className="bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white px-6 sm:px-8 py-3 sm:py-4 text-sm sm:text-base lg:text-lg shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105">
-              <Download className="mr-2 h-4 w-4 sm:h-5 sm:w-5" />
-              Download Full Resume
-            </Button>
+          <div
+            className={`text-center animate-on-visible ${isVisible ? 'visible' : ''}`}
+            style={{ transitionDelay: '0.6s' }}
+          >
+            <a
+              href="/resume.pdf"
+              download="Suraj_Kumar.pdf"
+              rel="noopener noreferrer"
+            >
+              <Button
+                size="lg"
+                className="bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white px-6 sm:px-8 py-3 sm:py-4 text-sm sm:text-base lg:text-lg shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105"
+              >
+                <Download className="mr-2 h-4 w-4 sm:h-5 sm:w-5" />
+                Download Full Resume
+              </Button>
+            </a>
           </div>
+
         </div>
       </section>
 

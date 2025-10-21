@@ -664,8 +664,8 @@ export default function Footer() {
                       Preview Resume
                     </button>
                     <a
-                      href="/resume.pdf"
-                      download
+                      href="resume.pdf"
+                      download = "Suraj_Kumar_Resume.pdf"
                       className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 hover:bg-amber-50 hover:text-amber-700 rounded-lg transition-all focus:outline-none focus:ring-2 focus:ring-amber-300 dark:bg-neutral-700 dark:text-gray-300 dark:hover:bg-neutral-600 dark:hover:text-amber-300"
                     >
                       <Download className="w-4 h-4" />

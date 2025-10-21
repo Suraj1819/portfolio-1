@@ -302,28 +302,42 @@ const Resume = () => {
   const resumeData = {
     education: [
       {
-        institution: 'Scaler School of Technology',
-        degree: 'Bachelor of Science in Computer Science',
-        period: '2023 - 2027',
-        location: 'Bangalore, India',
+        institution: 'SRT  School, Rautania',
+        degree: 'Matriculation (10th Grade)',
+        period: '2020',
+        location: 'Rautania, muzaffarpur',
         details: [
-          'Relevant Coursework: Data Structures & Algorithms, Web Development (MERN), Database Systems, Operating Systems',
-          'GPA: 8.5/10',
-          'Led team project: Real-time collaborative coding platform using React & Socket.io',
-          'Organized coding bootcamps, mentoring 50+ junior students'
+          'Done my Matriculation from SRT School with 82.6% marks',
+          'Subjects: Mathematics, Science, Social Studies, English, Hindi',
+          'Extracurricular: Member of Science Club, Participated in Math Olympiad'
         ],
         gradient: 'from-blue-400 via-indigo-500 to-purple-600',
         icon: GraduationCap
       },
       {
-        institution: 'Online Learning Platforms',
-        degree: 'Advanced Programming Certifications',
-        period: '2020 - Present',
-        location: 'Remote',
+        institution: 'SRT  School, Rautania',
+        degree: 'Matriculation (12th Grade)',
+        period: '2022',
+        location: 'Rautania, muzaffarpur',
         details: [
-          'Advanced React, Node.js, System Design',
-          'AWS Cloud Practitioner, Google UX Design',
-          'Portfolio: 5+ full-stack projects including e-commerce platform'
+          'Completed Higher Secondary Education with 83.2% marks',
+          'Stream: Science (Physics, Chemistry, Mathematics, English, Hindi)',
+          'Extracurricular: Captain of School Quiz Team, Volunteered in Tech Fest'
+        ],
+        gradient: 'from-blue-400 via-indigo-500 to-purple-600',
+        icon: GraduationCap
+      },
+      {
+        institution: 'Government Engineering College, Vaishali',
+        degree: 'B.Tech in Computer Science and Engineering',
+        period: '2023 - Present',
+        location: 'Bidupur,Chaksikandar, Vaishali,844115',
+        details: [
+          'Pursuing Bachelor of Technology with a focus on Software Development',
+          'Relevant Courses: Data Structures, Algorithms, Database Management, Web Development',
+          'GPA: 8.54/10 till 3rd semester',
+          'Expected Graduation: 2027',
+          
         ],
         gradient: 'from-emerald-400 via-green-500 to-teal-600',
         icon: Award
@@ -596,12 +610,12 @@ const Resume = () => {
                 size="lg"
                 className="w-full sm:w-auto bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white shadow-md hover:shadow-lg transition-all duration-300 hover:scale-105 px-6 sm:px-8 py-3 group"
               >
-                <a href="/resume.pdf" download className="flex items-center">
+                <a href="/resume.pdf" download = "SurajKumar-resume.pdf" className="flex items-center">
                   Download Resume
                   <Download className="ml-2 h-4 w-4 sm:h-5 sm:w-5 group-hover:translate-y-0.5 transition-transform" />
                 </a>
               </Button>
-              <a href="#contact">
+              <a href="/contact">
                 <Button
                   size="lg"
                   variant="outline"

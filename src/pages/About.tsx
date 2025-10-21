@@ -134,7 +134,7 @@ const About = () => {
       { name: 'C++', level: 90, icon: '💻', color: 'from-blue-400 to-blue-600', logo: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/cplusplus/cplusplus-original.svg' },
       { name: 'Python', level: 85, icon: '🐍', color: 'from-yellow-400 to-blue-500', logo: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/python/python-original.svg' },
       { name: 'JavaScript', level: 80, icon: '⚡', color: 'from-yellow-300 to-yellow-500', logo: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/javascript/javascript-original.svg' },
-      { name: 'Java', level: 75, icon: '☕', color: 'from-red-400 to-orange-500', logo: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/java/java-original.svg' },
+      // { name: 'Java', level: 75, icon: '☕', color: 'from-red-400 to-orange-500', logo: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/java/java-original.svg' },
       { name: 'C', level: 85, icon: '🔧', color: 'from-blue-500 to-blue-700', logo: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/c/c-original.svg' }
     ],
     'Frontend Development': [
@@ -142,19 +142,19 @@ const About = () => {
       { name: 'HTML5', level: 90, icon: '📄', color: 'from-orange-400 to-red-500', logo: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/html5/html5-original.svg' },
       { name: 'CSS3', level: 85, icon: '🎨', color: 'from-blue-400 to-blue-600', logo: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/css3/css3-original.svg' },
       { name: 'Tailwind CSS', level: 80, icon: '🌊', color: 'from-cyan-300 to-blue-400', logo: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/tailwindcss/tailwindcss-plain.svg' },
-      { name: 'Bootstrap', level: 75, icon: '📦', color: 'from-purple-400 to-purple-600', logo: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/bootstrap/bootstrap-original.svg' }
+      // { name: 'Bootstrap', level: 75, icon: '📦', color: 'from-purple-400 to-purple-600', logo: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/bootstrap/bootstrap-original.svg' }
     ],
     'Backend Development': [
       { name: 'Node.js', level: 70, icon: '🟢', color: 'from-green-400 to-green-600', logo: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/nodejs/nodejs-original.svg' },
       { name: 'Express.js', level: 68, icon: '🚂', color: 'from-gray-600 to-gray-800', logo: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/express/express-original.svg' },
       { name: 'REST API', level: 72, icon: '🔌', color: 'from-indigo-400 to-purple-500', logo: null },
-      { name: 'GraphQL', level: 60, icon: '📊', color: 'from-pink-400 to-purple-500', logo: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/graphql/graphql-plain.svg' }
+      // { name: 'GraphQL', level: 60, icon: '📊', color: 'from-pink-400 to-purple-500', logo: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/graphql/graphql-plain.svg' }
     ],
     'Databases': [
       { name: 'MongoDB', level: 65, icon: '🍃', color: 'from-green-500 to-green-700', logo: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/mongodb/mongodb-original.svg' },
       { name: 'MySQL', level: 70, icon: '🐬', color: 'from-blue-400 to-blue-600', logo: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/mysql/mysql-original.svg' },
       { name: 'PostgreSQL', level: 60, icon: '🐘', color: 'from-blue-500 to-indigo-600', logo: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/postgresql/postgresql-original.svg' },
-      { name: 'Firebase', level: 65, icon: '🔥', color: 'from-yellow-400 to-orange-500', logo: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/firebase/firebase-plain.svg' }
+      // { name: 'Firebase', level: 65, icon: '🔥', color: 'from-yellow-400 to-orange-500', logo: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/firebase/firebase-plain.svg' }
     ],
     'Tools & Technologies': [
       { name: 'Git', level: 85, icon: '🔀', color: 'from-orange-400 to-red-500', logo: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/git/git-original.svg' },
@@ -167,7 +167,7 @@ const About = () => {
       { name: 'Data Structures', level: 95, icon: '🏗️', color: 'from-purple-400 to-pink-500', logo: null },
       { name: 'Algorithms', level: 90, icon: '🧮', color: 'from-green-400 to-emerald-500', logo: null },
       { name: 'OOP', level: 88, icon: '🎯', color: 'from-red-400 to-pink-500', logo: null },
-      { name: 'System Design', level: 70, icon: '🏛️', color: 'from-indigo-400 to-purple-500', logo: null },
+      // { name: 'System Design', level: 70, icon: '🏛️', color: 'from-indigo-400 to-purple-500', logo: null },
       { name: 'Operating Systems', level: 75, icon: '💾', color: 'from-cyan-400 to-blue-500', logo: null }
     ]
   };
@@ -226,14 +226,14 @@ const About = () => {
       color: 'from-green-400 to-emerald-500',
       details: 'Advanced problem-solving and algorithmic thinking'
     },
-    {
-      year: '2024',
-      title: 'Tutoring Success',
-      description: 'Started tutoring students and helped 100+ students improve their programming skills',
-      icon: Users,
-      color: 'from-purple-400 to-pink-500',
-      details: 'Developed teaching methodology and curriculum'
-    },
+    // {
+    //   year: '2024',
+    //   title: 'Tutoring Success',
+    //   description: 'Started tutoring students and helped 100+ students improve their programming skills',
+    //   icon: Users,
+    //   color: 'from-purple-400 to-pink-500',
+    //   details: 'Developed teaching methodology and curriculum'
+    // },
     {
       year: '2025',
       title: 'Full-Stack Development',
@@ -508,16 +508,19 @@ const About = () => {
                   <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
                 </Link>
               </Button>
-              <a href="/Snapchat-118928623.jpg" download>
-                <Button
-                  size="lg"
-                  variant="outline"
-                  className="w-full sm:w-auto border-amber-300 text-gray-700 hover:bg-amber-50 backdrop-blur-sm bg-white/50 hover:border-amber-400 transition-all duration-300 hover:scale-[1.02] px-6 py-3"
-                >
-                  Download Resume
-                  <Download className="ml-2 h-5 w-5" />
-                </Button>
-              </a>
+              <div className="text-center">
+                <a href="resume.pdf" download="Suraj_Kumar_resume.pdf" rel="noopener noreferrer">
+                  <Button
+                    size="lg"
+                    variant="outline"
+                    className="w-full sm:w-auto border-amber-300 text-gray-700 hover:bg-amber-50 backdrop-blur-sm bg-white/50 hover:border-amber-400 transition-all duration-300 hover:scale-[1.02] px-6 py-3"
+                  >
+                    Download Resume
+                    <Download className="ml-2 h-5 w-5" />
+                  </Button>
+                </a>
+              </div>
+
             </div>
           </div>
 
