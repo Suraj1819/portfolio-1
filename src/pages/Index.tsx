@@ -1,17 +1,34 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import {
-  ArrowRight, Code,Mail, Github, Linkedin, Phone, Star, Sparkles,
-  Heart, ExternalLink, Menu, X,Calendar, MapPin, Award, Zap,
-  Target,Globe,Lightbulb,CheckCircle, Clock, Users,
-  Database, Brain,ChevronDown,
-  Loader2, Send,Terminal, GraduationCap,
+  ArrowRight, Code, Mail, Github, Linkedin, Phone, Star, Sparkles,
+  Heart, ExternalLink, Menu, X, Calendar, MapPin, Award, Zap,
+  Target, Globe, Lightbulb, CheckCircle, Clock, Users,
+  Database, Brain, ChevronDown,
+  Loader2, Send, Terminal, GraduationCap,
   Facebook,
   Code2,
   Instagram,
   School,
   School2,
   AlertCircle,
+  Trophy,
+  BookOpen,
+  Briefcase,
+  Coffee,
+  Cpu,
+  FileText,
+  Filter,
+  GitBranch,
+  Layout,
+  MessageSquare,
+  Palette,
+  Search,
+  Server,
+  Smartphone,
+  TrendingUp,
+  Wrench,
+  Rocket,
 } from "lucide-react";
 import { Button } from "../components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../components/ui/card";
@@ -24,7 +41,7 @@ import Footer from '../components/Footer';
 import axios, { AxiosError } from 'axios';
 import type { AxiosResponse, AxiosInstance } from 'axios';
 
-// Define types for state management
+// ==================== TYPE DEFINITIONS ====================
 interface FormData {
   name: string;
   email: string;
@@ -44,7 +61,6 @@ interface AlertMessage {
   message: string;
 }
 
-// Define types for API responses
 interface ContactSuccessData {
   id: string;
   category: string;
@@ -67,7 +83,65 @@ interface ContactErrorResponse {
   data?: ContactValidationError[];
 }
 
-// Axios configuration
+interface Skill {
+  name: string;
+  level: number;
+  icon: string;
+  description: string;
+}
+
+interface SkillCategory {
+  name: string;
+  icon: React.ComponentType<{ className?: string }>;
+  color: string;
+  skills: Skill[];
+}
+
+interface Project {
+  title: string;
+  description: string;
+  longDescription: string;
+  technologies: string[];
+  features: string[];
+  status: string;
+  github: string;
+  live: string;
+  image: string;
+  gradient: string;
+}
+
+interface Achievement {
+  icon: React.ComponentType<{ className?: string }>;
+  title: string;
+  description: string;
+  value: string;
+  color: string;
+  gradient: string;
+}
+
+interface Service {
+  icon: React.ComponentType<{ className?: string }>;
+  title: string;
+  description: string;
+  features: string[];
+  price: string;
+  duration: string;
+  color: string;
+}
+
+interface TimelineItem {
+  year: string;
+  title: string;
+  description: string;
+  icon: React.ComponentType<{ className?: string }>;
+  color: string;
+}
+
+interface SkillProgress {
+  [key: string]: number;
+}
+
+// ==================== API CONFIGURATION ====================
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "http://localhost:8081/api/v1";
 
 const axiosInstance: AxiosInstance = axios.create({
@@ -105,7 +179,7 @@ axiosInstance.interceptors.response.use(
   }
 );
 
-// Custom CSS for animations
+// ==================== CUSTOM STYLES ====================
 const customStyles = `
   @keyframes float {
     0%, 100% { transform: translateY(0px); }
@@ -127,30 +201,79 @@ const customStyles = `
     50% { transform: translateY(-10px); }
   }
   
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes slideIn {
+    from { transform: translateX(-100%); opacity: 0; }
+    to { transform: translateX(0); opacity: 1; }
+  }
+
+  @keyframes slideUp {
+    from { transform: translateY(20px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+  }
+  
   .animate-float { animation: float 3s ease-in-out infinite; }
   .animate-pulse-slow { animation: pulse-slow 3s ease-in-out infinite; }
   .animate-scale-in { animation: scale-in 0.5s ease-out; }
   .animate-bounce-gentle { animation: bounce-gentle 2s ease-in-out infinite; }
   .animate-fade-in { animation: fadeIn 0.3s ease-out; }
-  
-  @keyframes fadeIn {
-    from { opacity: 0; transform: translateY(-10px); }
-    to { opacity: 1; transform: translateY(0); }
+  .animate-slide-in { animation: slideIn 0.5s ease-out; }
+  .animate-slide-up { animation: slideUp 0.5s ease-out; }
+
+  /* Mobile Responsive Utilities */
+  @media (max-width: 640px) {
+    .mobile-text-xs { font-size: 0.75rem; }
+    .mobile-text-sm { font-size: 0.875rem; }
+    .mobile-text-base { font-size: 1rem; }
+    .mobile-text-lg { font-size: 1.125rem; }
+    .mobile-text-xl { font-size: 1.25rem; }
+    .mobile-text-2xl { font-size: 1.5rem; }
+    .mobile-text-3xl { font-size: 1.875rem; }
+    
+    .mobile-p-2 { padding: 0.5rem; }
+    .mobile-p-4 { padding: 1rem; }
+    .mobile-p-6 { padding: 1.5rem; }
+    
+    .mobile-m-2 { margin: 0.5rem; }
+    .mobile-m-4 { margin: 1rem; }
+    
+    .mobile-gap-2 { gap: 0.5rem; }
+    .mobile-gap-4 { gap: 1rem; }
+  }
+
+  /* Smooth Scrolling */
+  html {
+    scroll-behavior: smooth;
+  }
+
+  /* Hide scrollbar for Chrome, Safari and Opera */
+  .hide-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* Hide scrollbar for IE, Edge and Firefox */
+  .hide-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
   }
 `;
 
-// Premium Loading Screen with animated progress
-const PremiumLoadingScreen = () => {
-  const [progress, setProgress] = useState(0);
-  const [loadingMessage, setLoadingMessage] = useState(0);
+// ==================== LOADING SCREEN COMPONENT ====================
+const PremiumLoadingScreen: React.FC = () => {
+  const [progress, setProgress] = useState<number>(0);
+  const [loadingMessage, setLoadingMessage] = useState<number>(0);
 
-  const loadingMessages = [
+  const loadingMessages: string[] = [
     "Initializing components...",
     "Loading awesome content...",
     "Preparing amazing experience...",
     "Almost ready...",
     "Finalizing details...",
-    "Thanks...."
+    "Thanks for waiting..."
   ];
 
   useEffect(() => {
@@ -172,53 +295,53 @@ const PremiumLoadingScreen = () => {
       clearInterval(interval);
       clearInterval(messageInterval);
     };
-  }, []);
+  }, [loadingMessages.length]);
 
   return (
     <>
       <style>{customStyles}</style>
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-amber-50 via-orange-50 to-yellow-50">
-        <div className="text-center">
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-amber-50 via-orange-50 to-yellow-50 px-4">
+        <div className="text-center w-full max-w-md">
           {/* Animated Logo Container */}
-          <div className="flex justify-center items-center space-x-8 mb-12">
+          <div className="flex justify-center items-center space-x-4 sm:space-x-8 mb-8 sm:mb-12">
             {/* Left Side: Spinning Circle */}
             <div className="relative">
-              <div className="w-32 h-32 border-4 border-amber-500 border-t-transparent rounded-full animate-spin mx-auto" style={{ animationDuration: '2s' }}></div>
-              <div className="absolute inset-6 w-20 h-20 bg-gradient-to-br from-amber-400 to-orange-500 rounded-full flex items-center justify-center shadow-2xl">
-                <Code className="h-10 w-10 text-white animate-pulse" />
+              <div className="w-24 h-24 sm:w-32 sm:h-32 border-4 border-amber-500 border-t-transparent rounded-full animate-spin mx-auto" style={{ animationDuration: '2s' }}></div>
+              <div className="absolute inset-4 sm:inset-6 w-16 h-16 sm:w-20 sm:h-20 bg-gradient-to-br from-amber-400 to-orange-500 rounded-full flex items-center justify-center shadow-2xl">
+                <Code className="h-8 w-8 sm:h-10 sm:w-10 text-white animate-pulse" />
               </div>
             </div>
 
             {/* Right Side: Spinning Circle with Image */}
             <div className="relative">
-              <div className="w-32 h-32 border-4 border-orange-500 border-t-transparent rounded-full animate-spin mx-auto" style={{ animationDuration: '2s', animationDirection: 'reverse' }}></div>
-              <div className="absolute inset-6 w-20 h-20 bg-gradient-to-br from-orange-400 to-red-500 rounded-full flex items-center justify-center shadow-2xl overflow-hidden">
+              <div className="w-24 h-24 sm:w-32 sm:h-32 border-4 border-orange-500 border-t-transparent rounded-full animate-spin mx-auto" style={{ animationDuration: '2s', animationDirection: 'reverse' }}></div>
+              <div className="absolute inset-4 sm:inset-6 w-16 h-16 sm:w-20 sm:h-20 bg-gradient-to-br from-orange-400 to-red-500 rounded-full flex items-center justify-center shadow-2xl overflow-hidden">
                 <img 
                   src="https://picsum.photos/200/300"
                   alt="Loading Icon"
-                  className="h-16 w-16 object-cover rounded-full animate-pulse"
+                  className="h-12 w-12 sm:h-16 sm:w-16 object-cover rounded-full animate-pulse"
                 />
               </div>
             </div>
           </div>
 
           {/* Loading Text */}
-          <h2 className="text-4xl font-bold text-gray-800 mb-4 bg-gradient-to-r from-amber-600 to-orange-600 bg-clip-text text-transparent">
+          <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-800 mb-3 sm:mb-4 bg-gradient-to-r from-amber-600 to-orange-600 bg-clip-text text-transparent">
             Loading Portfolio
           </h2>
-          <p className="text-gray-600 mb-8 max-w-md mx-auto min-h-[24px]">
+          <p className="text-sm sm:text-base text-gray-600 mb-6 sm:mb-8 max-w-md mx-auto min-h-[24px] px-4">
             {loadingMessages[loadingMessage]}
           </p>
 
           {/* Progress Bar */}
-          <div className="w-64 mx-auto mb-8">
-            <div className="flex justify-between text-sm text-gray-600 mb-2">
+          <div className="w-full sm:w-64 mx-auto mb-6 sm:mb-8 px-4">
+            <div className="flex justify-between text-xs sm:text-sm text-gray-600 mb-2">
               <span>Loading</span>
               <span>{progress}%</span>
             </div>
-            <div className="w-full bg-gray-200 rounded-full h-3 overflow-hidden">
+            <div className="w-full bg-gray-200 rounded-full h-2 sm:h-3 overflow-hidden">
               <div
-                className="bg-gradient-to-r from-amber-500 to-orange-500 h-3 rounded-full transition-all duration-300 ease-out relative"
+                className="bg-gradient-to-r from-amber-500 to-orange-500 h-2 sm:h-3 rounded-full transition-all duration-300 ease-out relative"
                 style={{ width: `${progress}%` }}
               >
                 <div className="absolute inset-0 bg-white/30 animate-pulse"></div>
@@ -227,20 +350,20 @@ const PremiumLoadingScreen = () => {
           </div>
 
           {/* Loading Dots */}
-          <div className="flex justify-center space-x-3">
+          <div className="flex justify-center space-x-2 sm:space-x-3">
             {[0, 0.2, 0.4].map((delay, i) => (
               <div
                 key={i}
-                className="w-3 h-3 bg-amber-500 rounded-full animate-bounce"
+                className="w-2 h-2 sm:w-3 sm:h-3 bg-amber-500 rounded-full animate-bounce"
                 style={{ animationDelay: `${delay}s` }}
               ></div>
             ))}
           </div>
 
           {/* Loading Tips */}
-          <div className="mt-12 max-w-md mx-auto">
-            <div className="bg-white/80 backdrop-blur-sm p-4 rounded-lg shadow-sm border border-amber-100">
-              <p className="text-sm text-gray-600 italic">
+          <div className="mt-8 sm:mt-12 max-w-md mx-auto px-4">
+            <div className="bg-white/80 backdrop-blur-sm p-3 sm:p-4 rounded-lg shadow-sm border border-amber-100">
+              <p className="text-xs sm:text-sm text-gray-600 italic">
                 "Did you know? This portfolio is built with React, TypeScript, and Tailwind CSS!"
               </p>
             </div>
@@ -251,63 +374,63 @@ const PremiumLoadingScreen = () => {
   );
 };
 
-// Hero Section with animated elements
-const HeroSection = () => {
+// ==================== HERO SECTION COMPONENT ====================
+const HeroSection: React.FC = () => {
   return (
-    <section id="home" className="relative pt-24 pb-16 px-6 overflow-hidden min-h-screen flex items-center">
+    <section id="home" className="relative pt-20 sm:pt-24 pb-12 sm:pb-16 px-4 sm:px-6 overflow-hidden min-h-screen flex items-center">
       {/* Animated Background */}
       <div className="absolute inset-0 overflow-hidden">
-        <div className="absolute top-20 left-10 w-72 h-72 bg-amber-300/20 rounded-full blur-3xl animate-pulse-slow"></div>
-        <div className="absolute top-40 right-10 w-96 h-96 bg-orange-300/20 rounded-full blur-3xl animate-pulse-slow" style={{animationDelay: '1s'}}></div>
-        <div className="absolute bottom-20 left-1/3 w-80 h-80 bg-yellow-300/20 rounded-full blur-3xl animate-pulse-slow" style={{animationDelay: '2s'}}></div>
+        <div className="absolute top-10 sm:top-20 left-5 sm:left-10 w-48 sm:w-72 h-48 sm:h-72 bg-amber-300/20 rounded-full blur-3xl animate-pulse-slow"></div>
+        <div className="absolute top-20 sm:top-40 right-5 sm:right-10 w-64 sm:w-96 h-64 sm:h-96 bg-orange-300/20 rounded-full blur-3xl animate-pulse-slow" style={{animationDelay: '1s'}}></div>
+        <div className="absolute bottom-10 sm:bottom-20 left-1/4 sm:left-1/3 w-56 sm:w-80 h-56 sm:h-80 bg-yellow-300/20 rounded-full blur-3xl animate-pulse-slow" style={{animationDelay: '2s'}}></div>
       </div>
 
-      {/* Floating Elements */}
-      <div className="absolute inset-0 pointer-events-none">
+      {/* Floating Elements - Hidden on mobile for performance */}
+      <div className="absolute inset-0 pointer-events-none hidden sm:block">
         <div className="absolute top-32 left-20 animate-float" style={{animationDelay: '0.3s'}}>
-          <div className="w-16 h-16 bg-gradient-to-r from-amber-400 to-orange-400 rounded-lg flex items-center justify-center shadow-lg hover:shadow-xl transition-shadow">
-            <Code className="h-8 w-8 text-white" />
+          <div className="w-12 sm:w-16 h-12 sm:h-16 bg-gradient-to-r from-amber-400 to-orange-400 rounded-lg flex items-center justify-center shadow-lg hover:shadow-xl transition-shadow">
+            <Code className="h-6 sm:h-8 w-6 sm:w-8 text-white" />
           </div>
         </div>
         <div className="absolute top-48 right-32 animate-float" style={{animationDelay: '0.7s'}}>
-          <div className="w-12 h-12 bg-gradient-to-r from-orange-400 to-red-400 rounded-full flex items-center justify-center shadow-lg hover:shadow-xl transition-shadow">
-            <Sparkles className="h-6 w-6 text-white" />
+          <div className="w-10 sm:w-12 h-10 sm:h-12 bg-gradient-to-r from-orange-400 to-red-400 rounded-full flex items-center justify-center shadow-lg hover:shadow-xl transition-shadow">
+            <Sparkles className="h-5 sm:h-6 w-5 sm:w-6 text-white" />
           </div>
         </div>
         <div className="absolute bottom-40 left-16 animate-float" style={{animationDelay: '1s'}}>
-          <div className="w-14 h-14 bg-gradient-to-r from-yellow-400 to-amber-400 rounded-lg rotate-12 flex items-center justify-center shadow-lg hover:shadow-xl transition-shadow">
-            <Star className="h-7 w-7 text-white" />
+          <div className="w-12 sm:w-14 h-12 sm:h-14 bg-gradient-to-r from-yellow-400 to-amber-400 rounded-lg rotate-12 flex items-center justify-center shadow-lg hover:shadow-xl transition-shadow">
+            <Star className="h-6 sm:h-7 w-6 sm:w-7 text-white" />
           </div>
         </div>
       </div>
 
       <div className="container mx-auto relative z-10">
-        <div className="flex flex-col lg:flex-row items-center justify-between gap-12">
+        <div className="flex flex-col lg:flex-row items-center justify-between gap-8 sm:gap-12">
           {/* Left Content */}
-          <div className="lg:w-1/2 space-y-8">
-            <div className="inline-flex items-center space-x-2 bg-white/80 backdrop-blur-sm border border-amber-200 rounded-full px-4 py-2 text-sm shadow-sm">
-              <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+          <div className="w-full lg:w-1/2 space-y-6 sm:space-y-8 text-center lg:text-left">
+            <div className="inline-flex items-center space-x-2 bg-white/80 backdrop-blur-sm border border-amber-200 rounded-full px-3 sm:px-4 py-1.5 sm:py-2 text-xs sm:text-sm shadow-sm">
+              <div className="w-1.5 sm:w-2 h-1.5 sm:h-2 bg-green-500 rounded-full animate-pulse"></div>
               <span className="text-gray-700">Available for opportunities</span>
             </div>
 
-            <div className="space-y-6">
-              <h1 className="text-5xl lg:text-7xl font-bold leading-tight tracking-tight">
-                <span className="block text-gray-800 mb-2">Hello,</span>
+            <div className="space-y-4 sm:space-y-6">
+              <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-7xl font-bold leading-tight tracking-tight">
+                <span className="block text-gray-800 mb-1 sm:mb-2">Hello,</span>
                 <span className="block bg-gradient-to-r from-amber-600 via-orange-600 to-red-500 bg-clip-text text-transparent">
                   I'm SuraJz
                 </span>
               </h1>
 
-              <div className="space-y-4">
-                <p className="text-2xl lg:text-3xl font-semibold text-gray-800">
+              <div className="space-y-3 sm:space-y-4">
+                <p className="text-xl sm:text-2xl lg:text-3xl font-semibold text-gray-800">
                   Aspiring Software Engineer
                 </p>
-                <div className="flex flex-wrap gap-3">
+                <div className="flex flex-wrap justify-center lg:justify-start gap-2 sm:gap-3">
                   {['C++', 'Python', 'JavaScript', 'DSA', 'MERN', 'Tailwindcss'].map((skill, index) => (
                     <Badge
                       key={index}
                       variant="secondary"
-                      className="bg-amber-100 text-red-700 border-amber-200 px-3 py-1 hover:bg-amber-200 transition-all hover:-translate-y-1 hover:cursor-pointer "
+                      className="bg-amber-100 text-red-700 border-amber-200 px-2 sm:px-3 py-0.5 sm:py-1 text-xs sm:text-sm hover:bg-amber-200 transition-all hover:-translate-y-1 hover:cursor-pointer"
                     >
                       {skill}
                     </Badge>
@@ -315,37 +438,37 @@ const HeroSection = () => {
                 </div>
               </div>
 
-              <p className="text-lg lg:text-xl text-gray-700 leading-relaxed max-w-2xl">
-                I'm a <span className='bg-amber-200 rounded-lg px-2  text-red-600 font-semibold'>3<sup>rd</sup> Year B.Tech</span> student passionate about coding, problem-solving, and full-stack development. Skilled in
-                <span className='text-red-600 font-semibold bg-amber-200 px-2 rounded-lg ml-1 mr-1'>MERN</span>,
-                <span className='text-red-600 font-semibold bg-amber-200 px-2  rounded-md ml-1 mr-1'>TailwindCss</span>,
-                <span className='text-red-600 font-semibold bg-amber-200 px-2  rounded-md'>PostgreSQL</span>,
-                <span className='text-red-600 font-semibold bg-amber-200 px-2  rounded-md'>C++</span>, and
-                <span className='text-red-600 font-semibold bg-amber-200 px-2  rounded-md'>Python</span>.
+              <p className="text-sm sm:text-base lg:text-xl text-gray-700 leading-relaxed max-w-2xl mx-auto lg:mx-0">
+                I'm a <span className='bg-amber-200 rounded-lg px-1 sm:px-2 text-red-600 font-semibold text-xs sm:text-sm lg:text-base'>3<sup>rd</sup> Year B.Tech</span> student passionate about coding, problem-solving, and full-stack development. Skilled in
+                <span className='text-red-600 font-semibold bg-amber-200 px-1 sm:px-2 rounded-lg ml-1 mr-1 text-xs sm:text-sm lg:text-base'>MERN</span>,
+                <span className='text-red-600 font-semibold bg-amber-200 px-1 sm:px-2 rounded-md ml-1 mr-1 text-xs sm:text-sm lg:text-base'>TailwindCss</span>,
+                <span className='text-red-600 font-semibold bg-amber-200 px-1 sm:px-2 rounded-md text-xs sm:text-sm lg:text-base'>PostgreSQL</span>,
+                <span className='text-red-600 font-semibold bg-amber-200 px-1 sm:px-2 rounded-md text-xs sm:text-sm lg:text-base'>C++</span>, and
+                <span className='text-red-600 font-semibold bg-amber-200 px-1 sm:px-2 rounded-md text-xs sm:text-sm lg:text-base'>Python</span>.
               </p>
             </div>
 
-            <div className="flex flex-col sm:flex-row gap-4">
+            <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center lg:justify-start">
               <Button
                 size="lg"
-                className="bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white border-0 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105"
+                className="w-full sm:w-auto bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white border-0 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 text-sm sm:text-base"
                 onClick={() => document.getElementById('projects')?.scrollIntoView({ behavior: 'smooth' })}
               >
                 <span>Explore My Work</span>
-                <ArrowRight className="ml-2 h-4 w-4" />
+                <ArrowRight className="ml-2 h-3 w-3 sm:h-4 sm:w-4" />
               </Button>
               <Button
                 size="lg"
                 variant="outline"
-                className="border-amber-300 text-gray-700 hover:bg-amber-50 backdrop-blur-sm bg-white/50 hover:border-amber-400 transition-all duration-300 hover:scale-105"
+                className="w-full sm:w-auto border-amber-300 text-gray-700 hover:bg-amber-50 backdrop-blur-sm bg-white/50 hover:border-amber-400 transition-all duration-300 hover:scale-105 text-sm sm:text-base"
                 onClick={() => document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' })}
               >
                 Let's Connect
-                <ExternalLink className='ml-2 h-4 w-4'/>
+                <ExternalLink className='ml-2 h-3 w-3 sm:h-4 sm:w-4'/>
               </Button>
             </div>
 
-            <div className="flex space-x-6">
+            <div className="flex justify-center lg:justify-start space-x-3 sm:space-x-6">
               {[
                 { href: "https://github.com/Suraj1819", icon: Github },
                 { href: "https://www.linkedin.com/in/suraj-kumar-72847b30a/", icon: Linkedin },
@@ -360,20 +483,20 @@ const HeroSection = () => {
                   href={social.href}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-gray-600 hover:text-amber-700 transition-all duration-300 hover:scale-110 p-2 rounded-full hover:bg-amber-200"
+                  className="text-gray-600 hover:text-amber-700 transition-all duration-300 hover:scale-110 p-1.5 sm:p-2 rounded-full hover:bg-amber-200"
                 >
-                  <social.icon className="h-6 w-6" />
+                  <social.icon className="h-4 w-4 sm:h-5 sm:w-5 lg:h-6 lg:w-6" />
                 </a>
               ))}
             </div>
           </div>
 
           {/* Right Content - Profile Image */}
-          <div className="lg:w-1/2 flex justify-center">
+          <div className="w-full lg:w-1/2 flex justify-center mt-8 lg:mt-0">
             <div className="relative animate-scale-in">
               <div className="absolute inset-0 bg-gradient-to-r from-amber-400 via-orange-400 to-red-400 rounded-full blur-xl opacity-30 animate-pulse-slow"></div>
-              <div className="relative w-80 h-80 lg:w-96 lg:h-96 bg-gradient-to-br from-amber-400 via-orange-400 to-red-400 rounded-full flex items-center justify-center shadow-2xl hover:shadow-3xl transition-shadow duration-500">
-                <div className="w-72 h-72 lg:w-88 lg:h-88 bg-white rounded-full flex items-center justify-center border- border-amber-200 overflow-hidden">
+              <div className="relative w-64 h-64 sm:w-80 sm:h-80 lg:w-96 lg:h-96 bg-gradient-to-br from-amber-400 via-orange-400 to-red-400 rounded-full flex items-center justify-center shadow-2xl hover:shadow-3xl transition-shadow duration-500">
+                <div className="w-56 h-56 sm:w-72 sm:h-72 lg:w-88 lg:h-88 bg-white rounded-full flex items-center justify-center border border-amber-200 overflow-hidden">
                   <img
                     src="https://wallpapercave.com/wp/wp6690023.jpg"
                     alt="Profile Picture"
@@ -381,25 +504,25 @@ const HeroSection = () => {
                   />
                 </div>
               </div>
-              <div className="absolute -top-4 -right-4 w-20 h-20 bg-gradient-to-r from-yellow-400 to-orange-400 rounded-full flex items-center justify-center animate-bounce-gentle shadow-lg">
-                <span className="text-white font-bold text-md">2027</span>
+              <div className="absolute -top-2 sm:-top-4 -right-2 sm:-right-4 w-14 h-14 sm:w-20 sm:h-20 bg-gradient-to-r from-yellow-400 to-orange-400 rounded-full flex items-center justify-center animate-bounce-gentle shadow-lg">
+                <span className="text-white font-bold text-xs sm:text-sm lg:text-md">2027</span>
               </div>
-              <div className="absolute top-1/2 left-1/2 w-[120%] h-[120%] -translate-x-1/2 -translate-y-1/2">
+              <div className="absolute top-1/2 left-1/2 w-[120%] h-[120%] -translate-x-1/2 -translate-y-1/2 hidden sm:block">
                 <div className="relative w-full h-full animate-spin" style={{ animationDuration: '20s' }}>
-                  <div className="absolute top-0 left-1/2 w-4 h-4 bg-amber-400 rounded-full -translate-x-1/2 -translate-y-1/2 shadow-lg"></div>
-                  <div className="absolute bottom-0 left-1/2 w-4 h-4 bg-orange-400 rounded-full -translate-x-1/2 translate-y-1/2 shadow-lg"></div>
-                  <div className="absolute left-0 top-1/2 w-4 h-4 bg-red-400 rounded-full -translate-x-1/2 -translate-y-1/2 shadow-lg"></div>
-                  <div className="absolute right-0 top-1/2 w-4 h-4 bg-yellow-400 rounded-full translate-x-1/2 -translate-y-1/2 shadow-lg"></div>
+                  <div className="absolute top-0 left-1/2 w-3 h-3 sm:w-4 sm:h-4 bg-amber-400 rounded-full -translate-x-1/2 -translate-y-1/2 shadow-lg"></div>
+                  <div className="absolute bottom-0 left-1/2 w-3 h-3 sm:w-4 sm:h-4 bg-orange-400 rounded-full -translate-x-1/2 translate-y-1/2 shadow-lg"></div>
+                  <div className="absolute left-0 top-1/2 w-3 h-3 sm:w-4 sm:h-4 bg-red-400 rounded-full -translate-x-1/2 -translate-y-1/2 shadow-lg"></div>
+                  <div className="absolute right-0 top-1/2 w-3 h-3 sm:w-4 sm:h-4 bg-yellow-400 rounded-full translate-x-1/2 -translate-y-1/2 shadow-lg"></div>
                 </div>
               </div>
             </div>
           </div>
         </div>
 
-        {/* Scroll Indicator */}
-        <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 animate-bounce-gentle">
-          <div className="w-6 h-10 border-2 border-amber-400 rounded-full flex justify-center">
-            <div className="w-1 h-3 bg-amber-400 rounded-full mt-2 animate-pulse"></div>
+        {/* Scroll Indicator - Hidden on mobile */}
+        <div className="absolute bottom-4 sm:bottom-8 left-1/2 transform -translate-x-1/2 animate-bounce-gentle hidden sm:block">
+          <div className="w-5 h-8 sm:w-6 sm:h-10 border-2 border-amber-400 rounded-full flex justify-center">
+            <div className="w-1 h-2 sm:h-3 bg-amber-400 rounded-full mt-2 animate-pulse"></div>
           </div>
         </div>
       </div>
@@ -407,9 +530,9 @@ const HeroSection = () => {
   );
 };
 
-// About Section with timeline
-const AboutSection = () => {
-  const timeline = [
+// ==================== ABOUT SECTION COMPONENT ====================
+const AboutSection: React.FC = () => {
+  const timeline: TimelineItem[] = [
     {
       year: "2020",
       title: "Started Matriculation",
@@ -438,13 +561,6 @@ const AboutSection = () => {
       icon: Code,
       color: "from-green-400 to-emerald-500"
     },
-    // {
-    //   year: "2024",
-    //   title: "Tutoring Success",
-    //   description: "Started tutoring students and helped 50+ students improve their programming skills",
-    //   icon: Users,
-    //   color: "from-purple-400 to-pink-500"
-    // },
     {
       year: "2025",
       title: "Full-Stack Development",
@@ -455,67 +571,66 @@ const AboutSection = () => {
   ];
 
   return (
-    <section id="about" className="py-20 px-6 bg-white/30 backdrop-blur-sm">
+    <section id="about" className="py-12 sm:py-16 lg:py-20 px-4 sm:px-6 bg-white/30 backdrop-blur-sm">
       <div className="container mx-auto">
-        <div className="text-center mb-16">
-          <h2 className="text-4xl lg:text-5xl font-bold mb-4">About Me</h2>
-          <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+        <div className="text-center mb-10 sm:mb-12 lg:mb-16">
+          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold mb-3 sm:mb-4">About Me</h2>
+          <p className="text-base sm:text-lg lg:text-xl text-gray-600 max-w-3xl mx-auto px-4">
             Get to know me better and my journey in tech
           </p>
         </div>
 
-        <div className="grid lg:grid-cols-2 gap-12 items-center">
-          <div className="space-y-8">
-            <h3 className="text-2xl font-semibold text-amber-600">My Journey</h3>
-            <p className="text-gray-700 leading-relaxed">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 sm:gap-10 lg:gap-12 items-center">
+          <div className="space-y-6 sm:space-y-8">
+            <h3 className="text-xl sm:text-2xl font-semibold text-amber-600">My Journey</h3>
+            <p className="text-sm sm:text-base text-gray-700 leading-relaxed">
               I'm Suraj Kumar, a passionate 3rd-year Computer Science and Engineering student at
               Government Engineering College, Vaishali. Currently working towards my graduation in 2027,
               I'm building a strong foundation in programming and problem-solving.
             </p>
-            <p className="text-gray-700 leading-relaxed">
+            <p className="text-sm sm:text-base text-gray-700 leading-relaxed">
               My expertise lies in C++, Python, and JavaScript, with a solid understanding of
-              Data Structures and Algorithms. Beyond coding.
+              Data Structures and Algorithms. Beyond coding, I enjoy helping others learn.
             </p>
 
-            <div className="space-y-4">
-              <div className="flex items-center space-x-3">
-                <Badge className="bg-amber-100 text-amber-700">Education</Badge>
-                 <Badge className="bg-green-100 text-green-700">    Continue</Badge>
-                
-                <span className="text-gray-600 hover:underline">B.Tech CSE, GEC Vaishali (2023-2027)</span>
+            <div className="space-y-3 sm:space-y-4">
+              <div className="flex flex-wrap items-center gap-2 sm:gap-3">
+                <Badge className="bg-amber-100 text-amber-700 text-xs sm:text-sm">Education</Badge>
+                <Badge className="bg-green-100 text-green-700 text-xs sm:text-sm">Continue</Badge>
+                <span className="text-xs sm:text-sm text-gray-600 hover:underline">B.Tech CSE, GEC Vaishali (2023-2027)</span>
               </div>
-              <div className="flex items-center space-x-3">
-                <Badge className="bg-green-100 text-green-700">Focus</Badge>
-                <span className="text-gray-600">Software Development & Problem Solving</span>
+              <div className="flex flex-wrap items-center gap-2 sm:gap-3">
+                <Badge className="bg-green-100 text-green-700 text-xs sm:text-sm">Focus</Badge>
+                <span className="text-xs sm:text-sm text-gray-600">Software Development & Problem Solving</span>
               </div>
-              <div className="flex items-center space-x-3">
-                <Badge className="bg-orange-100  text-orange-700">Passion</Badge>
-                <span className="text-gray-600">Coding and Development</span>
+              <div className="flex flex-wrap items-center gap-2 sm:gap-3">
+                <Badge className="bg-orange-100 text-orange-700 text-xs sm:text-sm">Passion</Badge>
+                <span className="text-xs sm:text-sm text-gray-600">Coding and Development</span>
               </div>
             </div>
           </div>
 
-          <div className="space-y-6">
-            <h3 className="text-2xl font-semibold text-amber-600">My Timeline</h3>
-            <div className="space-y-6">
+          <div className="space-y-4 sm:space-y-6">
+            <h3 className="text-xl sm:text-2xl font-semibold text-amber-600">My Timeline</h3>
+            <div className="space-y-4 sm:space-y-6">
               {timeline.map((item, index) => (
-                <div key={index} className="flex items-start">
-                  <div className="flex-shrink-0 w-24 text-right pr-4">
-                    <Badge variant="secondary" className={`bg-gradient-to-r ${item.color} text-white px-4 py-2 text-lg font-bold border-0 shadow-lg`}>
+                <div key={index} className="flex items-start gap-3 sm:gap-4">
+                  <div className="flex-shrink-0 w-16 sm:w-20 lg:w-24 text-right pr-2 sm:pr-4">
+                    <Badge variant="secondary" className={`bg-gradient-to-r ${item.color} text-white px-2 sm:px-3 lg:px-4 py-1 sm:py-2 text-xs sm:text-sm lg:text-lg font-bold border-0 shadow-lg`}>
                       {item.year}
                     </Badge>
                   </div>
                   <div className="flex-shrink-0 relative">
-                    <div className={`w-12 h-12 bg-gradient-to-br ${item.color} rounded-full flex items-center justify-center mr-4 shadow-lg`}>
-                      <item.icon className="h-6 w-6 text-white" />
+                    <div className={`w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br ${item.color} rounded-full flex items-center justify-center mr-2 sm:mr-4 shadow-lg`}>
+                      <item.icon className="h-5 w-5 sm:h-6 sm:w-6 text-white" />
                     </div>
                     {index < timeline.length - 1 && (
-                      <div className="absolute w-1 h-20 bg-gradient-to-b from-amber-300 to-orange-300 left-1/2 transform -translate-x-1/2 top-12"></div>
+                      <div className="absolute w-0.5 sm:w-1 h-16 sm:h-20 bg-gradient-to-b from-amber-300 to-orange-300 left-1/2 transform -translate-x-1/2 top-10 sm:top-12"></div>
                     )}
                   </div>
-                  <div className="flex-grow bg-white/70 backdrop-blur-sm p-4 rounded-xl border border-amber-200 hover:shadow-lg transition-all duration-300">
-                    <h4 className="font-semibold text-gray-800 mb-1">{item.title}</h4>
-                    <p className="text-gray-600 text-sm">{item.description}</p>
+                  <div className="flex-grow bg-white/70 backdrop-blur-sm p-3 sm:p-4 rounded-xl border border-amber-200 hover:shadow-lg transition-all duration-300">
+                    <h4 className="font-semibold text-gray-800 mb-1 text-sm sm:text-base">{item.title}</h4>
+                    <p className="text-gray-600 text-xs sm:text-sm">{item.description}</p>
                   </div>
                 </div>
               ))}
@@ -524,9 +639,9 @@ const AboutSection = () => {
         </div>
 
         {/* Values Section */}
-        <div className="mt-20">
-          <h3 className="text-2xl font-semibold text-amber-600 text-center mb-12">Core Values</h3>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
+        <div className="mt-12 sm:mt-16 lg:mt-20">
+          <h3 className="text-xl sm:text-2xl font-semibold text-amber-600 text-center mb-8 sm:mb-10 lg:mb-12">Core Values</h3>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6 lg:gap-8">
             {[
               { title: "Curiosity", desc: "Always eager to learn new technologies", icon: Lightbulb, color: "text-amber-600" },
               { title: "Consistency", desc: "Dedicated to continuous improvement", icon: Clock, color: "text-orange-600" },
@@ -534,12 +649,12 @@ const AboutSection = () => {
               { title: "Teaching", desc: "Love sharing knowledge", icon: Users, color: "text-red-600" },
             ].map((value, index) => (
               <Card key={index} className="bg-white/70 backdrop-blur-sm border border-amber-200 hover:shadow-lg transition-all duration-300 hover:scale-105">
-                <CardContent className="p-6 text-center">
-                  <div className={`w-12 h-12 bg-gradient-to-br ${value.color.replace('text-', 'from-')}-100 ${value.color.replace('text-', 'to-')}-200 rounded-xl flex items-center justify-center mx-auto mb-4`}>
-                    <value.icon className={`h-6 w-6 ${value.color}`} />
+                <CardContent className="p-4 sm:p-6 text-center">
+                  <div className={`w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br ${value.color.replace('text-', 'from-')}-100 ${value.color.replace('text-', 'to-')}-200 rounded-xl flex items-center justify-center mx-auto mb-3 sm:mb-4`}>
+                    <value.icon className={`h-5 w-5 sm:h-6 sm:w-6 ${value.color}`} />
                   </div>
-                  <h4 className="font-semibold text-gray-800 mb-2">{value.title}</h4>
-                  <p className="text-gray-600 text-sm">{value.desc}</p>
+                  <h4 className="font-semibold text-gray-800 mb-1 sm:mb-2 text-sm sm:text-base">{value.title}</h4>
+                  <p className="text-gray-600 text-xs sm:text-sm">{value.desc}</p>
                 </CardContent>
               </Card>
             ))}
@@ -550,13 +665,13 @@ const AboutSection = () => {
   );
 };
 
-// Skills Section with interactive elements and animated progress bars
-const SkillsSection = () => {
-  const [activeCategory, setActiveCategory] = useState('Programming');
-  const [animateSkills, setAnimateSkills] = useState(true);
-  const [isInitialLoad, setIsInitialLoad] = useState(true);
+// ==================== SKILLS SECTION COMPONENT ====================
+const SkillsSection: React.FC = () => {
+  const [activeCategory, setActiveCategory] = useState<string>('Programming');
+  const [animateSkills, setAnimateSkills] = useState<boolean>(true);
+  const [isInitialLoad, setIsInitialLoad] = useState<boolean>(true);
 
-  const skillsData = [
+  const skillsData: SkillCategory[] = [
     {
       name: 'Programming',
       icon: Code,
@@ -566,7 +681,6 @@ const SkillsSection = () => {
         { name: 'Python', level: 70, icon: '🐍', description: 'Data analysis and automation scripts' },
         { name: 'JavaScript', level: 85, icon: '⚡', description: 'ES6+, async programming, DOM manipulation' },
         { name: 'TypeScript', level: 80, icon: '📜', description: 'Type safety and interface design' },
-        // { name: 'JavaScript', level: 75, icon: '☕', description: 'Object-oriented programming concepts' },
       ]
     },
     {
@@ -588,7 +702,6 @@ const SkillsSection = () => {
       skills: [
         { name: 'MongoDB', level: 80, icon: '🍃', description: 'NoSQL, aggregation pipelines, indexing' },
         { name: 'PostgreSQL', level: 60, icon: '🐘', description: 'Complex queries, transactions, optimization' },
-        // { name: 'Firebase', level: 10, icon: '🔥', description: 'Real-time database, authentication' },
         { name: 'MySQL', level: 10, icon: '📊', description: 'Relational design, joins, stored procedures' },
       ]
     },
@@ -598,9 +711,6 @@ const SkillsSection = () => {
       color: 'from-red-400 to-orange-500',
       skills: [
         { name: 'Git/GitHub', level: 90, icon: '🐙', description: 'Version control, branching strategies, CI/CD' },
-        // { name: 'Docker', level: 10, icon: '🐳', description: 'Containerization, Docker Compose' },
-        // { name: 'AWS', level: 10, icon: '☁️', description: 'EC2, S3, Lambda, deployment' },
-        // { name: 'CI/CD', level: 10, icon: '🔄', description: 'GitHub Actions, automated testing' },
       ]
     },
     {
@@ -612,7 +722,6 @@ const SkillsSection = () => {
         { name: 'Algorithms', level: 92, icon: '🧮', description: 'Sorting, searching, dynamic programming' },
         { name: 'OOP', level: 88, icon: '🔄', description: 'Encapsulation, inheritance, polymorphism' },
         { name: 'OS', level: 80, icon: '🖥️', description: 'Process management, memory, file systems' },
-        // { name: 'Computer Networks', level: 78, icon: '🌐', description: 'TCP/IP, HTTP, protocols, security' },
       ]
     },
     {
@@ -628,19 +737,11 @@ const SkillsSection = () => {
     }
   ];
 
-  /* FIX: TS7053 - Defining interface for index signature */
-  interface SkillProgress {
-    [key: string]: number;
-  }
-  
-  /* FIX: TS7053 - Applying defined interface to skillProgress state */
   const [skillProgress, setSkillProgress] = useState<SkillProgress>({});
-
 
   // Initialize progress values
   useEffect(() => {
-    
-    const initialProgress:SkillProgress = {};
+    const initialProgress: SkillProgress = {};
     skillsData.forEach(category => {
       category.skills.forEach(skill => {
         initialProgress[`${category.name}-${skill.name}`] = isInitialLoad ? skill.level : 0;
@@ -648,24 +749,19 @@ const SkillsSection = () => {
     });
     setSkillProgress(initialProgress);
     
-    // Trigger initial animation after mount
     if (isInitialLoad) {
       setIsInitialLoad(false);
       setTimeout(() => {
-        const resetProgress:SkillProgress = {};
+        const resetProgress: SkillProgress = {};
         skillsData.forEach(category => {
-          /* FIX: TS6133 - Renaming 'skill' to '_skill' as it's not used inside the loop body */
           category.skills.forEach(_skill => {
-            // Se esta linha estivesse descomentada, 'skill' não daria erro. 
-            // Como está comentada, 'skill' não é lida. 
-            // Para suprimir o erro, renomeamos para '_skill'.
-            // resetProgress[`${category.name}-${skill.name}`] = 0;
+            // Unused variable prefixed with underscore
           });
         });
         setSkillProgress(resetProgress);
         
         setTimeout(() => {
-          const animatingProgress:SkillProgress = {};
+          const animatingProgress: SkillProgress = {};
           skillsData.forEach(category => {
             category.skills.forEach(skill => {
               if (category.name === activeCategory) {
@@ -688,18 +784,14 @@ const SkillsSection = () => {
     const timer = setTimeout(() => {
       const newProgress = { ...skillProgress };
       
-      // Reset all skills to 0
       skillsData.forEach(category => {
-        /* FIX: TS6133 - Renaming 'skill' to '_skill' as it's not used inside the loop body */
         category.skills.forEach(_skill => {
-          // newProgress[`${category.name}-${skill.name}`] = 0;
+          // Unused variable prefixed with underscore
         });
       });
       setSkillProgress(newProgress);
 
-      // Animate active category skills
       setTimeout(() => {
-        // const animatingProgress = { ...newProgress };
         const activeCategoryData = skillsData.find(cat => cat.name === activeCategory);
         
         if (activeCategoryData) {
@@ -716,19 +808,18 @@ const SkillsSection = () => {
     }, 100);
 
     return () => clearTimeout(timer);
-  }, [activeCategory, animateSkills, isInitialLoad]);
+  }, [activeCategory, animateSkills, isInitialLoad, skillProgress, skillsData]);
 
-  const handleCategoryClick = (categoryName:string) => {
+  const handleCategoryClick = (categoryName: string): void => {
     if (categoryName === activeCategory) return;
     
     setActiveCategory(categoryName);
     setAnimateSkills(false);
     
-    // Re-enable animation after a brief delay
     setTimeout(() => setAnimateSkills(true), 50);
   };
 
-  const getProgressBarColor = (level:number) => {
+  const getProgressBarColor = (level: number): string => {
     if (level >= 90) return 'from-green-400 to-emerald-500';
     if (level >= 80) return 'from-blue-400 to-cyan-500';
     if (level >= 70) return 'from-amber-400 to-orange-500';
@@ -736,36 +827,36 @@ const SkillsSection = () => {
   };
 
   return (
-    <section id="skills" className="py-20 px-6">
+    <section id="skills" className="py-12 sm:py-16 lg:py-20 px-4 sm:px-6">
       <style>{customStyles}</style>
       <div className="container mx-auto">
-        <div className="text-center mb-16">
-          <h2 className="text-4xl lg:text-5xl font-bold mb-4">My Skills</h2>
-          <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+        <div className="text-center mb-10 sm:mb-12 lg:mb-16">
+          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold mb-3 sm:mb-4">My Skills</h2>
+          <p className="text-base sm:text-lg lg:text-xl text-gray-600 max-w-3xl mx-auto px-4">
             Technologies and expertise I've developed through continuous learning and practice
           </p>
         </div>
 
         {/* Skill Category Selector */}
-        <div className="flex flex-wrap justify-center gap-4 mb-12">
+        <div className="flex flex-wrap justify-center gap-2 sm:gap-3 lg:gap-4 mb-8 sm:mb-10 lg:mb-12">
           {skillsData.map((category) => (
             <Button
               key={category.name}
               onClick={() => handleCategoryClick(category.name)}
-              className={`px-6 py-3 rounded-full text-sm font-medium transition-all duration-300 flex items-center space-x-2 ${
+              className={`px-3 sm:px-4 lg:px-6 py-2 sm:py-3 rounded-full text-xs sm:text-sm font-medium transition-all duration-300 flex items-center space-x-1 sm:space-x-2 ${
                 activeCategory === category.name
                   ? 'bg-gradient-to-r from-amber-500 to-orange-500 text-white shadow-lg transform scale-105'
                   : 'bg-white/70 text-gray-700 hover:bg-amber-50 hover:shadow-md hover:scale-105'
               }`}
             >
-              <category.icon className="h-4 w-4" />
+              <category.icon className="h-3 w-3 sm:h-4 sm:w-4" />
               <span>{category.name}</span>
             </Button>
           ))}
         </div>
 
         {/* Skills Display */}
-        <div className="grid grid-cols-1 gap-8">
+        <div className="grid grid-cols-1 gap-6 sm:gap-8">
           {skillsData
             .filter(category => category.name === activeCategory)
             .map((category) => (
@@ -773,46 +864,45 @@ const SkillsSection = () => {
                 key={category.name}
                 className="bg-white/70 backdrop-blur-sm rounded-2xl border border-amber-200 overflow-hidden hover:shadow-xl transition-all duration-300 w-full"
               >
-                <div className={`p-6 bg-gradient-to-r ${category.color} text-white relative overflow-hidden`}>
+                <div className={`p-4 sm:p-6 bg-gradient-to-r ${category.color} text-white relative overflow-hidden`}>
                   <div className="absolute inset-0 bg-black/10"></div>
-                  <div className="relative flex items-center justify-between">
-                    <div className="flex items-center space-x-3">
-                      <category.icon className="h-8 w-8" />
-                      <h3 className="text-2xl font-bold">{category.name}</h3>
+                  <div className="relative flex flex-col sm:flex-row items-center justify-between gap-3">
+                    <div className="flex items-center space-x-2 sm:space-x-3">
+                      <category.icon className="h-6 w-6 sm:h-8 sm:w-8" />
+                      <h3 className="text-xl sm:text-2xl font-bold">{category.name}</h3>
                     </div>
                     <div className="flex items-center space-x-2">
-                      <span className="text-sm opacity-90">Skills</span>
-                      <Badge className="bg-white/20 text-white border-white/30">
+                      <span className="text-xs sm:text-sm opacity-90">Skills</span>
+                      <Badge className="bg-white/20 text-white border-white/30 text-xs sm:text-sm">
                         {category.skills.length}
                       </Badge>
                     </div>
                   </div>
                 </div>
 
-                <div className="p-6 space-y-6">
+                <div className="p-4 sm:p-6 space-y-4 sm:space-y-6">
                   {category.skills.map((skill, index) => {
-                    const progressKey:string = `${category.name}-${skill.name}`;
-                    /* FIX: TS7053 - skillProgress is now correctly typed as SkillProgress */
+                    const progressKey: string = `${category.name}-${skill.name}`;
                     const currentProgress = skillProgress[progressKey] || 0;
                     
                     return (
-                      <div key={index} className="space-y-3 p-4 rounded-lg bg-white/50 hover:bg-white/70 transition-colors">
+                      <div key={index} className="space-y-2 sm:space-y-3 p-3 sm:p-4 rounded-lg bg-white/50 hover:bg-white/70 transition-colors">
                         <div className="flex justify-between items-start">
-                          <div className="flex items-start space-x-3">
-                            <span className="text-2xl">{skill.icon}</span>
+                          <div className="flex items-start space-x-2 sm:space-x-3">
+                            <span className="text-xl sm:text-2xl">{skill.icon}</span>
                             <div>
-                              <span className="font-medium text-gray-800 text-base">{skill.name}</span>
-                              <p className="text-xs text-gray-500 mt-1">{skill.description}</p>
+                              <span className="font-medium text-gray-800 text-sm sm:text-base">{skill.name}</span>
+                              <p className="text-xs text-gray-500 mt-0.5 sm:mt-1">{skill.description}</p>
                             </div>
                           </div>
                           <div className="text-right">
-                            <span className="text-lg font-bold text-amber-600">
+                            <span className="text-base sm:text-lg font-bold text-amber-600">
                               {Math.round(currentProgress)}%
                             </span>
-                            <div className="text-xs text-gray-500">Proficiency</div>
+                            <div className="text-[10px] sm:text-xs text-gray-500">Proficiency</div>
                           </div>
                         </div>
-                        <div className="relative h-4 bg-gray-100 rounded-full overflow-hidden shadow-inner">
+                        <div className="relative h-3 sm:h-4 bg-gray-100 rounded-full overflow-hidden shadow-inner">
                           <div
                             className={`absolute top-0 left-0 h-full rounded-full bg-gradient-to-r ${getProgressBarColor(skill.level)} transition-all duration-1000 ease-out relative shadow-sm`}
                             style={{ 
@@ -823,11 +913,11 @@ const SkillsSection = () => {
                             <div className="absolute inset-0 bg-white/20 animate-pulse"></div>
                           </div>
                         </div>
-                        <div className="flex justify-between text-xs text-gray-400">
+                        <div className="flex justify-between text-[10px] sm:text-xs text-gray-400">
                           <span>Beginner</span>
-                          <span>Intermediate</span>
+                          <span className="hidden sm:inline">Intermediate</span>
                           <span>Advanced</span>
-                          <span>Expert</span>
+                          <span className="hidden sm:inline">Expert</span>
                         </div>
                       </div>
                     );
@@ -838,44 +928,44 @@ const SkillsSection = () => {
         </div>
 
         {/* Skills Overview */}
-        <div className="mt-16">
-          <h3 className="text-2xl font-semibold text-amber-600 mb-8 text-center">Explore Other Skills</h3>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="mt-10 sm:mt-12 lg:mt-16">
+          <h3 className="text-xl sm:text-2xl font-semibold text-amber-600 mb-6 sm:mb-8 text-center">Explore Other Skills</h3>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
             {skillsData
               .filter(category => category.name !== activeCategory)
               .map((category) => (
                 <div
                   key={category.name}
-                  className="bg-white/70 backdrop-blur-sm p-6 rounded-xl border border-amber-200 hover:shadow-lg transition-all duration-300 hover:scale-105 cursor-pointer group"
+                  className="bg-white/70 backdrop-blur-sm p-4 sm:p-6 rounded-xl border border-amber-200 hover:shadow-lg transition-all duration-300 hover:scale-105 cursor-pointer group"
                   onClick={() => handleCategoryClick(category.name)}
                 >
-                  <div className="flex items-center justify-between mb-4">
-                    <div className="flex items-center space-x-3">
-                      <div className={`w-12 h-12 bg-gradient-to-r ${category.color} rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform`}>
-                        <category.icon className="h-6 w-6 text-white" />
+                  <div className="flex items-center justify-between mb-3 sm:mb-4">
+                    <div className="flex items-center space-x-2 sm:space-x-3">
+                      <div className={`w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-r ${category.color} rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform`}>
+                        <category.icon className="h-5 w-5 sm:h-6 sm:w-6 text-white" />
                       </div>
                       <div>
-                        <h3 className="font-semibold text-gray-800">{category.name}</h3>
-                        <p className="text-xs text-gray-500">{category.skills.length} skills</p>
+                        <h3 className="font-semibold text-gray-800 text-sm sm:text-base">{category.name}</h3>
+                        <p className="text-[10px] sm:text-xs text-gray-500">{category.skills.length} skills</p>
                       </div>
                     </div>
-                    <ChevronDown className="h-4 w-4 text-gray-400 group-hover:text-amber-600 transition-colors" />
+                    <ChevronDown className="h-3 w-3 sm:h-4 sm:w-4 text-gray-400 group-hover:text-amber-600 transition-colors" />
                   </div>
-                  <div className="grid grid-cols-2 gap-2">
+                  <div className="grid grid-cols-2 gap-1.5 sm:gap-2">
                     {category.skills.slice(0, 4).map((skill, index) => (
                       <div
                         key={index}
-                        className="flex items-center space-x-2 bg-amber-50/50 p-2 rounded-lg hover:bg-amber-100 transition-colors"
+                        className="flex items-center space-x-1 sm:space-x-2 bg-amber-50/50 p-1.5 sm:p-2 rounded-lg hover:bg-amber-100 transition-colors"
                       >
-                        <span className="text-sm">{skill.icon}</span>
-                        <span className="text-xs font-medium text-gray-700 truncate">{skill.name}</span>
+                        <span className="text-xs sm:text-sm">{skill.icon}</span>
+                        <span className="text-[10px] sm:text-xs font-medium text-gray-700 truncate">{skill.name}</span>
                       </div>
                     ))}
                   </div>
-                  <div className="mt-3 pt-3 border-t border-amber-100">
+                  <div className="mt-2 sm:mt-3 pt-2 sm:pt-3 border-t border-amber-100">
                     <div className="flex items-center justify-between">
-                      <span className="text-xs text-gray-500">Average proficiency</span>
-                      <span className="text-xs font-bold text-amber-600">
+                      <span className="text-[10px] sm:text-xs text-gray-500">Average proficiency</span>
+                      <span className="text-[10px] sm:text-xs font-bold text-amber-600">
                         {Math.round(category.skills.reduce((acc, s) => acc + s.level, 0) / category.skills.length)}%
                       </span>
                     </div>
@@ -886,31 +976,31 @@ const SkillsSection = () => {
         </div>
 
         {/* Skill Statistics */}
-        <div className="mt-16 grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div className="mt-10 sm:mt-12 lg:mt-16 grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6">
           <Card className="bg-gradient-to-br from-amber-50 to-orange-50 border-amber-200 transition-all hover:scale-105 duration-300 hover:cursor-pointer">
-            <CardContent className="p-6 text-center">
-              <div className="text-3xl font-bold text-amber-600 mb-2">
+            <CardContent className="p-4 sm:p-6 text-center">
+              <div className="text-2xl sm:text-3xl font-bold text-amber-600 mb-1 sm:mb-2">
                 {skillsData.reduce((acc, cat) => acc + cat.skills.length, 0)}
               </div>
-              <p className="text-gray-600">Total Skills</p>
+              <p className="text-xs sm:text-sm text-gray-600">Total Skills</p>
             </CardContent>
           </Card>
           <Card className="bg-gradient-to-br from-blue-50 to-purple-50 border-blue-200 transition-all hover:scale-105 duration-300 hover:cursor-pointer">
-            <CardContent className="p-6 text-center">
-              <div className="text-3xl font-bold text-blue-600 mb-2">
+            <CardContent className="p-4 sm:p-6 text-center">
+              <div className="text-2xl sm:text-3xl font-bold text-blue-600 mb-1 sm:mb-2">
                 {skillsData.length}
               </div>
-              <p className="text-gray-600">Skill Categories</p>
+              <p className="text-xs sm:text-sm text-gray-600">Skill Categories</p>
             </CardContent>
           </Card>
           <Card className="bg-gradient-to-br from-green-50 to-emerald-50 border-green-200 transition-all hover:scale-105 duration-300 hover:cursor-pointer">
-            <CardContent className="p-6 text-center">
-              <div className="text-3xl font-bold text-green-600 mb-2">
+            <CardContent className="p-4 sm:p-6 text-center">
+              <div className="text-2xl sm:text-3xl font-bold text-green-600 mb-1 sm:mb-2">
                 {Math.round(skillsData.reduce((acc, cat) => 
                   acc + cat.skills.reduce((sacc, skill) => sacc + skill.level, 0) / cat.skills.length, 0
                 ) / skillsData.length)}%
               </div>
-              <p className="text-gray-600">Average Proficiency</p>
+              <p className="text-xs sm:text-sm text-gray-600">Average Proficiency</p>
             </CardContent>
           </Card>
         </div>
@@ -919,9 +1009,9 @@ const SkillsSection = () => {
   );
 };
 
-// Services Section with pricing cards
-const ServicesSection = () => {
-  const services = [
+// ==================== SERVICES SECTION COMPONENT ====================
+const ServicesSection: React.FC = () => {
+  const services: Service[] = [
     {
       icon: Code,
       title: "Programming Tutoring",
@@ -952,45 +1042,45 @@ const ServicesSection = () => {
   ];
 
   return (
-    <section id="services" className="py-20 px-6 bg-white/50 backdrop-blur-sm">
+    <section id="services" className="py-12 sm:py-16 lg:py-20 px-4 sm:px-6 bg-white/50 backdrop-blur-sm">
       <div className="container mx-auto">
-        <div className="text-center mb-16">
-          <h2 className="text-4xl lg:text-5xl font-bold mb-4">Services</h2>
-          <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+        <div className="text-center mb-10 sm:mb-12 lg:mb-16">
+          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold mb-3 sm:mb-4">Services</h2>
+          <p className="text-base sm:text-lg lg:text-xl text-gray-600 max-w-3xl mx-auto px-4">
             How I can help you achieve your programming goals
           </p>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
           {services.map((service, index) => (
             <Card
               key={index}
               className="bg-white/70 backdrop-blur-sm border border-amber-200 hover:border-amber-400 transition-all duration-300 hover:scale-105 hover:shadow-lg group"
             >
-              <CardHeader className="text-center pb-4">
-                <div className={`w-16 h-16 bg-gradient-to-r ${service.color} rounded-xl flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform`}>
-                  <service.icon className="h-8 w-8 text-white" />
+              <CardHeader className="text-center pb-3 sm:pb-4">
+                <div className={`w-12 h-12 sm:w-16 sm:h-16 bg-gradient-to-r ${service.color} rounded-xl flex items-center justify-center mx-auto mb-3 sm:mb-4 group-hover:scale-110 transition-transform`}>
+                  <service.icon className="h-6 w-6 sm:h-8 sm:w-8 text-white" />
                 </div>
-                <CardTitle className="text-xl group-hover:text-amber-600 transition-colors">{service.title}</CardTitle>
+                <CardTitle className="text-lg sm:text-xl group-hover:text-amber-600 transition-colors">{service.title}</CardTitle>
               </CardHeader>
-              <CardContent className="space-y-4">
-                <CardDescription className="text-gray-600 text-center leading-relaxed">
+              <CardContent className="space-y-3 sm:space-y-4">
+                <CardDescription className="text-gray-600 text-center leading-relaxed text-xs sm:text-sm">
                   {service.description}
                 </CardDescription>
-                <ul className="space-y-2 text-sm text-gray-600">
+                <ul className="space-y-1.5 sm:space-y-2 text-xs sm:text-sm text-gray-600">
                   {service.features.map((feature, idx) => (
                     <li key={idx} className="flex items-center space-x-2">
-                      <CheckCircle className="h-4 w-4 text-green-500" />
+                      <CheckCircle className="h-3 w-3 sm:h-4 sm:w-4 text-green-500 flex-shrink-0" />
                       <span>{feature}</span>
                     </li>
                   ))}
                 </ul>
-                <div className="pt-4 border-t border-amber-200">
-                  <div className="flex justify-between items-center mb-3">
-                    <span className="text-lg font-bold text-amber-600">{service.price}</span>
-                    <span className="text-sm text-gray-500">{service.duration}</span>
+                <div className="pt-3 sm:pt-4 border-t border-amber-200">
+                  <div className="flex justify-between items-center mb-2 sm:mb-3">
+                    <span className="text-base sm:text-lg font-bold text-amber-600">{service.price}</span>
+                    <span className="text-xs sm:text-sm text-gray-500">{service.duration}</span>
                   </div>
-                  <Button className="w-full bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white">
+                  <Button className="w-full bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white text-xs sm:text-sm">
                     Book Now
                   </Button>
                 </div>
@@ -998,64 +1088,14 @@ const ServicesSection = () => {
             </Card>
           ))}
         </div>
-
-        {/* *****Testimonials ************************************/}
-        {/* <div className="mt-20">
-          <h3 className="text-2xl font-semibold text-amber-600 text-center mb-12">What Students Say</h3>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {[
-              {
-                name: "Rahul Kumar",
-                role: "B.Tech Student",
-                testimonial: "Suraj's tutoring helped me understand complex DSA concepts easily. My coding skills improved significantly!",
-                rating: 5
-              },
-              {
-                name: "Shivam kumar",
-                role: "Computer Science Student",
-                testimonial: "The personalized sessions were exactly what I needed to prepare for my technical interviews.",
-                rating: 5
-              },
-              {
-                name: "Shubham Kumar",
-                role: "Friend",
-                testimonial: "Great mentor! Suraj explains concepts clearly and provides excellent practice problems.",
-                rating: 5
-              }
-            ].map((testimonial, index) => (
-              <Card key={index} className="bg-white/70 backdrop-blur-sm border border-amber-200 hover:shadow-lg transition-all duration-300 hover:scale-105">
-                <CardContent className="p-6">
-                  <div className="flex items-center mb-4">
-                    <div className="w-12 h-12 bg-gradient-to-r from-amber-400 to-orange-500 rounded-full flex items-center justify-center mr-4">
-                      <User className="h-6 w-6 text-white" />
-                    </div>
-                    <div>
-                      <h4 className="font-semibold text-gray-800">{testimonial.name}</h4>
-                      <p className="text-sm text-gray-500">{testimonial.role}</p>
-                    </div>
-                  </div>
-                  <p className="text-gray-600 italic mb-4">"{testimonial.testimonial}"</p>
-                  <div className="flex">
-                    {[...Array(5)].map((_, i) => (
-                      <Star
-                        key={i}
-                        className={`h-4 w-4 ${i < testimonial.rating ? 'text-amber-500 fill-amber-500' : 'text-gray-300'}`}
-                      />
-                    ))}
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-        </div> */}
       </div>
     </section>
   );
 };
 
-// Projects Section with detailed cards
-const ProjectsSection = () => {
-  const projects = [
+// ==================== PROJECTS SECTION COMPONENT ====================
+const ProjectsSection: React.FC = () => {
+  const projects: Project[] = [
     {
       title: "Calculator App",
       description: "A functional calculator application built using Python. Performs basic arithmetic operations with a clean user interface.",
@@ -1095,24 +1135,24 @@ const ProjectsSection = () => {
   ];
 
   return (
-    <section id="projects" className="py-20 px-6">
+    <section id="projects" className="py-12 sm:py-16 lg:py-20 px-4 sm:px-6">
       <div className="container mx-auto">
-        <div className="text-center mb-16">
-          <h2 className="text-4xl lg:text-5xl font-bold mb-4">My Projects</h2>
-          <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+        <div className="text-center mb-10 sm:mb-12 lg:mb-16">
+          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold mb-3 sm:mb-4">My Projects</h2>
+          <p className="text-base sm:text-lg lg:text-xl text-gray-600 max-w-3xl mx-auto px-4">
             Showcasing my work and technical skills through real-world projects
           </p>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8">
           {projects.map((project, index) => (
             <Card
               key={index}
               className="bg-white/70 backdrop-blur-sm border border-amber-200 overflow-hidden hover:border-amber-400 transition-all duration-300 hover:scale-105 hover:shadow-lg group"
             >
-              <div className={`h-48 bg-gradient-to-br ${project.gradient} relative overflow-hidden`}>
+              <div className={`h-32 sm:h-40 lg:h-48 bg-gradient-to-br ${project.gradient} relative overflow-hidden`}>
                 <div className="absolute inset-0 bg-black/20 group-hover:bg-black/10 transition-colors flex items-center justify-center">
-                  <Badge className={`bg-white/20 text-white border-white/30 ${
+                  <Badge className={`bg-white/20 text-white border-white/30 text-xs sm:text-sm ${
                     project.status === "Completed" ? "bg-green-500/20 border-green-300" : "bg-yellow-500/20 border-yellow-300"
                   }`}>
                     {project.status}
@@ -1120,47 +1160,47 @@ const ProjectsSection = () => {
                 </div>
               </div>
 
-              <CardContent className="p-6">
-                <div className="space-y-4">
+              <CardContent className="p-4 sm:p-6">
+                <div className="space-y-3 sm:space-y-4">
                   <div>
-                    <CardTitle className="text-xl mb-2 group-hover:text-amber-600 transition-colors">
+                    <CardTitle className="text-lg sm:text-xl mb-1 sm:mb-2 group-hover:text-amber-600 transition-colors">
                       {project.title}
                     </CardTitle>
-                    <CardDescription className="text-gray-600 leading-relaxed">
+                    <CardDescription className="text-gray-600 leading-relaxed text-xs sm:text-sm">
                       {project.description}
                     </CardDescription>
                   </div>
 
-                  <div className="space-y-3">
+                  <div className="space-y-2 sm:space-y-3">
                     <div>
-                      <h4 className="font-semibold text-gray-800 text-sm mb-2">Key Features:</h4>
-                      <div className="grid grid-cols-1 gap-1">
+                      <h4 className="font-semibold text-gray-800 text-xs sm:text-sm mb-1 sm:mb-2">Key Features:</h4>
+                      <div className="grid grid-cols-1 gap-0.5 sm:gap-1">
                         {project.features.map((feature, featureIndex) => (
-                          <div key={featureIndex} className="flex items-center space-x-2">
-                            <Star className="h-3 w-3 text-amber-500" />
-                            <span className="text-sm text-gray-600">{feature}</span>
+                          <div key={featureIndex} className="flex items-center space-x-1.5 sm:space-x-2">
+                            <Star className="h-2.5 w-2.5 sm:h-3 sm:w-3 text-amber-500 flex-shrink-0" />
+                            <span className="text-xs sm:text-sm text-gray-600">{feature}</span>
                           </div>
                         ))}
                       </div>
                     </div>
 
-                    <div className="flex flex-wrap gap-2">
+                    <div className="flex flex-wrap gap-1.5 sm:gap-2">
                       {project.technologies.map((tech, techIndex) => (
-                        <Badge key={techIndex} variant="outline" className="border-amber-200 text-amber-700 text-xs">
+                        <Badge key={techIndex} variant="outline" className="border-amber-200 text-amber-700 text-[10px] sm:text-xs">
                           {tech}
                         </Badge>
                       ))}
                     </div>
                   </div>
 
-                  <div className="flex gap-3 pt-4 border-t border-amber-200">
-                    <Button size="sm" className="bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white flex-1 ">
-                      <ExternalLink className="mr-2 h-4 w-4" />
+                  <div className="flex gap-2 sm:gap-3 pt-3 sm:pt-4 border-t border-amber-200">
+                    <Button size="sm" className="bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white flex-1 text-xs sm:text-sm">
+                      <ExternalLink className="mr-1.5 sm:mr-2 h-3 w-3 sm:h-4 sm:w-4" />
                       Live Demo
                     </Button>
                     <Button size="sm" variant="outline" className="border-amber-300 text-gray-700 hover:bg-amber-50">
                       <a href={project.github} target="_blank" rel="noopener noreferrer">
-                        <Github className="h-4 w-4" />
+                        <Github className="h-3 w-3 sm:h-4 sm:w-4" />
                       </a>
                     </Button>
                   </div>
@@ -1174,25 +1214,9 @@ const ProjectsSection = () => {
   );
 };
 
-// Achievements Section with animated cards
-const AchievementsSection = () => {
-  const achievements = [
-    // {
-    //   icon: Trophy,
-    //   title: "Top Performer",
-    //   description: "Consistently ranked among top students in programming contests",
-    //   value: "Top 10%",
-    //   color: "text-amber-600",
-    //   gradient: "from-amber-400 to-orange-500"
-    // },
-    // {
-    //   icon: Users,
-    //   title: "Students Helped",
-    //   description: "Successfully mentored students in programming and DSA",
-    //   value: "50+",
-    //   color: "text-blue-600",
-    //   gradient: "from-blue-400 to-cyan-500"
-    // },
+// ==================== ACHIEVEMENTS SECTION COMPONENT ====================
+const AchievementsSection: React.FC = () => {
+  const achievements: Achievement[] = [
     {
       icon: Award,
       title: "Projects Completed",
@@ -1212,33 +1236,33 @@ const AchievementsSection = () => {
   ];
 
   return (
-    <section className="py-20 px-6 bg-white/50 backdrop-blur-sm">
+    <section className="py-12 sm:py-16 lg:py-20 px-4 sm:px-6 bg-white/50 backdrop-blur-sm">
       <div className="container mx-auto">
-        <div className="text-center mb-16">
-          <h2 className="text-4xl lg:text-5xl font-bold mb-4">Achievements</h2>
-          <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+        <div className="text-center mb-10 sm:mb-12 lg:mb-16">
+          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold mb-3 sm:mb-4">Achievements</h2>
+          <p className="text-base sm:text-lg lg:text-xl text-gray-600 max-w-3xl mx-auto px-4">
             Milestones and recognition in my programming journey
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
           {achievements.map((achievement, index) => (
             <Card
               key={index}
               className="bg-white/70 backdrop-blur-sm border border-amber-200 hover:shadow-xl transition-all duration-300 hover:scale-105 group"
             >
               <CardHeader className="text-center">
-                <div className={`w-20 h-20 bg-gradient-to-br ${achievement.gradient} rounded-2xl flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform shadow-lg`}>
-                  <achievement.icon className="h-10 w-10 text-white" />
+                <div className={`w-16 h-16 sm:w-20 sm:h-20 bg-gradient-to-br ${achievement.gradient} rounded-2xl flex items-center justify-center mx-auto mb-3 sm:mb-4 group-hover:scale-110 transition-transform shadow-lg`}>
+                  <achievement.icon className="h-8 w-8 sm:h-10 sm:w-10 text-white" />
                 </div>
-                <div className="text-3xl font-bold text-gray-800">{achievement.value}</div>
-                <div className="text-sm text-gray-500">{achievement.title}</div>
-                <CardTitle className="text-lg group-hover:text-amber-600 transition-colors mt-2">
+                <div className="text-2xl sm:text-3xl font-bold text-gray-800">{achievement.value}</div>
+                <div className="text-xs sm:text-sm text-gray-500">{achievement.title}</div>
+                <CardTitle className="text-base sm:text-lg group-hover:text-amber-600 transition-colors mt-1 sm:mt-2">
                   {achievement.title}
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                <CardDescription className="text-gray-600 leading-relaxed text-center">
+                <CardDescription className="text-gray-600 leading-relaxed text-center text-xs sm:text-sm">
                   {achievement.description}
                 </CardDescription>
               </CardContent>
@@ -1250,8 +1274,8 @@ const AchievementsSection = () => {
   );
 };
 
-// Contact Section with enhanced form
-const ContactSection = () => {
+// ==================== CONTACT SECTION COMPONENT ====================
+const ContactSection: React.FC = () => {
   const { toast } = useToast();
   const navigate = useNavigate();
   const [isSending, setIsSending] = useState<boolean>(false);
@@ -1270,7 +1294,6 @@ const ContactSection = () => {
   });
 
   useEffect(() => {
-    // Clear alert after 5 seconds
     if (alertMessage.message) {
       const timer = setTimeout(() => {
         setAlertMessage({ type: '', message: '' });
@@ -1283,7 +1306,6 @@ const ContactSection = () => {
     const newErrors: FormErrors = { name: '', email: '', subject: '', message: '' };
     let isValid: boolean = true;
 
-    // Name validation
     if (!formData.name.trim()) {
       newErrors.name = 'Name is required';
       isValid = false;
@@ -1298,7 +1320,6 @@ const ContactSection = () => {
       isValid = false;
     }
 
-    // Email validation
     if (!formData.email.trim()) {
       newErrors.email = 'Email is required';
       isValid = false;
@@ -1310,7 +1331,6 @@ const ContactSection = () => {
       isValid = false;
     }
 
-    // Subject validation
     if (!formData.subject.trim()) {
       newErrors.subject = 'Subject is required';
       isValid = false;
@@ -1322,7 +1342,6 @@ const ContactSection = () => {
       isValid = false;
     }
 
-    // Message validation
     if (!formData.message.trim()) {
       newErrors.message = 'Message is required';
       isValid = false;
@@ -1476,38 +1495,38 @@ const ContactSection = () => {
   };
 
   return (
-    <section id="contact" className="py-20 px-6">
+    <section id="contact" className="py-12 sm:py-16 lg:py-20 px-4 sm:px-6">
       <div className="container mx-auto">
-        <div className="text-center mb-16">
-          <h2 className="text-4xl lg:text-5xl font-bold mb-4">Get In Touch</h2>
-          <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+        <div className="text-center mb-10 sm:mb-12 lg:mb-16">
+          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold mb-3 sm:mb-4">Get In Touch</h2>
+          <p className="text-base sm:text-lg lg:text-xl text-gray-600 max-w-3xl mx-auto px-4">
             Let's connect and discuss opportunities
           </p>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 max-w-6xl mx-auto">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 sm:gap-10 lg:gap-12 max-w-6xl mx-auto">
           {/* Contact Information */}
-          <div className="space-y-8">
-            <h3 className="text-2xl font-semibold text-amber-600">Contact Information</h3>
+          <div className="space-y-6 sm:space-y-8">
+            <h3 className="text-xl sm:text-2xl font-semibold text-amber-600">Contact Information</h3>
 
-            <div className="space-y-6">
+            <div className="space-y-4 sm:space-y-6">
               {[
                 { icon: Mail, label: "Email", value: "surajkumarraj8888@gmail.com", href: "mailto:surajkumarraj8888@gmail.com" },
-                { icon: Phone, label: "Phone", value: "+91 9507272341", href: "callto:+919507272341" },
+                { icon: Phone, label: "Phone", value: "+91 9507272341", href: "tel:+919507272341" },
                 { icon: MapPin, label: "Location", value: "Vaishali, Bihar, India", href: "https://maps.app.goo.gl/5Cmg979kkJ4EE6dK9" },
-                { icon: Calendar, label: "Available", value: "Mon-Sat, 9AM-6PM",href:"/contact" }
+                { icon: Calendar, label: "Available", value: "Mon-Sat, 9AM-6PM", href: "/contact" }
               ].map((item, index) => (
                 <a
                   key={index}
                   href={item.href || "#"}
-                  className="flex items-center space-x-4 p-4 bg-white/70 backdrop-blur-sm rounded-xl border border-amber-200 hover:border-amber-400 transition-all duration-300 hover:scale-105 group"
+                  className="flex items-center space-x-3 sm:space-x-4 p-3 sm:p-4 bg-white/70 backdrop-blur-sm rounded-xl border border-amber-200 hover:border-amber-400 transition-all duration-300 hover:scale-105 group"
                 >
-                  <div className="w-12 h-12 bg-gradient-to-r from-amber-500 to-orange-500 rounded-full flex items-center justify-center">
-                    <item.icon className="h-6 w-6 text-white" />
+                  <div className="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-r from-amber-500 to-orange-500 rounded-full flex items-center justify-center flex-shrink-0">
+                    <item.icon className="h-5 w-5 sm:h-6 sm:w-6 text-white" />
                   </div>
                   <div>
-                    <p className="text-sm text-gray-500">{item.label}</p>
-                    <p className="text-gray-800 font-medium group-hover:text-amber-600 transition-colors">
+                    <p className="text-xs sm:text-sm text-gray-500">{item.label}</p>
+                    <p className="text-gray-800 font-medium group-hover:text-amber-600 transition-colors text-xs sm:text-sm lg:text-base">
                       {item.value}
                     </p>
                   </div>
@@ -1515,24 +1534,24 @@ const ContactSection = () => {
               ))}
             </div>
 
-            <div className="space-y-4">
-              <h4 className="text-lg font-semibold text-orange-600">Connect With Me</h4>
-              <div className="flex space-x-3">
+            <div className="space-y-3 sm:space-y-4">
+              <h4 className="text-base sm:text-lg font-semibold text-orange-600">Connect With Me</h4>
+              <div className="flex flex-wrap gap-2 sm:gap-3">
                 {[
                   { href: "https://github.com/Suraj1819", icon: Github, label: "GitHub" },
                   { href: "https://www.linkedin.com/in/suraj-kumar-72847b30a/", icon: Linkedin, label: "LinkedIn" },
                   { href: "https://leetcode.com/u/Suraj_1819/", icon: Code, label: "LeetCode" },
-                  { href: "https://www.geeksforgeeks.org/user/surajkuma16ts/", icon: Code2, label: "LeetCode" }
+                  { href: "https://www.geeksforgeeks.org/user/surajkuma16ts/", icon: Code2, label: "GeeksforGeeks" }
                 ].map((social, index) => (
                   <a
                     key={index}
                     href={social.href}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="w-12 h-12 bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white rounded-full flex items-center justify-center transition-all duration-300 hover:scale-110"
+                    className="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white rounded-full flex items-center justify-center transition-all duration-300 hover:scale-110"
                     title={social.label}
                   >
-                    <social.icon className="h-5 w-5" />
+                    <social.icon className="h-4 w-4 sm:h-5 sm:w-5" />
                   </a>
                 ))}
               </div>
@@ -1542,26 +1561,26 @@ const ContactSection = () => {
           {/* Contact Form */}
           <Card className="bg-white/70 backdrop-blur-sm border border-amber-200">
             <CardHeader>
-              <CardTitle className="text-orange-600">Send me a message</CardTitle>
+              <CardTitle className="text-orange-600 text-lg sm:text-xl">Send me a message</CardTitle>
             </CardHeader>
             <CardContent>
               {alertMessage.message && (
-                <div className={`mb-6 p-4 rounded-lg border flex items-center ${
+                <div className={`mb-4 sm:mb-6 p-3 sm:p-4 rounded-lg border flex items-center ${
                   alertMessage.type === 'error'
                     ? 'border-red-200 bg-red-50 text-red-800'
                     : 'border-green-200 bg-green-50 text-green-800'
                 }`}>
                   {alertMessage.type === 'error' ? (
-                    <AlertCircle className="h-4 w-4 mr-2 flex-shrink-0" />
+                    <AlertCircle className="h-3 w-3 sm:h-4 sm:w-4 mr-2 flex-shrink-0" />
                   ) : (
-                    <CheckCircle className="h-4 w-4 mr-2 flex-shrink-0" />
+                    <CheckCircle className="h-3 w-3 sm:h-4 sm:w-4 mr-2 flex-shrink-0" />
                   )}
-                  <span className="text-sm">{alertMessage.message}</span>
+                  <span className="text-xs sm:text-sm">{alertMessage.message}</span>
                 </div>
               )}
-              <form onSubmit={handleContactSubmit} className="space-y-4">
-                <div className="space-y-2">
-                  <Label htmlFor="name" className="text-gray-700 font-medium">Name *</Label>
+              <form onSubmit={handleContactSubmit} className="space-y-3 sm:space-y-4">
+                <div className="space-y-1.5 sm:space-y-2">
+                  <Label htmlFor="name" className="text-gray-700 font-medium text-xs sm:text-sm">Name *</Label>
                   <Input
                     id="name"
                     name="name"
@@ -1571,7 +1590,7 @@ const ContactSection = () => {
                     onChange={handleChange}
                     required
                     disabled={isSending}
-                    className={`border-amber-200 focus:ring-amber-500 bg-white/50 ${
+                    className={`border-amber-200 focus:ring-amber-500 bg-white/50 text-xs sm:text-sm ${
                       errors.name ? 'border-red-300 focus:ring-red-500' : ''
                     }`}
                     aria-invalid={!!errors.name}
@@ -1579,14 +1598,14 @@ const ContactSection = () => {
                     maxLength={50}
                   />
                   {errors.name && (
-                    <p id="name-error" className="text-red-500 text-sm flex items-center">
-                      <AlertCircle className="h-4 w-4 mr-1" />
+                    <p id="name-error" className="text-red-500 text-xs sm:text-sm flex items-center">
+                      <AlertCircle className="h-3 w-3 sm:h-4 sm:w-4 mr-1" />
                       {errors.name}
                     </p>
                   )}
                 </div>
-                <div className="space-y-2">
-                  <Label htmlFor="email" className="text-gray-700 font-medium">Email *</Label>
+                <div className="space-y-1.5 sm:space-y-2">
+                  <Label htmlFor="email" className="text-gray-700 font-medium text-xs sm:text-sm">Email *</Label>
                   <Input
                     id="email"
                     name="email"
@@ -1596,7 +1615,7 @@ const ContactSection = () => {
                     onChange={handleChange}
                     required
                     disabled={isSending}
-                    className={`border-amber-200 focus:ring-amber-500 bg-white/50 ${
+                    className={`border-amber-200 focus:ring-amber-500 bg-white/50 text-xs sm:text-sm ${
                       errors.email ? 'border-red-300 focus:ring-red-500' : ''
                     }`}
                     aria-invalid={!!errors.email}
@@ -1604,14 +1623,14 @@ const ContactSection = () => {
                     maxLength={100}
                   />
                   {errors.email && (
-                    <p id="email-error" className="text-red-500 text-sm flex items-center">
-                      <AlertCircle className="h-4 w-4 mr-1" />
+                    <p id="email-error" className="text-red-500 text-xs sm:text-sm flex items-center">
+                      <AlertCircle className="h-3 w-3 sm:h-4 sm:w-4 mr-1" />
                       {errors.email}
                     </p>
                   )}
                 </div>
-                <div className="space-y-2">
-                  <Label htmlFor="subject" className="text-gray-700 font-medium">Subject *</Label>
+                <div className="space-y-1.5 sm:space-y-2">
+                  <Label htmlFor="subject" className="text-gray-700 font-medium text-xs sm:text-sm">Subject *</Label>
                   <Input
                     id="subject"
                     name="subject"
@@ -1621,7 +1640,7 @@ const ContactSection = () => {
                     onChange={handleChange}
                     required
                     disabled={isSending}
-                    className={`border-amber-200 focus:ring-amber-500 bg-white/50 ${
+                    className={`border-amber-200 focus:ring-amber-500 bg-white/50 text-xs sm:text-sm ${
                       errors.subject ? 'border-red-300 focus:ring-red-500' : ''
                     }`}
                     aria-invalid={!!errors.subject}
@@ -1629,14 +1648,14 @@ const ContactSection = () => {
                     maxLength={100}
                   />
                   {errors.subject && (
-                    <p id="subject-error" className="text-red-500 text-sm flex items-center">
-                      <AlertCircle className="h-4 w-4 mr-1" />
+                    <p id="subject-error" className="text-red-500 text-xs sm:text-sm flex items-center">
+                      <AlertCircle className="h-3 w-3 sm:h-4 sm:w-4 mr-1" />
                       {errors.subject}
                     </p>
                   )}
                 </div>
-                <div className="space-y-2">
-                  <Label htmlFor="message" className="text-gray-700 font-medium">Message *</Label>
+                <div className="space-y-1.5 sm:space-y-2">
+                  <Label htmlFor="message" className="text-gray-700 font-medium text-xs sm:text-sm">Message *</Label>
                   <Textarea
                     id="message"
                     name="message"
@@ -1646,7 +1665,7 @@ const ContactSection = () => {
                     onChange={handleChange}
                     required
                     disabled={isSending}
-                    className={`border-amber-200 focus:ring-amber-500 bg-white/50 resize-none ${
+                    className={`border-amber-200 focus:ring-amber-500 bg-white/50 resize-none text-xs sm:text-sm ${
                       errors.message ? 'border-red-300 focus:ring-red-500' : ''
                     }`}
                     aria-invalid={!!errors.message}
@@ -1655,28 +1674,28 @@ const ContactSection = () => {
                   />
                   <div className="flex justify-between items-center">
                     {errors.message && (
-                      <p id="message-error" className="text-red-500 text-sm flex items-center">
-                        <AlertCircle className="h-4 w-4 mr-1" />
+                      <p id="message-error" className="text-red-500 text-xs sm:text-sm flex items-center">
+                        <AlertCircle className="h-3 w-3 sm:h-4 sm:w-4 mr-1" />
                         {errors.message}
                       </p>
                     )}
-                    <p className="text-sm text-gray-500 ml-auto">{formData.message.length}/1000</p>
+                    <p className="text-xs text-gray-500 ml-auto">{formData.message.length}/1000</p>
                   </div>
                 </div>
-                <p className="text-sm text-gray-500">* Required fields. Your information is kept confidential and used only for responding to your inquiry.</p>
+                <p className="text-[10px] sm:text-xs text-gray-500">* Required fields. Your information is kept confidential and used only for responding to your inquiry.</p>
                 <Button
                   type="submit"
                   disabled={isSending}
-                  className="w-full bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 disabled:opacity-70 disabled:cursor-not-allowed"
+                  className="w-full bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 disabled:opacity-70 disabled:cursor-not-allowed text-xs sm:text-sm"
                 >
                   {isSending ? (
                     <>
-                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                      <Loader2 className="mr-1.5 sm:mr-2 h-3 w-3 sm:h-4 sm:w-4 animate-spin" />
                       Sending...
                     </>
                   ) : (
                     <>
-                      <Send className="mr-2 h-4 w-4" />
+                      <Send className="mr-1.5 sm:mr-2 h-3 w-3 sm:h-4 sm:w-4" />
                       Send Message
                     </>
                   )}
@@ -1690,12 +1709,10 @@ const ContactSection = () => {
   );
 };
 
-// Main Index Component
-const Index = () => {
-  // const { toast } = useToast();
-  // const navigate = useNavigate();
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const [isLoading, setIsLoading] = useState(true);
+// ==================== MAIN INDEX COMPONENT ====================
+const Index: React.FC = () => {
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -1704,11 +1721,11 @@ const Index = () => {
     return () => clearTimeout(timer);
   }, []);
 
-  const toggleMobileMenu = () => {
+  const toggleMobileMenu = (): void => {
     setIsMobileMenuOpen(!isMobileMenuOpen);
   };
 
-  const closeMobileMenu = () => {
+  const closeMobileMenu = (): void => {
     setIsMobileMenuOpen(false);
   };
 
@@ -1722,38 +1739,37 @@ const Index = () => {
       <div className="min-h-screen bg-gradient-to-br from-amber-50 via-orange-50 to-yellow-50 text-foreground">
         {/* Navigation */}
         <nav className="fixed top-0 w-full bg-white/90 backdrop-blur-md z-50 border-b border-amber-200 shadow-sm">
-          <div className="container mx-auto px-4 sm:px-6 py-3 sm:py-4">
+          <div className="container mx-auto px-3 sm:px-4 lg:px-6 py-2.5 sm:py-3 lg:py-4">
             <div className="flex items-center justify-between">
-              {/* Logo and Brand Name with Circular Section */}
-              <div className="flex items-center space-x-3">
-                {/* Circular section for logo/photos/icons */}
-                <div className="w-12 h-12 bg-gradient-to-r from-amber-500 to-orange-500 rounded-full flex items-center justify-center shadow-md hover:shadow-lg transition-all duration-300 hover:scale-105">
-                  <Code className="h-5 w-5 text-white" />
+              {/* Logo and Brand Name */}
+              <div className="flex items-center space-x-2 sm:space-x-3">
+                <div className="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-r from-amber-500 to-orange-500 rounded-full flex items-center justify-center shadow-md hover:shadow-lg transition-all duration-300 hover:scale-105">
+                  <Code className="h-4 w-4 sm:h-5 sm:w-5 text-white" />
                 </div>
 
                 <Link
                   to="/home"
-                  className="text-xl sm:text-2xl font-bold bg-gradient-to-r from-amber-600 to-orange-600 bg-clip-text text-transparent flex items-center space-x-2 hover:scale-105 transition-transform duration-300"
+                  className="text-lg sm:text-xl lg:text-2xl font-bold bg-gradient-to-r from-amber-600 to-orange-600 bg-clip-text text-transparent flex items-center space-x-1 sm:space-x-2 hover:scale-105 transition-transform duration-300"
                   onClick={closeMobileMenu}
                 >
                   <span>SuraJz</span>
-                  <Sparkles className="h-4 w-4 sm:h-5 sm:w-5 text-orange-500 animate-pulse" />
+                  <Sparkles className="h-3 w-3 sm:h-4 sm:w-4 lg:h-5 lg:w-5 text-orange-500 animate-pulse" />
                 </Link>
               </div>
 
               {/* Desktop Navigation */}
-              <div className="hidden md:flex items-center space-x-6 lg:space-x-8">
+              <div className="hidden md:flex items-center space-x-4 lg:space-x-6 xl:space-x-8">
                 {["home", "about", "skills", "services", "projects", "contact"].map((item) => (
                   <a
                     key={item}
                     href={`#${item}`}
-                    className="relative py-2 px-3 rounded-lg transition-all duration-300 hover:scale-105 text-gray-700 hover:text-amber-600 hover:bg-amber-50 font-medium capitalize text-sm lg:text-base"
+                    className="relative py-2 px-2 lg:px-3 rounded-lg transition-all duration-300 hover:scale-105 text-gray-700 hover:text-amber-600 hover:bg-amber-50 font-medium capitalize text-sm lg:text-base"
                   >
                     {item}
                   </a>
                 ))}
                 <Link to="/home" className="p-2 rounded-full bg-gradient-to-r from-red-400 to-pink-500 hover:from-red-500 hover:to-pink-600 transition-all hover:scale-110">
-                  <Heart className="h-4 w-4 sm:h-5 sm:w-5 text-white fill-white" />
+                  <Heart className="h-4 w-4 lg:h-5 lg:w-5 text-white fill-white" />
                 </Link>
               </div>
 
@@ -1763,7 +1779,7 @@ const Index = () => {
                   variant="ghost"
                   size="sm"
                   onClick={toggleMobileMenu}
-                  className="p-2 hover:bg-amber-50 rounded-lg transition-colors"
+                  className="p-1.5 sm:p-2 hover:bg-amber-50 rounded-lg transition-colors"
                 >
                   {isMobileMenuOpen ? <X className="h-5 w-5 sm:h-6 sm:w-6" /> : <Menu className="h-5 w-5 sm:h-6 sm:w-6" />}
                 </Button>
@@ -1774,12 +1790,12 @@ const Index = () => {
           {/* Mobile Menu */}
           {isMobileMenuOpen && (
             <div className="md:hidden bg-white/95 backdrop-blur-md border-t border-amber-200 animate-fade-in">
-              <div className="px-4 sm:px-6 py-4 space-y-1">
+              <div className="px-3 sm:px-4 lg:px-6 py-3 sm:py-4 space-y-1">
                 {["home", "about", "skills", "services", "projects", "contact"].map((item) => (
                   <a
                     key={item}
                     href={`#${item}`}
-                    className="block py-3 px-4 rounded-lg transition-all duration-300 hover:scale-105 text-gray-700 hover:text-amber-600 hover:bg-amber-50 font-medium text-base capitalize"
+                    className="block py-2.5 sm:py-3 px-3 sm:px-4 rounded-lg transition-all duration-300 hover:scale-105 text-gray-700 hover:text-amber-600 hover:bg-amber-50 font-medium text-sm sm:text-base capitalize"
                     onClick={closeMobileMenu}
                   >
                     {item}
@@ -1787,10 +1803,10 @@ const Index = () => {
                 ))}
                 <Link
                   to="/home"
-                  className="flex items-center justify-center p-3 rounded-full bg-gradient-to-r from-red-400 to-pink-500 hover:from-red-500 hover:to-pink-600 transition-all hover:scale-110 mt-2"
+                  className="flex items-center justify-center p-2.5 sm:p-3 rounded-full bg-gradient-to-r from-red-400 to-pink-500 hover:from-red-500 hover:to-pink-600 transition-all hover:scale-110 mt-2"
                   onClick={closeMobileMenu}
                 >
-                  <Heart className="h-5 w-5 text-white fill-white" />
+                  <Heart className="h-4 w-4 sm:h-5 sm:w-5 text-white fill-white" />
                 </Link>
               </div>
             </div>
