@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import axios, { AxiosError} from 'axios'; // Import Axios types
+import axios, { AxiosError } from 'axios'; // Import Axios types
 import Footer from '../components/Footer';
-import type { AxiosResponse,AxiosInstance} from 'axios'; // Import AxiosResponse type
+import type { AxiosResponse, AxiosInstance } from 'axios'; // Import AxiosResponse type
 import {
   Mail, PhoneCall, MapPinHouse, Github, Linkedin, X, Code2, Instagram, Facebook, Disc2, Twitch, ArrowRight, MessageCircle, ExternalLink, AlertCircle, CheckCircle
 } from 'lucide-react';
@@ -405,7 +405,7 @@ const Contact: React.FC = () => { // Use React.FC for functional components
 
             {/* Progress bar */}
             <div
-              className="mt-6 w-full h-3 rounded-full bg-amber-100/80 overflow-hidden relative"
+              className="mt-6 w-full h-3 rounded-full bg-amber-100/80 relative overflow-hidden"
               role="progressbar"
               aria-valuemin={0}
               aria-valuemax={100}
@@ -497,12 +497,17 @@ const Contact: React.FC = () => { // Use React.FC for functional components
         </div>
       </section>
 
-      {/* Contact Section */}
-      <section id="contact-form" className="py-20 px-6 bg-white/50 backdrop-blur-sm">
+      {/* Contact Section - IMPROVED MOBILE LAYOUT */}
+      <section id="contact-form" className="py-20 px-4 sm:px-6 bg-white/50 backdrop-blur-sm">
         <div className="container mx-auto">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
-            {/* Contact Form */}
-            <Card className="bg-white/70 backdrop-blur-sm border border-amber-200 hover:shadow-xl transition-all duration-300 animate-slide-up">
+          {/*
+            Change: Reduced base gap (gap-8) for tighter vertical stacking on mobile,
+            but kept larger gap (lg:gap-12) for desktop when side-by-side.
+          */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12">
+            
+            {/* Contact Form Card - Wider on Mobile */}
+            <Card className="bg-white/70 backdrop-blur-sm border border-amber-200 hover:shadow-xl transition-all duration-300 animate-slide-up w-full">
               <CardHeader>
                 <CardTitle className="text-3xl font-bold text-gray-800 flex items-center">
                   <MessageCircle className="h-8 w-8 text-amber-600 mr-3" />
@@ -530,6 +535,7 @@ const Contact: React.FC = () => { // Use React.FC for functional components
                 )}
 
                 <form className="space-y-6" onSubmit={handleSubmit}>
+                  {/* Form Fields (Input/Textarea sizing remains full width by default) */}
                   <div className="space-y-2">
                     <Label htmlFor="name" className="text-gray-700 font-semibold">Full Name *</Label>
                     <Input
@@ -660,9 +666,11 @@ const Contact: React.FC = () => { // Use React.FC for functional components
               </CardContent>
             </Card>
 
-            {/* Contact Information - (rest of your existing code remains the same) */}
-            <div className="space-y-8">
-              <Card className="bg-white/70 backdrop-blur-sm border border-amber-200 hover:shadow-xl transition-all duration-300 animate-slide-up" style={{ animationDelay: '0.2s' }}>
+            {/* Contact Information Column - Cards made larger/taller on Mobile */}
+            <div className="space-y-6 lg:space-y-8"> {/* Reduced base gap slightly for better stacking */}
+              
+              {/* Email Card */}
+              <Card className="bg-white/70 backdrop-blur-sm border border-amber-200 hover:shadow-xl transition-all duration-300 animate-slide-up w-full" style={{ animationDelay: '0.2s' }}>
                 <CardHeader>
                   <CardTitle className="text-2xl font-bold text-gray-800 flex items-center">
                     <Mail className="h-6 w-6 text-amber-600 mr-3" />
@@ -678,7 +686,8 @@ const Contact: React.FC = () => { // Use React.FC for functional components
                 </CardContent>
               </Card>
 
-              <Card className="bg-white/70 backdrop-blur-sm border border-amber-200 hover:shadow-xl transition-all duration-300 animate-slide-up" style={{ animationDelay: '0.4s' }}>
+              {/* Phone Card */}
+              <Card className="bg-white/70 backdrop-blur-sm border border-amber-200 hover:shadow-xl transition-all duration-300 animate-slide-up w-full" style={{ animationDelay: '0.4s' }}>
                 <CardHeader>
                   <CardTitle className="text-2xl font-bold text-gray-800 flex items-center">
                     <PhoneCall className="h-6 w-6 text-amber-600 mr-3" />
@@ -694,7 +703,8 @@ const Contact: React.FC = () => { // Use React.FC for functional components
                 </CardContent>
               </Card>
 
-              <Card className="bg-white/70 backdrop-blur-sm border border-amber-200 hover:shadow-xl transition-all duration-300 animate-slide-up" style={{ animationDelay: '0.6s' }}>
+              {/* Location Card */}
+              <Card className="bg-white/70 backdrop-blur-sm border border-amber-200 hover:shadow-xl transition-all duration-300 animate-slide-up w-full" style={{ animationDelay: '0.6s' }}>
                 <CardHeader>
                   <CardTitle className="text-2xl font-bold text-gray-800 flex items-center">
                     <MapPinHouse className="h-6 w-6 text-amber-600 mr-3" />
@@ -721,7 +731,8 @@ const Contact: React.FC = () => { // Use React.FC for functional components
                 </CardContent>
               </Card>
 
-              <Card className="bg-white/70 backdrop-blur-sm border border-amber-200 hover:shadow-xl transition-all duration-300 animate-slide-up" style={{ animationDelay: '0.8s' }}>
+              {/* Social Card */}
+              <Card className="bg-white/70 backdrop-blur-sm border border-amber-200 hover:shadow-xl transition-all duration-300 animate-slide-up w-full" style={{ animationDelay: '0.8s' }}>
                 <CardHeader>
                   <CardTitle className="text-2xl font-bold text-gray-800 flex items-center">
                     <Github className="h-6 w-6 text-amber-600 mr-3" />
@@ -736,7 +747,7 @@ const Contact: React.FC = () => { // Use React.FC for functional components
                         <TooltipTrigger asChild>
                           <Button variant="ghost" className="p-0 hover:bg-amber-100 transition-all duration-300 hover:scale-110">
                             <a href="https://github.com/Suraj1819" target="_blank" rel="noopener noreferrer">
-                                                            <Github className="h-8 w-8 text-amber-700" />
+                              <Github className="h-8 w-8 text-amber-700" />
                             </a>
                           </Button>
                         </TooltipTrigger>

@@ -192,6 +192,17 @@ const customStyles = `
     from { transform: translateY(20px); opacity: 0; }
     to { transform: translateY(0); opacity: 1; }
   }
+
+  @keyframes pageSlideUp {
+    from {
+      opacity: 0;
+      transform: translateY(30px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
   
   .animate-float { animation: float 3s ease-in-out infinite; }
   .animate-pulse-slow { animation: pulse-slow 3s ease-in-out infinite; }
@@ -200,6 +211,63 @@ const customStyles = `
   .animate-fade-in { animation: fadeIn 0.3s ease-out; }
   .animate-slide-in { animation: slideIn 0.5s ease-out; }
   .animate-slide-up { animation: slideUp 0.5s ease-out; }
+  .page-entrance { animation: pageSlideUp 0.8s ease-out forwards; }
+
+  @keyframes fadeInUp {
+    from {
+      opacity: 0;
+      transform: translateY(40px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes slideInLeft {
+    from {
+      opacity: 0;
+      transform: translateX(-50px);
+    }
+    to {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
+
+  @keyframes slideInRight {
+    from {
+      opacity: 0;
+      transform: translateX(50px);
+    }
+    to {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
+
+  .animate-fade-in-up {
+    animation: fadeInUp 0.8s ease-out forwards;
+  }
+
+  .animate-slide-left {
+    animation: slideInLeft 0.8s ease-out forwards;
+  }
+
+  .animate-slide-right {
+    animation: slideInRight 0.8s ease-out forwards;
+  }
+
+  .animate-on-visible {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: all 0.8s ease-out;
+  }
+  
+  .animate-on-visible.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
 
   html {
     scroll-behavior: smooth;
@@ -234,6 +302,18 @@ const Home: React.FC = () => {
     subject: '',
     message: ''
   });
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [isVisible, setIsVisible] = useState<boolean>(false);
+
+  // Simulate loading and trigger animations
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setIsLoading(false);
+      // Small delay to ensure DOM is ready before starting animations
+      setTimeout(() => setIsVisible(true), 100);
+    }, 1500);
+    return () => clearTimeout(timer);
+  }, []);
 
   useEffect(() => {
     if (showThankYou) {
@@ -711,6 +791,48 @@ const Home: React.FC = () => {
     }
   ];
 
+  // Loading State
+  if (isLoading) {
+    return (
+      <div
+        className="min-h-screen bg-gradient-to-br from-cream-50 via-cream-100 to-amber-50 flex items-center justify-center"
+        aria-busy="true"
+        aria-live="polite"
+      >
+        <div className="relative">
+          <div className="absolute -inset-10 bg-gradient-to-tr from-amber-500/20 via-orange-400/20 to-yellow-400/20 blur-3xl rounded-full animate-pulse" />
+          <div className="relative z-10 flex flex-col items-center">
+            <div className="relative w-28 h-28">
+              <div className="absolute inset-0 rounded-full border-4 border-amber-200/70" />
+              <div className="absolute inset-0 rounded-full border-4 border-transparent border-t-amber-500 border-r-amber-500 animate-spin" />
+              <div className="absolute inset-2 rounded-full border-4 border-transparent border-b-orange-500 border-l-orange-500 animate-spin [animation-direction:reverse] [animation-duration:2.2s]" />
+              <div className="absolute inset-0 animate-spin [animation-duration:3s]">
+                <span className="absolute -top-1 left-1/2 -translate-x-1/2 w-3.5 h-3.5 bg-amber-500 rounded-full shadow-md" />
+                <span className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-2.5 h-2.5 bg-orange-500 rounded-full shadow-md" />
+              </div>
+            </div>
+            <div className="mt-6 text-center">
+              <div className="flex justify-center items-baseline gap-3">
+                <p className="text-2xl font-semibold bg-gradient-to-r from-amber-600 to-orange-600 bg-clip-text text-transparent">
+                  Loading Portfolio
+                </p>
+                <div className="flex items-center gap-1.5" aria-hidden="true">
+                  <span className="w-2 h-2 rounded-full bg-amber-500 animate-bounce" />
+                  <span className="w-2 h-2 rounded-full bg-orange-500 animate-bounce [animation-delay:150ms]" />
+                  <span className="w-2 h-2 rounded-full bg-yellow-500 animate-bounce [animation-delay:300ms]" />
+                  <span className="w-2 h-2 rounded-full bg-amber-400 animate-bounce [animation-delay:450ms]" />
+                </div>
+              </div>
+              <p className="mt-3 text-sm text-gray-600">
+                Preparing amazing content for you...
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   if (showThankYou) {
     try {
       return <ThankYou />;
@@ -738,7 +860,7 @@ const Home: React.FC = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-cream-50 via-cream-100 to-amber-50 text-foreground">
+    <div className={`min-h-screen bg-gradient-to-br from-cream-50 via-cream-100 to-amber-50 text-foreground page-entrance`}>
       <style>{customStyles}</style>
 
       {/* Enhanced Hero Section */}
@@ -771,7 +893,7 @@ const Home: React.FC = () => {
 
         <div className="container mx-auto relative z-10">
           <div className="flex flex-col lg:flex-row items-center justify-between gap-8 sm:gap-12">
-            <div className="w-full lg:w-1/2 space-y-6 sm:space-y-8 animate-fade-in text-center lg:text-left">
+            <div className="w-full lg:w-1/2 space-y-6 sm:space-y-8 animate-fade-in-up text-center lg:text-left">
               {/* Status Badge */}
               <div className="inline-flex items-center space-x-2 bg-white/80 backdrop-blur-sm border border-amber-200 rounded-full px-4 sm:px-6 py-2 sm:py-3 text-xs sm:text-sm shadow-sm animate-slide-up">
                 <div className="w-1.5 sm:w-2 h-1.5 sm:h-2 bg-green-500 rounded-full animate-pulse"></div>
@@ -843,7 +965,7 @@ const Home: React.FC = () => {
             </div>
 
             <div className="w-full lg:w-1/2 flex justify-center mt-8 lg:mt-0">
-              <div className="relative animate-scale-in" style={{ animationDelay: '0.5s' }}>
+              <div className="relative animate-slide-right" style={{ animationDelay: '0.5s' }}>
                 <div className="absolute inset-0 bg-gradient-to-r from-amber-400 via-orange-400 to-red-400 rounded-full blur-xl opacity-30 animate-pulse-slow"></div>
                 <div className="relative w-64 h-64 sm:w-80 sm:h-80 lg:w-96 lg:h-96 bg-gradient-to-br from-amber-400 via-orange-400 to-red-400 rounded-full flex items-center justify-center shadow-2xl hover:shadow-3xl transition-shadow duration-500">
                   <div className="w-56 h-56 sm:w-72 sm:h-72 lg:w-88 lg:h-88 bg-white rounded-full flex items-center justify-center border-4 border-amber-200 overflow-hidden">
@@ -889,7 +1011,7 @@ const Home: React.FC = () => {
               { value: "10+", label: "Technologies" },
               { value: "2027", label: "Graduation Year" }
             ].map((stat, idx) => (
-              <div key={idx} className="text-center animate-fade-in" style={{ animationDelay: `${idx * 0.2}s` }}>
+              <div key={idx} className={`text-center animate-on-visible ${isVisible ? 'visible' : ''}`} style={{ transitionDelay: `${idx * 0.2}s` }}>
                 <div className="text-2xl sm:text-3xl lg:text-4xl font-bold text-amber-600 mb-1 sm:mb-2">{stat.value}</div>
                 <div className="text-xs sm:text-sm lg:text-base text-gray-600">{stat.label}</div>
               </div>
@@ -901,7 +1023,7 @@ const Home: React.FC = () => {
       {/* About Section */}
       <section id="about" className="py-12 sm:py-16 lg:py-20 px-4 sm:px-6">
         <div className="container mx-auto">
-          <div className="text-center mb-10 sm:mb-12 lg:mb-16 animate-fade-in">
+          <div className={`text-center mb-10 sm:mb-12 lg:mb-16 animate-on-visible ${isVisible ? 'visible' : ''}`} style={{ transitionDelay: '0.1s' }}>
             <h2 className="text-3xl sm:text-4xl lg:text-6xl font-bold mb-4 sm:mb-6">About Me</h2>
             <p className="text-base sm:text-lg lg:text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed px-4">
               A passionate developer on a mission to create innovative solutions
@@ -910,7 +1032,7 @@ const Home: React.FC = () => {
           </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 sm:gap-10 lg:gap-12 items-center mb-12 sm:mb-16 lg:mb-20">
-            <div className="space-y-4 sm:space-y-6 animate-slide-up">
+            <div className="space-y-4 sm:space-y-6 animate-slide-left">
               <div className="flex items-center space-x-2 sm:space-x-3 mb-4 sm:mb-6">
                 <GraduationCap className="h-6 w-6 sm:h-8 sm:w-8 text-amber-600" />
                 <h3 className="text-2xl sm:text-3xl font-bold text-gray-800">My Journey</h3>
@@ -928,7 +1050,7 @@ const Home: React.FC = () => {
               </p>
             </div>
 
-            <div className="animate-scale-in">
+            <div className="animate-slide-right">
               <div className="relative">
                 <div className="w-full h-64 sm:h-80 lg:h-96 bg-gradient-to-br from-amber-400 via-orange-400 to-red-400 rounded-2xl shadow-2xl hover:scale-105 duration-300 transition-all">
                   <div className="absolute inset-4 bg-white rounded-xl flex items-center justify-center">
@@ -948,7 +1070,7 @@ const Home: React.FC = () => {
           {/* Values Section */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 lg:gap-8">
             {values.map((value, index) => (
-              <Card key={index} className="bg-white/70 backdrop-blur-sm border-0 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105" style={{ animationDelay: `${index * 0.1}s` }}>
+              <Card key={index} className={`bg-white/70 backdrop-blur-sm border-0 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 animate-on-visible ${isVisible ? 'visible' : ''}`} style={{ transitionDelay: `${index * 0.1}s` }}>
                 <CardHeader className="text-center p-4 sm:p-6">
                   <div className={`w-12 h-12 sm:w-16 sm:h-16 ${value.color} rounded-full flex items-center justify-center mx-auto mb-3 sm:mb-4`}>
                     <value.icon className="h-6 w-6 sm:h-8 sm:w-8" />
@@ -969,7 +1091,7 @@ const Home: React.FC = () => {
       {/* Skills Section */}
       <section id="skills" className="py-12 sm:py-16 lg:py-20 px-4 sm:px-6 bg-white/50 backdrop-blur-sm">
         <div className="container mx-auto">
-          <div className="text-center mb-10 sm:mb-12 lg:mb-16 animate-fade-in">
+          <div className={`text-center mb-10 sm:mb-12 lg:mb-16 animate-on-visible ${isVisible ? 'visible' : ''}`} style={{ transitionDelay: '0.2s' }}>
             <h2 className="text-3xl sm:text-4xl lg:text-6xl font-bold mb-4 sm:mb-6">My Skills</h2>
             <p className="text-base sm:text-lg lg:text-xl text-gray-600 max-w-3xl mx-auto px-4">
               Technologies and expertise I've developed throughout my journey
@@ -978,7 +1100,7 @@ const Home: React.FC = () => {
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8">
             {skills.map((skill, index) => (
-              <Card key={index} className="bg-white/70 backdrop-blur-sm border border-amber-200 hover:shadow-xl transition-all duration-300 hover:scale-105 group" style={{ animationDelay: `${index * 0.1}s` }}>
+              <Card key={index} className={`bg-white/70 backdrop-blur-sm border border-amber-200 hover:shadow-xl transition-all duration-300 hover:scale-105 group animate-on-visible ${isVisible ? 'visible' : ''}`} style={{ transitionDelay: `${index * 0.1}s` }}>
                 <CardHeader className="pb-3 sm:pb-4 p-4 sm:p-6">
                   <div className="flex items-center justify-between mb-2 sm:mb-3">
                     <div className="flex items-center space-x-2 sm:space-x-3">
@@ -1019,7 +1141,7 @@ const Home: React.FC = () => {
       {/* Services Section */}
       <section id="services" className="py-12 sm:py-16 lg:py-20 px-4 sm:px-6">
         <div className="container mx-auto">
-          <div className="text-center mb-10 sm:mb-12 lg:mb-16 animate-fade-in">
+          <div className={`text-center mb-10 sm:mb-12 lg:mb-16 animate-on-visible ${isVisible ? 'visible' : ''}`} style={{ transitionDelay: '0.3s' }}>
             <h2 className="text-3xl sm:text-4xl lg:text-6xl font-bold mb-4 sm:mb-6">My Services</h2>
             <p className="text-base sm:text-lg lg:text-xl text-gray-600 max-w-3xl mx-auto px-4">
               Comprehensive solutions for your digital needs and learning goals
@@ -1028,7 +1150,7 @@ const Home: React.FC = () => {
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8">
             {services.map((service, index) => (
-              <Card key={index} className="bg-white/70 backdrop-blur-sm border border-amber-200 hover:shadow-xl transition-all duration-300 hover:scale-105 group overflow-hidden" style={{ animationDelay: `${index * 0.2}s` }}>
+              <Card key={index} className={`bg-white/70 backdrop-blur-sm border border-amber-200 hover:shadow-xl transition-all duration-300 hover:scale-105 group overflow-hidden animate-on-visible ${isVisible ? 'visible' : ''}`} style={{ transitionDelay: `${index * 0.2}s` }}>
                 <CardHeader className="pb-3 sm:pb-4 p-4 sm:p-6">
                   <div className="flex items-center space-x-3 sm:space-x-4 mb-3 sm:mb-4">
                     <div className={`w-12 h-12 sm:w-16 sm:h-16 bg-gradient-to-r ${service.iconBg} rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform shadow-lg`}>
@@ -1085,7 +1207,7 @@ const Home: React.FC = () => {
       {/* Projects Section */}
       <section id="projects" className="py-12 sm:py-16 lg:py-20 px-4 sm:px-6 bg-white/50 backdrop-blur-sm">
         <div className="container mx-auto">
-          <div className="text-center mb-10 sm:mb-12 lg:mb-16 animate-fade-in">
+          <div className={`text-center mb-10 sm:mb-12 lg:mb-16 animate-on-visible ${isVisible ? 'visible' : ''}`} style={{ transitionDelay: '0.4s' }}>
             <h2 className="text-3xl sm:text-4xl lg:text-6xl font-bold mb-4 sm:mb-6">My Projects</h2>
             <p className="text-base sm:text-lg lg:text-xl text-gray-600 max-w-3xl mx-auto px-4">
               A showcase of my recent work and creative solutions
@@ -1094,7 +1216,7 @@ const Home: React.FC = () => {
 
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8">
             {projects.map((project, index) => (
-              <Card key={index} className="bg-white/70 backdrop-blur-sm border border-amber-200 overflow-hidden hover:shadow-xl transition-all duration-300 hover:scale-105 group" style={{ animationDelay: `${index * 0.2}s` }}>
+              <Card key={index} className={`bg-white/70 backdrop-blur-sm border border-amber-200 overflow-hidden hover:shadow-xl transition-all duration-300 hover:scale-105 group animate-on-visible ${isVisible ? 'visible' : ''}`} style={{ transitionDelay: `${index * 0.2}s` }}>
                 <div className={`h-32 sm:h-40 lg:h-48 bg-gradient-to-br ${project.gradient} relative overflow-hidden`}>
                   <div className="absolute inset-0 bg-black/20 group-hover:bg-black/10 transition-colors flex items-center justify-center">
                     <Badge className={`bg-white/20 text-white border-white/30 text-xs sm:text-sm ${
@@ -1171,7 +1293,7 @@ const Home: React.FC = () => {
       {/* Resume & Certificates Section */}
       <section id="resume" className="py-12 sm:py-16 lg:py-20 px-4 sm:px-6">
         <div className="container mx-auto">
-          <div className="text-center mb-10 sm:mb-12 lg:mb-16 animate-fade-in">
+          <div className={`text-center mb-10 sm:mb-12 lg:mb-16 animate-on-visible ${isVisible ? 'visible' : ''}`} style={{ transitionDelay: '0.5s' }}>
             <div className="inline-flex items-center justify-center space-x-2 sm:space-x-3 mb-3 sm:mb-4">
               <GraduationCap className="h-8 w-8 sm:h-10 sm:w-10 lg:h-12 lg:w-12 text-amber-600" />
               <h2 className="text-3xl sm:text-4xl lg:text-6xl font-bold">Resume</h2>
@@ -1183,7 +1305,7 @@ const Home: React.FC = () => {
 
           {/* Education Section */}
           <div className="mb-10 sm:mb-12 lg:mb-16">
-            <h3 className="text-2xl sm:text-3xl font-bold text-gray-800 mb-6 sm:mb-8 flex items-center justify-center animate-fade-in">
+            <h3 className="text-2xl sm:text-3xl font-bold text-gray-800 mb-6 sm:mb-8 flex items-center justify-center animate-on-visible ${isVisible ? 'visible' : ''}">
               <GraduationCap className="h-6 w-6 sm:h-8 sm:w-8 text-amber-600 mr-2 sm:mr-3" />
               Education
             </h3>
@@ -1211,7 +1333,7 @@ const Home: React.FC = () => {
                   courses: ["Data Structures", "Algorithms", "Web Development", "Database Systems", "Operating Systems"]
                 }
               ].map((edu, idx) => (
-                <Card key={idx} className="bg-white/70 backdrop-blur-sm border-2 border-amber-300 hover:shadow-xl transition-all duration-300 hover:scale-105">
+                <Card key={idx} className={`bg-white/70 backdrop-blur-sm border-2 border-amber-300 hover:shadow-xl transition-all duration-300 hover:scale-105 animate-on-visible ${isVisible ? 'visible' : ''}`} style={{ transitionDelay: `${idx * 0.1}s` }}>
                   <CardContent className="p-4 sm:p-6 lg:p-8">
                     <div className="grid md:grid-cols-3 gap-4 sm:gap-6">
                       <div className="md:col-span-2">
@@ -1249,13 +1371,13 @@ const Home: React.FC = () => {
 
           {/* Certificates Section */}
           <div className="mb-10 sm:mb-12 lg:mb-16">
-            <h3 className="text-2xl sm:text-3xl font-bold text-gray-800 mb-6 sm:mb-8 flex items-center justify-center animate-fade-in">
+            <h3 className="text-2xl sm:text-3xl font-bold text-gray-800 mb-6 sm:mb-8 flex items-center justify-center animate-on-visible ${isVisible ? 'visible' : ''}">
               <Award className="h-6 w-6 sm:h-8 sm:w-8 text-amber-600 mr-2 sm:mr-3" />
               Professional Certifications
             </h3>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 max-w-6xl mx-auto">
               {certificates.map((cert, index) => (
-                <Card key={index} className="bg-white/70 backdrop-blur-sm border border-amber-200 hover:shadow-xl transition-all duration-300 hover:scale-105 group" style={{ animationDelay: `${index * 0.1}s` }}>
+                <Card key={index} className={`bg-white/70 backdrop-blur-sm border border-amber-200 hover:shadow-xl transition-all duration-300 hover:scale-105 group animate-on-visible ${isVisible ? 'visible' : ''}`} style={{ transitionDelay: `${index * 0.1}s` }}>
                   <CardContent className="p-4 sm:p-6">
                     <div className="flex items-start justify-between mb-3 sm:mb-4">
                       <div className="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-r from-amber-500 to-orange-500 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform flex-shrink-0">
@@ -1291,13 +1413,13 @@ const Home: React.FC = () => {
 
           {/* Achievements Section */}
           <div className="mb-10 sm:mb-12 lg:mb-16">
-            <h3 className="text-2xl sm:text-3xl font-bold text-gray-800 mb-6 sm:mb-8 flex items-center justify-center animate-fade-in">
+            <h3 className="text-2xl sm:text-3xl font-bold text-gray-800 mb-6 sm:mb-8 flex items-center justify-center animate-on-visible ${isVisible ? 'visible' : ''}">
               <Trophy className="h-6 w-6 sm:h-8 sm:w-8 text-amber-600 mr-2 sm:mr-3" />
               Key Achievements
             </h3>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 max-w-6xl mx-auto">
               {achievements.map((achievement, index) => (
-                <Card key={index} className="bg-gradient-to-br from-white to-amber-50 border-2 border-amber-200 hover:shadow-xl transition-all duration-300 hover:scale-105 group" style={{ animationDelay: `${index * 0.1}s` }}>
+                <Card key={index} className={`bg-gradient-to-br from-white to-amber-50 border-2 border-amber-200 hover:shadow-xl transition-all duration-300 hover:scale-105 group animate-on-visible ${isVisible ? 'visible' : ''}`} style={{ transitionDelay: `${index * 0.1}s` }}>
                   <CardContent className="p-4 sm:p-6 text-center">
                     <div className="w-12 h-12 sm:w-16 sm:h-16 bg-gradient-to-r from-amber-500 to-orange-500 rounded-2xl flex items-center justify-center mx-auto mb-3 sm:mb-4 group-hover:scale-110 transition-transform">
                       <achievement.icon className="h-6 w-6 sm:h-8 sm:w-8 text-white" />
@@ -1314,7 +1436,7 @@ const Home: React.FC = () => {
           </div>
 
           {/* Download Resume Button */}
-          <div className="text-center animate-fade-in">
+          <div className={`text-center animate-on-visible ${isVisible ? 'visible' : ''}`} style={{ transitionDelay: '0.6s' }}>
             <Button size="lg" className="bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white px-6 sm:px-8 py-3 sm:py-4 text-sm sm:text-base lg:text-lg shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105">
               <Download className="mr-2 h-4 w-4 sm:h-5 sm:w-5" />
               Download Full Resume
@@ -1326,7 +1448,7 @@ const Home: React.FC = () => {
       {/* Contact Section */}
       <section id="contact" className="py-12 sm:py-16 lg:py-20 px-4 sm:px-6 bg-white/50 backdrop-blur-sm">
         <div className="container mx-auto">
-          <div className="text-center mb-10 sm:mb-12 lg:mb-16 animate-fade-in">
+          <div className={`text-center mb-10 sm:mb-12 lg:mb-16 animate-on-visible ${isVisible ? 'visible' : ''}`} style={{ transitionDelay: '0.6s' }}>
             <h2 className="text-3xl sm:text-4xl lg:text-6xl font-bold mb-4 sm:mb-6">Get In Touch</h2>
             <p className="text-base sm:text-lg lg:text-xl text-gray-600 max-w-3xl mx-auto px-4">
               Let's discuss your next project, tutoring needs, or just connect and share ideas
@@ -1335,7 +1457,7 @@ const Home: React.FC = () => {
 
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 sm:gap-10 lg:gap-12">
             {/* Contact Form */}
-            <Card className="bg-white/70 backdrop-blur-sm border border-amber-200 hover:shadow-xl transition-all duration-300 animate-slide-up">
+            <Card className={`bg-white/70 backdrop-blur-sm border border-amber-200 hover:shadow-xl transition-all duration-300 animate-slide-up animate-on-visible ${isVisible ? 'visible' : ''}`} style={{ transitionDelay: '0.1s' }}>
               <CardHeader className="p-4 sm:p-6">
                 <CardTitle className="text-2xl sm:text-3xl font-bold text-gray-800 flex items-center">
                   <Mail className="h-6 w-6 sm:h-8 sm:w-8 text-amber-600 mr-2 sm:mr-3" />
