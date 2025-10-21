@@ -6,7 +6,7 @@ import {
   GraduationCap, Heart, Target, Users, Award, BookOpen,
   Github, Linkedin, ExternalLink, Calendar, Clock,
   Database, Server, Brain, Zap,
-  Trophy, Coffee, Rocket, Globe, ExternalLinkIcon, Gamepad2Icon, DatabaseZap,
+  Trophy, Globe, ExternalLinkIcon, Gamepad2Icon, DatabaseZap,
   Send, Code2, AlertCircle, CheckCircle
 } from 'lucide-react';
 import { Button } from '../components/ui/button';
@@ -19,7 +19,7 @@ import { useToast } from '../hooks/use-toast';
 import Footer from '../components/Footer';
 import ThankYou from './Thankyou';
 
-// Define types for state management
+// ==================== TYPE DEFINITIONS ====================
 interface FormData {
   name: string;
   email: string;
@@ -39,7 +39,6 @@ interface AlertMessage {
   message: string;
 }
 
-// Define types for API responses
 interface ContactSuccessData {
   id: string;
   category: string;
@@ -62,8 +61,65 @@ interface ContactErrorResponse {
   data?: ContactValidationError[];
 }
 
-// Axios configuration
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "http://localhost:8081/api/v1"; // Fallback to localhost if env variable is not set
+interface Value {
+  icon: React.ComponentType<{ className?: string }>;
+  title: string;
+  description: string;
+  color: string;
+}
+
+interface Skill {
+  name: string;
+  level: number;
+  category: string;
+  icon: React.ComponentType<{ className?: string }>;
+  description: string;
+  projects: string;
+}
+
+interface Service {
+  icon: React.ComponentType<{ className?: string }>;
+  iconBg: string;
+  title: string;
+  description: string;
+  features: string[];
+  price: string;
+  duration: string;
+  projects: string;
+}
+
+interface Project {
+  title: string;
+  description: string;
+  longDescription: string;
+  technologies: string[];
+  features: string[];
+  gradient: string;
+  status: string;
+  users: string;
+  github: string;
+  live: string;
+}
+
+interface Certificate {
+  title: string;
+  issuer: string;
+  year: string;
+  description: string;
+  skills: string[];
+  icon: React.ComponentType<{ className?: string }>;
+  credentialId: string;
+}
+
+interface Achievement {
+  title: string;
+  description: string;
+  icon: React.ComponentType<{ className?: string }>;
+  metric: string;
+}
+
+// ==================== API CONFIGURATION ====================
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "http://localhost:8081/api/v1";
 
 const axiosInstance: AxiosInstance = axios.create({
   baseURL: API_BASE_URL,
@@ -100,7 +156,68 @@ axiosInstance.interceptors.response.use(
   }
 );
 
-const Home = () => {
+// ==================== CUSTOM STYLES ====================
+const customStyles = `
+  @keyframes float {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-20px); }
+  }
+  
+  @keyframes pulse-slow {
+    0%, 100% { opacity: 0.3; }
+    50% { opacity: 0.5; }
+  }
+  
+  @keyframes scale-in {
+    from { transform: scale(0.8); opacity: 0; }
+    to { transform: scale(1); opacity: 1; }
+  }
+  
+  @keyframes bounce-gentle {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+  }
+  
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes slideIn {
+    from { transform: translateX(-100%); opacity: 0; }
+    to { transform: translateX(0); opacity: 1; }
+  }
+
+  @keyframes slideUp {
+    from { transform: translateY(20px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+  }
+  
+  .animate-float { animation: float 3s ease-in-out infinite; }
+  .animate-pulse-slow { animation: pulse-slow 3s ease-in-out infinite; }
+  .animate-scale-in { animation: scale-in 0.5s ease-out; }
+  .animate-bounce-gentle { animation: bounce-gentle 2s ease-in-out infinite; }
+  .animate-fade-in { animation: fadeIn 0.3s ease-out; }
+  .animate-slide-in { animation: slideIn 0.5s ease-out; }
+  .animate-slide-up { animation: slideUp 0.5s ease-out; }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  @media (max-width: 640px) {
+    .mobile-text-xs { font-size: 0.75rem; }
+    .mobile-text-sm { font-size: 0.875rem; }
+    .mobile-text-base { font-size: 1rem; }
+    .mobile-text-lg { font-size: 1.125rem; }
+    .mobile-text-xl { font-size: 1.25rem; }
+    .mobile-text-2xl { font-size: 1.5rem; }
+    .mobile-text-3xl { font-size: 1.875rem; }
+  }
+`;
+
+// ==================== MAIN COMPONENT ====================
+const Home: React.FC = () => {
   const { toast } = useToast();
   const [showThankYou, setShowThankYou] = useState<boolean>(false);
   const [isSending, setIsSending] = useState<boolean>(false);
@@ -119,7 +236,6 @@ const Home = () => {
   });
 
   useEffect(() => {
-    // Reset thank you page after 5 seconds
     if (showThankYou) {
       const thankYouTimer = setTimeout(() => {
         setShowThankYou(false);
@@ -132,7 +248,6 @@ const Home = () => {
   }, [showThankYou]);
 
   useEffect(() => {
-    // Clear alert after 5 seconds
     if (alertMessage.message) {
       const timer = setTimeout(() => {
         setAlertMessage({ type: '', message: '' });
@@ -145,7 +260,6 @@ const Home = () => {
     const newErrors: FormErrors = { name: '', email: '', subject: '', message: '' };
     let isValid: boolean = true;
 
-    // Name validation
     if (!formData.name.trim()) {
       newErrors.name = 'Name is required';
       isValid = false;
@@ -160,7 +274,6 @@ const Home = () => {
       isValid = false;
     }
 
-    // Email validation
     if (!formData.email.trim()) {
       newErrors.email = 'Email is required';
       isValid = false;
@@ -172,7 +285,6 @@ const Home = () => {
       isValid = false;
     }
 
-    // Subject validation
     if (!formData.subject.trim()) {
       newErrors.subject = 'Subject is required';
       isValid = false;
@@ -184,7 +296,6 @@ const Home = () => {
       isValid = false;
     }
 
-    // Message validation
     if (!formData.message.trim()) {
       newErrors.message = 'Message is required';
       isValid = false;
@@ -337,7 +448,8 @@ const Home = () => {
     }
   };
 
-  const values = [
+  // ==================== DATA DEFINITIONS ====================
+  const values: Value[] = [
     {
       icon: Heart,
       title: "Passion",
@@ -365,12 +477,12 @@ const Home = () => {
     {
       icon: Gamepad2Icon,
       title: "Gaming",
-      description: "Gaming isn’t just a hobby for me, it’s my passion. I love exploring virtual worlds, mastering strategies, and pushing my limits to achieve victory while enjoying the thrill of competition.",
-      color: "text-yellow-500 bg-yellow-100"
+      description: "Gaming isn't just a hobby for me, it's my passion.",
+      color: "text-purple-500 bg-purple-100"
     }
   ];
 
-  const skills = [
+  const skills: Skill[] = [
     {
       name: "React.js",
       level: 92,
@@ -445,7 +557,7 @@ const Home = () => {
     }
   ];
 
-  const services = [
+  const services: Service[] = [
     {
       icon: Code,
       iconBg: "from-red-500 to-pink-600",
@@ -468,21 +580,21 @@ const Home = () => {
     }
   ];
 
-  const projects = [
+  const projects: Project[] = [
     {
       title: "PassGenie - Random Password Generator",
       description: "A modern and secure password generator built with React and Tailwind CSS, offering customizable options and responsive design.",
-      longDescription: "PassGenie is a powerful and secure web application designed to generate strong, unique, and customizable passwords instantly. Developed using React for dynamic UI and Tailwind CSS for modern responsive styling, it provides users with complete control over password length, inclusion of special characters, numbers, and uppercase/lowercase letters. With JavaScript handling the generation logic and HTML5 structuring the interface, PassGenie combines security, usability, and performance in a sleek design. Its copy-to-clipboard functionality and responsive layout make it an essential tool for individuals and professionals alike.",
+      longDescription: "PassGenie is a powerful and secure web application designed to generate strong, unique, and customizable passwords instantly.",
       technologies: [
-        "React - Component-based UI development",
-        "Tailwind CSS - Utility-first CSS for styling",
-        "JavaScript (ES6+) - Logic for password generation",
-        "HTML5 - Structural backbone of the UI"
+        "React",
+        "Tailwind CSS",
+        "JavaScript (ES6+)",
+        "HTML5"
       ],
       features: [
         "Random Password Generation",
         "Customizable Length",
-        "Special Characters, Numbers, Uppercase/Lowercase Support",
+        "Special Characters Support",
         "Copy to Clipboard",
         "Responsive Design"
       ],
@@ -494,22 +606,23 @@ const Home = () => {
     },
     {
       title: "ShopEase - E-Commerce Platform",
-      description: "Modern e-commerce solution with advanced features including AI-powered recommendations, real-time inventory management, secure payment processing, and comprehensive admin dashboard.",
-      longDescription: "A full-featured e-commerce platform built with modern technologies, featuring responsive design, advanced search, payment integration, and robust admin tools for complete business management.",
+      description: "Modern e-commerce solution with advanced features including AI-powered recommendations and secure payment processing.",
+      longDescription: "A full-featured e-commerce platform built with modern technologies, featuring responsive design and robust admin tools.",
       technologies: ["React", "Node.js", "MongoDB", "Stripe", "AWS S3"],
       features: ["AI Recommendations", "Payment Gateway", "Inventory Management", "Order Tracking", "Admin Dashboard"],
       gradient: "from-green-400 to-emerald-600",
       status: "In Progress",
       users: "1000+ customers in Future",
-      github: "https://github.com/Suraj1819"
+      github: "https://github.com/Suraj1819",
+      live: "#"
     },
     {
       title: "PyCalc - Tkinter Calculator",
       description: "A simple and efficient calculator built using Python's Tkinter library for GUI applications.",
-      longDescription: "PyCalc is a lightweight calculator application developed with Python Tkinter. It provides a clean and interactive interface for performing basic arithmetic operations such as addition, subtraction, multiplication, and division. Designed as a beginner-friendly project, it showcases the power of Python's GUI programming.",
+      longDescription: "PyCalc is a lightweight calculator application developed with Python Tkinter.",
       technologies: ["Python", "Tkinter"],
       features: ["Basic Arithmetic", "User-friendly Interface", "Responsive Buttons", "Lightweight App"],
-      gradient: "from-green-400 to-emerald-600",
+      gradient: "from-blue-400 to-cyan-600",
       status: "Completed",
       users: "Only I am using LOL 😂",
       github: "https://github.com/Suraj1819/SimpleCalculator",
@@ -517,12 +630,12 @@ const Home = () => {
     }
   ];
 
-  const certificates = [
+  const certificates: Certificate[] = [
     {
       title: "Advanced Data Structures & Algorithms",
       issuer: "GeeksforGeeks",
       year: "2024",
-      description: "Comprehensive course covering advanced DSA concepts, optimization techniques, and competitive programming strategies.",
+      description: "Comprehensive course covering advanced DSA concepts and optimization techniques.",
       skills: ["Dynamic Programming", "Graph Algorithms", "Tree Structures", "Optimization"],
       icon: Trophy,
       credentialId: "GFG-DSA-2024-001"
@@ -531,7 +644,7 @@ const Home = () => {
       title: "Full Stack Web Development Certification",
       issuer: "GeeksforGeeks",
       year: "2024",
-      description: "Complete full-stack development program covering frontend frameworks, backend development, and database management.",
+      description: "Complete full-stack development program covering frontend frameworks and backend development.",
       skills: ["React.js", "Node.js", "MongoDB", "API Development"],
       icon: Award,
       credentialId: "FCC-FSWD-2024-001"
@@ -540,7 +653,7 @@ const Home = () => {
       title: "Cybersecurity Essentials Certification",
       issuer: "Simplilearn | Skillup",
       year: "2024",
-      description: "Comprehensive course on cybersecurity fundamentals, covering network security, threat analysis, ethical hacking basics, and risk management strategies.",
+      description: "Comprehensive course on cybersecurity fundamentals and threat analysis.",
       skills: ["Network Security", "Threat Analysis", "Ethical Hacking", "Risk Management"],
       icon: Award,
       credentialId: "8289220"
@@ -549,8 +662,8 @@ const Home = () => {
       title: "Microsoft Excel Mastery Certification",
       issuer: "LearnX",
       year: "2024",
-      description: "In-depth Excel training covering advanced formulas, data analysis, PivotTables, charting, and automation with macros and VBA for real-world business tasks.",
-      skills: ["Advanced Formulas", "PivotTables & PivotCharts", "XLOOKUP / VLOOKUP", "Data Analysis & Visualization", "Macros & VBA"],
+      description: "In-depth Excel training covering advanced formulas and data analysis.",
+      skills: ["Advanced Formulas", "PivotTables", "XLOOKUP", "Data Analysis", "Macros & VBA"],
       icon: Award,
       credentialId: "a3yydcv6ub8"
     },
@@ -558,8 +671,8 @@ const Home = () => {
       title: "50 Days Streak Badge",
       issuer: "LeetCode",
       year: "2025",
-      description: "Earned the 50 Days Streak badge on LeetCode by consistently solving coding problems every day, showcasing strong dedication and problem-solving consistency.",
-      skills: ["Problem Solving", "Data Structures", "Algorithms", "Consistency", "Competitive Programming"],
+      description: "Earned by consistently solving coding problems every day.",
+      skills: ["Problem Solving", "Data Structures", "Algorithms", "Consistency"],
       icon: Award,
       credentialId: "LEETCODE-STREAK-50-2025"
     },
@@ -567,23 +680,23 @@ const Home = () => {
       title: "100 Days Streak Badge",
       issuer: "LeetCode",
       year: "2025",
-      description: "Earned the 100 Days Streak badge on LeetCode by consistently solving coding problems every day, showcasing strong dedication and problem-solving consistency.",
-      skills: ["Problem Solving", "Data Structures", "Algorithms", "Consistency", "Competitive Programming"],
+      description: "Earned by consistently solving coding problems every day for 100 days.",
+      skills: ["Problem Solving", "Data Structures", "Algorithms", "Consistency"],
       icon: Award,
       credentialId: "LEETCODE-STREAK-100-2025"
     },
     {
-      title: "Python",
+      title: "Python Certification",
       issuer: "LearnX",
       year: "2024",
-      description: "Specialized certification in Python programming for data science",
+      description: "Specialized certification in Python programming for data science.",
       skills: ["Python", "NumPy", "Pandas"],
       icon: Brain,
       credentialId: "a3yydcv6ub8"
     }
   ];
 
-  const achievements = [
+  const achievements: Achievement[] = [
     {
       title: "Top 5% on LeetCode",
       description: "Ranked in top 5% globally with 500+ problems solved",
@@ -604,16 +717,16 @@ const Home = () => {
     } catch (error: unknown) {
       console.error('Error rendering ThankYou component:', error);
       return (
-        <div className="min-h-screen bg-gradient-to-br from-cream-50 via-cream-100 to-amber-50 flex items-center justify-center">
-          <Card className="bg-white/70 backdrop-blur-sm border border-amber-200 p-8">
+        <div className="min-h-screen bg-gradient-to-br from-cream-50 via-cream-100 to-amber-50 flex items-center justify-center px-4">
+          <Card className="bg-white/70 backdrop-blur-sm border border-amber-200 p-6 sm:p-8 max-w-md w-full">
             <CardHeader>
-              <CardTitle className="text-2xl text-gray-800">Something Went Wrong</CardTitle>
+              <CardTitle className="text-xl sm:text-2xl text-gray-800">Something Went Wrong</CardTitle>
             </CardHeader>
             <CardContent>
-              <p className="text-gray-600 mb-4">An error occurred while displaying the thank you message. Please try again.</p>
+              <p className="text-sm sm:text-base text-gray-600 mb-4">An error occurred while displaying the thank you message. Please try again.</p>
               <Button
                 onClick={() => setShowThankYou(false)}
-                className="bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white"
+                className="w-full bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white"
               >
                 Back to Contact Form
               </Button>
@@ -626,135 +739,114 @@ const Home = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-cream-50 via-cream-100 to-amber-50 text-foreground">
+      <style>{customStyles}</style>
+
       {/* Enhanced Hero Section */}
-      <section className="relative pt-24 pb-16 px-6 overflow-hidden min-h-screen flex items-center">
+      <section className="relative pt-20 sm:pt-24 pb-12 sm:pb-16 px-4 sm:px-6 overflow-hidden min-h-screen flex items-center">
         {/* Animated Background Elements */}
         <div className="absolute inset-0 overflow-hidden">
-          <div className="absolute top-20 left-10 w-72 h-72 bg-amber-300/20 rounded-full blur-3xl animate-pulse-slow"></div>
-          <div className="absolute top-40 right-10 w-96 h-96 bg-orange-300/20 rounded-full blur-3xl animate-pulse-slow" style={{ animationDelay: '1s' }}></div>
-          <div className="absolute bottom-20 left-1/3 w-80 h-80 bg-yellow-300/20 rounded-full blur-3xl animate-pulse-slow" style={{ animationDelay: '2s' }}></div>
+          <div className="absolute top-10 sm:top-20 left-5 sm:left-10 w-48 sm:w-72 h-48 sm:h-72 bg-amber-300/20 rounded-full blur-3xl animate-pulse-slow"></div>
+          <div className="absolute top-20 sm:top-40 right-5 sm:right-10 w-64 sm:w-96 h-64 sm:h-96 bg-orange-300/20 rounded-full blur-3xl animate-pulse-slow" style={{ animationDelay: '1s' }}></div>
+          <div className="absolute bottom-10 sm:bottom-20 left-1/4 sm:left-1/3 w-56 sm:w-80 h-56 sm:h-80 bg-yellow-300/20 rounded-full blur-3xl animate-pulse-slow" style={{ animationDelay: '2s' }}></div>
         </div>
 
-        {/* Floating Elements */}
-        <div className="absolute inset-0 pointer-events-none">
+        {/* Floating Elements - Hidden on mobile */}
+        <div className="absolute inset-0 pointer-events-none hidden sm:block">
           <div className="absolute top-32 left-20 animate-float" style={{ animationDelay: '0.3s' }}>
-            <div className="w-16 h-16 bg-gradient-to-r from-amber-400 to-orange-400 rounded-lg flex items-center justify-center shadow-lg hover:shadow-xl transition-shadow">
-              <Code className="h-8 w-8 text-white" />
+            <div className="w-12 sm:w-16 h-12 sm:h-16 bg-gradient-to-r from-amber-400 to-orange-400 rounded-lg flex items-center justify-center shadow-lg">
+              <Code className="h-6 sm:h-8 w-6 sm:w-8 text-white" />
             </div>
           </div>
           <div className="absolute top-48 right-32 animate-float" style={{ animationDelay: '0.7s' }}>
-            <div className="w-12 h-12 bg-gradient-to-r from-orange-400 to-red-400 rounded-full flex items-center justify-center shadow-lg hover:shadow-xl transition-shadow">
-              <Sparkles className="h-6 w-6 text-white" />
+            <div className="w-10 sm:w-12 h-10 sm:h-12 bg-gradient-to-r from-orange-400 to-red-400 rounded-full flex items-center justify-center shadow-lg">
+              <Sparkles className="h-5 sm:h-6 w-5 sm:w-6 text-white" />
             </div>
           </div>
           <div className="absolute bottom-40 left-16 animate-float" style={{ animationDelay: '1s' }}>
-            <div className="w-14 h-14 bg-gradient-to-r from-yellow-400 to-amber-400 rounded-lg rotate-12 flex items-center justify-center shadow-lg hover:shadow-xl transition-shadow">
-              <Star className="h-7 w-7 text-white" />
+            <div className="w-12 sm:w-14 h-12 sm:h-14 bg-gradient-to-r from-yellow-400 to-amber-400 rounded-lg rotate-12 flex items-center justify-center shadow-lg">
+              <Star className="h-6 sm:h-7 w-6 sm:w-7 text-white" />
             </div>
           </div>
         </div>
 
         <div className="container mx-auto relative z-10">
-          <div className="flex flex-col lg:flex-row items-center justify-between">
-            <div className="lg:w-1/2 space-y-8 animate-fade-in">
+          <div className="flex flex-col lg:flex-row items-center justify-between gap-8 sm:gap-12">
+            <div className="w-full lg:w-1/2 space-y-6 sm:space-y-8 animate-fade-in text-center lg:text-left">
               {/* Status Badge */}
-              <div className="inline-flex items-center space-x-2 bg-white/80 backdrop-blur-sm border border-amber-200 rounded-full px-6 py-3 text-sm shadow-sm animate-slide-up">
-                <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+              <div className="inline-flex items-center space-x-2 bg-white/80 backdrop-blur-sm border border-amber-200 rounded-full px-4 sm:px-6 py-2 sm:py-3 text-xs sm:text-sm shadow-sm animate-slide-up">
+                <div className="w-1.5 sm:w-2 h-1.5 sm:h-2 bg-green-500 rounded-full animate-pulse"></div>
                 <span className="text-gray-700 font-medium">Available for opportunities</span>
               </div>
 
-              <div className="space-y-6">
-                <h1 className="text-6xl lg:text-8xl font-bold leading-tight tracking-tight animate-slide-up" style={{ animationDelay: '0.2s' }}>
-                  <span className="block text-gray-800 mb-2">Hello,</span>
+              <div className="space-y-4 sm:space-y-6">
+                <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-8xl font-bold leading-tight tracking-tight animate-slide-up" style={{ animationDelay: '0.2s' }}>
+                  <span className="block text-gray-800 mb-1 sm:mb-2">Hello,</span>
                   <span className="block bg-gradient-to-r from-amber-600 via-orange-600 to-red-500 bg-clip-text text-transparent">
                     I'm Suraj
                   </span>
                 </h1>
 
-                <div className="space-y-4 animate-slide-up" style={{ animationDelay: '0.4s' }}>
-                  <p className="text-3xl lg:text-4xl font-semibold text-gray-800">
+                <div className="space-y-3 sm:space-y-4 animate-slide-up" style={{ animationDelay: '0.4s' }}>
+                  <p className="text-2xl sm:text-3xl lg:text-4xl font-semibold text-gray-800">
                     Full-Stack Developer
                   </p>
-                  <p className="text-xl text-gray-600 font-medium">
+                  <p className="text-base sm:text-lg lg:text-xl text-gray-600 font-medium">
                     MERN Stack • Python • C++ • DSA Expert
                   </p>
-                  <div className="flex flex-wrap gap-3">
-                    <Badge variant="secondary" className="bg-amber-100 text-amber-700 border-amber-200 px-4 py-2 hover:bg-amber-200 transition-colors text-sm font-medium">
-                      MongoDB
-                    </Badge>
-                    <Badge variant="secondary" className="bg-orange-100 text-orange-700 border-orange-200 px-4 py-2 hover:bg-orange-200 transition-colors text-sm font-medium">
-                      Express.js
-                    </Badge>
-                    <Badge variant="secondary" className="bg-yellow-100 text-yellow-700 border-yellow-200 px-4 py-2 hover:bg-yellow-200 transition-colors text-sm font-medium">
-                      React.js
-                    </Badge>
-                    <Badge variant="secondary" className="bg-red-100 text-red-700 border-red-200 px-4 py-2 hover:bg-red-200 transition-colors text-sm font-medium">
-                      Node.js
-                    </Badge>
-                    <Badge variant="secondary" className="bg-red-100 text-red-700 border-red-200 px-4 py-2 hover:bg-red-200 transition-colors text-sm font-medium">
-                      Tailwindcss
-                    </Badge>
+                  <div className="flex flex-wrap justify-center lg:justify-start gap-2 sm:gap-3">
+                    {['MongoDB', 'Express.js', 'React.js', 'Node.js', 'Tailwindcss'].map((tech, idx) => (
+                      <Badge key={idx} variant="secondary" className="bg-amber-100 text-amber-700 border-amber-200 px-2 sm:px-4 py-1 sm:py-2 hover:bg-amber-200 transition-colors text-xs sm:text-sm font-medium">
+                        {tech}
+                      </Badge>
+                    ))}
                   </div>
                 </div>
 
-                <p className="text-lg lg:text-xl text-gray-600 max-w-2xl leading-relaxed animate-slide-up" style={{ animationDelay: '0.6s' }}>
-                  I’m a B.Tech student passionate about full-stack development and problem-solving. I work with MERN Stack, Tailwind CSS, PostgreSQL, C++, and Python to build real-world projects that push my skills. I love exploring data structures, algorithms, and new technologies, aiming to grow as a Software Development Engineer and create meaningful, innovative solutions that make an impact.
+                <p className="text-sm sm:text-base lg:text-xl text-gray-600 max-w-2xl mx-auto lg:mx-0 leading-relaxed animate-slide-up" style={{ animationDelay: '0.6s' }}>
+                  I'm a B.Tech student passionate about full-stack development and problem-solving. I work with MERN Stack, Tailwind CSS, PostgreSQL, C++, and Python to build real-world projects that push my skills.
                 </p>
               </div>
 
-              <div className="flex flex-col sm:flex-row gap-4 animate-slide-up" style={{ animationDelay: '0.8s' }}>
-                <a href="#projects">
+              <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center lg:justify-start animate-slide-up" style={{ animationDelay: '0.8s' }}>
+                <a href="#projects" className="w-full sm:w-auto">
                   <Button
                     size="lg"
-                    className="bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white border-0 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 px-8 py-4 text-lg"
+                    className="w-full sm:w-auto bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white border-0 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 px-6 sm:px-8 py-3 sm:py-4 text-sm sm:text-base lg:text-lg"
                   >
                     <span>View My Projects</span>
-                    <ArrowRight className="ml-2 h-5 w-5" />
+                    <ArrowRight className="ml-2 h-4 w-4 sm:h-5 sm:w-5" />
                   </Button>
                 </a>
-                <a href="#resume">
+                <a href="#resume" className="w-full sm:w-auto">
                   <Button
                     size="lg"
                     variant="outline"
-                    className="border-amber-300 text-gray-700 hover:bg-amber-50 backdrop-blur-sm bg-white/50 hover:border-amber-400 transition-all duration-300 hover:scale-105 px-8 py-4 text-lg"
+                    className="w-full sm:w-auto border-amber-300 text-gray-700 hover:bg-amber-50 backdrop-blur-sm bg-white/50 hover:border-amber-400 transition-all duration-300 hover:scale-105 px-6 sm:px-8 py-3 sm:py-4 text-sm sm:text-base lg:text-lg"
                   >
-                    <Download className="mr-2 h-5 w-5" />
+                    <Download className="mr-2 h-4 w-4 sm:h-5 sm:w-5" />
                     Download Resume
                   </Button>
                 </a>
-                <a href="#contact">
-                  <Button
-                    size="lg"
-                    variant="outline"
-                    className="border-orange-300 text-gray-700 hover:bg-orange-50 backdrop-blur-sm bg-white/50 hover:border-orange-400 transition-all duration-300 hover:scale-105 px-8 py-4 text-lg"
-                  >
-                    <Mail className="mr-2 h-5 w-5" />
-                    Let's Connect
-                  </Button>
-                </a>
               </div>
 
-              <div className="flex space-x-6 animate-slide-up" style={{ animationDelay: '1s' }}>
-                <a href="https://github.com/Suraj1819" target="_blank" rel="noopener noreferrer" className="text-gray-600 hover:text-amber-600 transition-all duration-300 hover:scale-110 p-3 rounded-full hover:bg-amber-100 shadow-sm">
-                  <Github className="h-6 w-6" />
-                </a>
-                <a href="https://www.linkedin.com/in/suraj-kumar-72847b30a/" target="_blank" rel="noopener noreferrer" className="text-gray-600 hover:text-amber-600 transition-all duration-300 hover:scale-110 p-3 rounded-full hover:bg-amber-100 shadow-sm">
-                  <Linkedin className="h-6 w-6" />
-                </a>
-                <a href="https://leetcode.com/u/Suraj_1819/" target="_blank" rel="noopener noreferrer" className="text-gray-600 hover:text-amber-600 transition-all duration-300 hover:scale-110 p-3 rounded-full hover:bg-amber-100 shadow-sm">
-                  <Code className="h-6 w-6" />
-                </a>
+              <div className="flex justify-center lg:justify-start space-x-4 sm:space-x-6 animate-slide-up" style={{ animationDelay: '1s' }}>
+                {[
+                  { href: "https://github.com/Suraj1819", icon: Github },
+                  { href: "https://www.linkedin.com/in/suraj-kumar-72847b30a/", icon: Linkedin },
+                  { href: "https://leetcode.com/u/Suraj_1819/", icon: Code }
+                ].map((social, idx) => (
+                  <a key={idx} href={social.href} target="_blank" rel="noopener noreferrer" className="text-gray-600 hover:text-amber-600 transition-all duration-300 hover:scale-110 p-2 sm:p-3 rounded-full hover:bg-amber-100 shadow-sm">
+                    <social.icon className="h-5 w-5 sm:h-6 sm:w-6" />
+                  </a>
+                ))}
               </div>
             </div>
 
-            <div className="lg:w-1/2 flex justify-center mt-12 lg:mt-0">
+            <div className="w-full lg:w-1/2 flex justify-center mt-8 lg:mt-0">
               <div className="relative animate-scale-in" style={{ animationDelay: '0.5s' }}>
-                {/* Glowing Ring */}
                 <div className="absolute inset-0 bg-gradient-to-r from-amber-400 via-orange-400 to-red-400 rounded-full blur-xl opacity-30 animate-pulse-slow"></div>
-
-                {/* Main Profile Circle */}
-                <div className="relative w-80 h-80 lg:w-96 lg:h-96 bg-gradient-to-br from-amber-400 via-orange-400 to-red-400 rounded-full flex items-center justify-center shadow-2xl hover:shadow-3xl transition-shadow duration-500">
-                  <div className="w-72 h-72 lg:w-88 lg:h-88 bg-white rounded-full flex items-center justify-center border-4 border-amber-200 overflow-hidden">
+                <div className="relative w-64 h-64 sm:w-80 sm:h-80 lg:w-96 lg:h-96 bg-gradient-to-br from-amber-400 via-orange-400 to-red-400 rounded-full flex items-center justify-center shadow-2xl hover:shadow-3xl transition-shadow duration-500">
+                  <div className="w-56 h-56 sm:w-72 sm:h-72 lg:w-88 lg:h-88 bg-white rounded-full flex items-center justify-center border-4 border-amber-200 overflow-hidden">
                     <img
                       src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ0DIfnIJb34lm7mYgKzTqIbWfhjNdqmRY52g&s"
                       alt="Profile Picture"
@@ -762,83 +854,75 @@ const Home = () => {
                     />
                   </div>
                 </div>
-
-                {/* Floating Badge */}
-                <div className="absolute -top-4 -right-4 w-20 h-20 bg-gradient-to-r from-yellow-400 to-orange-400 rounded-full flex items-center justify-center animate-bounce-gentle shadow-lg">
-                  <span className="text-white font-bold text-sm">2027</span>
+                <div className="absolute -top-2 sm:-top-4 -right-2 sm:-right-4 w-14 h-14 sm:w-20 sm:h-20 bg-gradient-to-r from-yellow-400 to-orange-400 rounded-full flex items-center justify-center animate-bounce-gentle shadow-lg">
+                  <span className="text-white font-bold text-xs sm:text-sm">2027</span>
                 </div>
-
-                {/* Orbit Elements */}
-                <div className="absolute top-1/2 left-1/2 w-[120%] h-[120%] -translate-x-1/2 -translate-y-1/2">
+                {/* Orbit Elements - Hidden on mobile */}
+                <div className="absolute top-1/2 left-1/2 w-[120%] h-[120%] -translate-x-1/2 -translate-y-1/2 hidden sm:block">
                   <div className="relative w-full h-full animate-spin" style={{ animationDuration: '20s' }}>
-                    <div className="absolute top-0 left-1/2 w-4 h-4 bg-amber-400 rounded-full -translate-x-1/2 -translate-y-1/2 shadow-lg"></div>
-                    <div className="absolute bottom-0 left-1/2 w-4 h-4 bg-orange-400 rounded-full -translate-x-1/2 translate-y-1/2 shadow-lg"></div>
-                    <div className="absolute left-0 top-1/2 w-4 h-4 bg-red-400 rounded-full -translate-x-1/2 -translate-y-1/2 shadow-lg"></div>
-                    <div className="absolute right-0 top-1/2 w-4 h-4 bg-yellow-400 rounded-full translate-x-1/2 -translate-y-1/2 shadow-lg"></div>
+                    <div className="absolute top-0 left-1/2 w-3 h-3 sm:w-4 sm:h-4 bg-amber-400 rounded-full -translate-x-1/2 -translate-y-1/2 shadow-lg"></div>
+                    <div className="absolute bottom-0 left-1/2 w-3 h-3 sm:w-4 sm:h-4 bg-orange-400 rounded-full -translate-x-1/2 translate-y-1/2 shadow-lg"></div>
+                    <div className="absolute left-0 top-1/2 w-3 h-3 sm:w-4 sm:h-4 bg-red-400 rounded-full -translate-x-1/2 -translate-y-1/2 shadow-lg"></div>
+                    <div className="absolute right-0 top-1/2 w-3 h-3 sm:w-4 sm:h-4 bg-yellow-400 rounded-full translate-x-1/2 -translate-y-1/2 shadow-lg"></div>
                   </div>
                 </div>
               </div>
             </div>
           </div>
 
-          {/* Scroll Indicator */}
-          <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 animate-bounce-gentle">
-            <div className="w-6 h-10 border-2 border-amber-400 rounded-full flex justify-center">
-              <div className="w-1 h-3 bg-amber-400 rounded-full mt-2 animate-pulse"></div>
+          {/* Scroll Indicator - Hidden on mobile */}
+          <div className="absolute bottom-4 sm:bottom-8 left-1/2 transform -translate-x-1/2 animate-bounce-gentle hidden sm:block">
+            <div className="w-5 h-8 sm:w-6 sm:h-10 border-2 border-amber-400 rounded-full flex justify-center">
+              <div className="w-1 h-2 sm:h-3 bg-amber-400 rounded-full mt-2 animate-pulse"></div>
             </div>
           </div>
         </div>
       </section>
 
       {/* Quick Stats Section */}
-      <section className="py-20 px-6 bg-white/50 backdrop-blur-sm">
+      <section className="py-12 sm:py-16 lg:py-20 px-4 sm:px-6 bg-white/50 backdrop-blur-sm">
         <div className="container mx-auto">
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-8">
-            <div className="text-center animate-fade-in">
-              <div className="text-4xl font-bold text-amber-600 mb-2">10+</div>
-              <div className="text-gray-600">Projects Completed</div>
-            </div>
-            <div className="text-center animate-fade-in" style={{ animationDelay: '0.2s' }}>
-              <div className="text-4xl font-bold text-orange-600 mb-2">Kidding None</div>
-              <div className="text-gray-600">Students Tutored</div>
-            </div>
-            <div className="text-center animate-fade-in" style={{ animationDelay: '0.4s' }}>
-              <div className="text-4xl font-bold text-yellow-600 mb-2">10+</div>
-              <div className="text-gray-600">Technologies</div>
-            </div>
-            <div className="text-center animate-fade-in" style={{ animationDelay: '0.6s' }}>
-              <div className="text-4xl font-bold text-red-600 mb-2">2027</div>
-              <div className="text-gray-600">Graduation Year</div>
-            </div>
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 lg:gap-8">
+            {[
+              { value: "10+", label: "Projects Completed" },
+              { value: "Kidding None", label: "Students Tutored" },
+              { value: "10+", label: "Technologies" },
+              { value: "2027", label: "Graduation Year" }
+            ].map((stat, idx) => (
+              <div key={idx} className="text-center animate-fade-in" style={{ animationDelay: `${idx * 0.2}s` }}>
+                <div className="text-2xl sm:text-3xl lg:text-4xl font-bold text-amber-600 mb-1 sm:mb-2">{stat.value}</div>
+                <div className="text-xs sm:text-sm lg:text-base text-gray-600">{stat.label}</div>
+              </div>
+            ))}
           </div>
         </div>
       </section>
 
       {/* About Section */}
-      <section id="about" className="py-20 px-6">
+      <section id="about" className="py-12 sm:py-16 lg:py-20 px-4 sm:px-6">
         <div className="container mx-auto">
-          <div className="text-center mb-16 animate-fade-in">
-            <h2 className="text-5xl lg:text-6xl font-bold mb-6">About Me</h2>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
+          <div className="text-center mb-10 sm:mb-12 lg:mb-16 animate-fade-in">
+            <h2 className="text-3xl sm:text-4xl lg:text-6xl font-bold mb-4 sm:mb-6">About Me</h2>
+            <p className="text-base sm:text-lg lg:text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed px-4">
               A passionate developer on a mission to create innovative solutions
               and help others achieve their programming goals.
             </p>
           </div>
 
-          <div className="grid lg:grid-cols-2 gap-12 items-center mb-20">
-            <div className="space-y-6 animate-slide-up">
-              <div className="flex items-center space-x-3 mb-6">
-                <GraduationCap className="h-8 w-8 text-amber-600" />
-                <h3 className="text-3xl font-bold text-gray-800">My Journey</h3>
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 sm:gap-10 lg:gap-12 items-center mb-12 sm:mb-16 lg:mb-20">
+            <div className="space-y-4 sm:space-y-6 animate-slide-up">
+              <div className="flex items-center space-x-2 sm:space-x-3 mb-4 sm:mb-6">
+                <GraduationCap className="h-6 w-6 sm:h-8 sm:w-8 text-amber-600" />
+                <h3 className="text-2xl sm:text-3xl font-bold text-gray-800">My Journey</h3>
               </div>
 
-              <p className="text-gray-600 leading-relaxed text-lg">
-                <span className=''>I</span>'m Suraj Kumar, a dedicated <span className=' p-0.5 text-2xl'>3<sup className=''>rd</sup></span> -  <strong className='text-2xl'>year</strong> Computer Science and Engineering student at
+              <p className="text-sm sm:text-base lg:text-lg text-gray-600 leading-relaxed">
+                I'm Suraj Kumar, a dedicated <span className='text-lg sm:text-xl lg:text-2xl'>3<sup>rd</sup></span>-year Computer Science and Engineering student at
                 Government Engineering College, Vaishali. My journey in technology began with curiosity
                 and has evolved into a deep passion for creating meaningful digital experiences.
               </p>
 
-              <p className="text-gray-600 leading-relaxed text-lg">
+              <p className="text-sm sm:text-base lg:text-lg text-gray-600 leading-relaxed">
                 What sets me apart is not just my technical skills in C++, Python, and modern web
                 technologies, but my genuine love for teaching and helping others succeed.
               </p>
@@ -846,14 +930,14 @@ const Home = () => {
 
             <div className="animate-scale-in">
               <div className="relative">
-                <div className="w-full h-96 bg-gradient-to-br from-amber-400 via-orange-400 to-red-400 rounded-2xl shadow-2xl hover:scale-105 duration-300 transition-all">
+                <div className="w-full h-64 sm:h-80 lg:h-96 bg-gradient-to-br from-amber-400 via-orange-400 to-red-400 rounded-2xl shadow-2xl hover:scale-105 duration-300 transition-all">
                   <div className="absolute inset-4 bg-white rounded-xl flex items-center justify-center">
                     <div className="text-center">
-                      <div className="w-32 h-32 bg-gradient-to-br from-amber-100 to-orange-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                        <GraduationCap className="h-16 w-16 text-amber-600" />
+                      <div className="w-24 h-24 sm:w-32 sm:h-32 bg-gradient-to-br from-amber-100 to-orange-100 rounded-full flex items-center justify-center mx-auto mb-3 sm:mb-4">
+                        <GraduationCap className="h-12 w-12 sm:h-16 sm:w-16 text-amber-600" />
                       </div>
-                      <h4 className="text-xl font-bold text-gray-800 mb-2">Student & Educator</h4>
-                      <p className="text-gray-600">Bridging the gap between learning and teaching</p>
+                      <h4 className="text-lg sm:text-xl font-bold text-gray-800 mb-1 sm:mb-2">Student & Educator</h4>
+                      <p className="text-xs sm:text-sm text-gray-600">Bridging the gap between learning and teaching</p>
                     </div>
                   </div>
                 </div>
@@ -862,17 +946,17 @@ const Home = () => {
           </div>
 
           {/* Values Section */}
-          <div className="grid lg:grid-cols-4 gap-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 lg:gap-8">
             {values.map((value, index) => (
-              <Card key={index} className="bg-white/70 backdrop-blur-sm border-0 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 " style={{ animationDelay: `${index * 0.1}s` }}>
-                <CardHeader className="text-center">
-                  <div className={`w-16 h-16 ${value.color} rounded-full flex items-center justify-center mx-auto mb-4`}>
-                    <value.icon className="h-8 w-8" />
+              <Card key={index} className="bg-white/70 backdrop-blur-sm border-0 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105" style={{ animationDelay: `${index * 0.1}s` }}>
+                <CardHeader className="text-center p-4 sm:p-6">
+                  <div className={`w-12 h-12 sm:w-16 sm:h-16 ${value.color} rounded-full flex items-center justify-center mx-auto mb-3 sm:mb-4`}>
+                    <value.icon className="h-6 w-6 sm:h-8 sm:w-8" />
                   </div>
-                  <CardTitle className="text-xl">{value.title}</CardTitle>
+                  <CardTitle className="text-base sm:text-lg lg:text-xl">{value.title}</CardTitle>
                 </CardHeader>
-                <CardContent>
-                  <CardDescription className="text-center text-gray-600">
+                <CardContent className="p-4 sm:p-6 pt-0">
+                  <CardDescription className="text-center text-gray-600 text-xs sm:text-sm">
                     {value.description}
                   </CardDescription>
                 </CardContent>
@@ -883,46 +967,46 @@ const Home = () => {
       </section>
 
       {/* Skills Section */}
-      <section id="skills" className="py-20 px-6 bg-white/50 backdrop-blur-sm">
+      <section id="skills" className="py-12 sm:py-16 lg:py-20 px-4 sm:px-6 bg-white/50 backdrop-blur-sm">
         <div className="container mx-auto">
-          <div className="text-center mb-16 animate-fade-in">
-            <h2 className="text-5xl lg:text-6xl font-bold mb-6">My Skills</h2>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+          <div className="text-center mb-10 sm:mb-12 lg:mb-16 animate-fade-in">
+            <h2 className="text-3xl sm:text-4xl lg:text-6xl font-bold mb-4 sm:mb-6">My Skills</h2>
+            <p className="text-base sm:text-lg lg:text-xl text-gray-600 max-w-3xl mx-auto px-4">
               Technologies and expertise I've developed throughout my journey
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8">
             {skills.map((skill, index) => (
               <Card key={index} className="bg-white/70 backdrop-blur-sm border border-amber-200 hover:shadow-xl transition-all duration-300 hover:scale-105 group" style={{ animationDelay: `${index * 0.1}s` }}>
-                <CardHeader className="pb-4">
-                  <div className="flex items-center justify-between mb-3">
-                    <div className="flex items-center space-x-3">
-                      <div className="w-10 h-10 bg-gradient-to-r from-amber-500 to-orange-500 rounded-lg flex items-center justify-center group-hover:scale-110 transition-transform">
-                        <skill.icon className="h-5 w-5 text-white" />
+                <CardHeader className="pb-3 sm:pb-4 p-4 sm:p-6">
+                  <div className="flex items-center justify-between mb-2 sm:mb-3">
+                    <div className="flex items-center space-x-2 sm:space-x-3">
+                      <div className="w-8 h-8 sm:w-10 sm:h-10 bg-gradient-to-r from-amber-500 to-orange-500 rounded-lg flex items-center justify-center group-hover:scale-110 transition-transform">
+                        <skill.icon className="h-4 w-4 sm:h-5 sm:w-5 text-white" />
                       </div>
                       <div>
-                        <CardTitle className="text-lg">{skill.name}</CardTitle>
-                        <Badge variant="secondary" className="bg-amber-100 text-amber-700 text-xs">
+                        <CardTitle className="text-base sm:text-lg">{skill.name}</CardTitle>
+                        <Badge variant="secondary" className="bg-amber-100 text-amber-700 text-[10px] sm:text-xs">
                           {skill.category}
                         </Badge>
                       </div>
                     </div>
                     <div className="text-right">
-                      <div className="text-2xl font-bold text-amber-600">{skill.level}%</div>
-                      <div className="text-xs text-gray-500">{skill.projects}</div>
+                      <div className="text-xl sm:text-2xl font-bold text-amber-600">{skill.level}%</div>
+                      <div className="text-[10px] sm:text-xs text-gray-500">{skill.projects}</div>
                     </div>
                   </div>
 
-                  <div className="w-full bg-amber-200 rounded-full h-3 mb-3">
+                  <div className="w-full bg-amber-200 rounded-full h-2 sm:h-3 mb-2 sm:mb-3">
                     <div
-                      className="bg-gradient-to-r from-amber-500 to-orange-500 h-3 rounded-full transition-all duration-1000 ease-out"
+                      className="bg-gradient-to-r from-amber-500 to-orange-500 h-2 sm:h-3 rounded-full transition-all duration-1000 ease-out"
                       style={{ width: `${skill.level}%` }}
                     ></div>
                   </div>
                 </CardHeader>
-                <CardContent>
-                  <CardDescription className="text-gray-600 leading-relaxed">
+                <CardContent className="p-4 sm:p-6 pt-0">
+                  <CardDescription className="text-gray-600 leading-relaxed text-xs sm:text-sm">
                     {skill.description}
                   </CardDescription>
                 </CardContent>
@@ -933,61 +1017,61 @@ const Home = () => {
       </section>
 
       {/* Services Section */}
-      <section id="services" className="py-20 px-6">
+      <section id="services" className="py-12 sm:py-16 lg:py-20 px-4 sm:px-6">
         <div className="container mx-auto">
-          <div className="text-center mb-16 animate-fade-in">
-            <h2 className="text-5xl lg:text-6xl font-bold mb-6">My Services</h2>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+          <div className="text-center mb-10 sm:mb-12 lg:mb-16 animate-fade-in">
+            <h2 className="text-3xl sm:text-4xl lg:text-6xl font-bold mb-4 sm:mb-6">My Services</h2>
+            <p className="text-base sm:text-lg lg:text-xl text-gray-600 max-w-3xl mx-auto px-4">
               Comprehensive solutions for your digital needs and learning goals
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8">
             {services.map((service, index) => (
               <Card key={index} className="bg-white/70 backdrop-blur-sm border border-amber-200 hover:shadow-xl transition-all duration-300 hover:scale-105 group overflow-hidden" style={{ animationDelay: `${index * 0.2}s` }}>
-                <CardHeader className="pb-4">
-                  <div className="flex items-center space-x-4 mb-4">
-                    <div className={`w-16 h-16 bg-gradient-to-r ${service.iconBg} rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform shadow-lg`}>
-                      <service.icon className="h-8 w-8 text-white" />
+                <CardHeader className="pb-3 sm:pb-4 p-4 sm:p-6">
+                  <div className="flex items-center space-x-3 sm:space-x-4 mb-3 sm:mb-4">
+                    <div className={`w-12 h-12 sm:w-16 sm:h-16 bg-gradient-to-r ${service.iconBg} rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform shadow-lg`}>
+                      <service.icon className="h-6 w-6 sm:h-8 sm:w-8 text-white" />
                     </div>
                     <div className="flex-1">
-                      <CardTitle className="text-xl mb-2">{service.title}</CardTitle>
-                      <div className="flex items-center space-x-4 text-sm text-gray-600">
+                      <CardTitle className="text-base sm:text-lg lg:text-xl mb-1 sm:mb-2">{service.title}</CardTitle>
+                      <div className="flex items-center space-x-3 sm:space-x-4 text-xs sm:text-sm text-gray-600">
                         <div className="flex items-center space-x-1">
-                          <Clock className="h-4 w-4" />
+                          <Clock className="h-3 w-3 sm:h-4 sm:w-4" />
                           <span>{service.duration}</span>
                         </div>
                         <div className="flex items-center space-x-1">
-                          <Trophy className="h-4 w-4" />
+                          <Trophy className="h-3 w-3 sm:h-4 sm:w-4" />
                           <span>{service.projects}</span>
                         </div>
                       </div>
                     </div>
                   </div>
                 </CardHeader>
-                <CardContent className="space-y-4">
-                  <CardDescription className="text-gray-600 leading-relaxed">
+                <CardContent className="space-y-3 sm:space-y-4 p-4 sm:p-6 pt-0">
+                  <CardDescription className="text-gray-600 leading-relaxed text-xs sm:text-sm">
                     {service.description}
                   </CardDescription>
 
                   <div className="space-y-2">
-                    <h4 className="font-semibold text-gray-800 text-sm">Key Features:</h4>
-                    <div className="grid grid-cols-1 gap-2">
+                    <h4 className="font-semibold text-gray-800 text-xs sm:text-sm">Key Features:</h4>
+                    <div className="grid grid-cols-1 gap-1.5 sm:gap-2">
                       {service.features.map((feature, featureIndex) => (
                         <div key={featureIndex} className="flex items-center space-x-2">
-                          <div className="w-2 h-2 bg-gradient-to-r from-amber-500 to-orange-500 rounded-full"></div>
-                          <span className="text-sm text-gray-600">{feature}</span>
+                          <div className="w-1.5 h-1.5 sm:w-2 sm:h-2 bg-gradient-to-r from-amber-500 to-orange-500 rounded-full"></div>
+                          <span className="text-xs sm:text-sm text-gray-600">{feature}</span>
                         </div>
                       ))}
                     </div>
                   </div>
 
-                  <div className="flex items-center justify-between pt-4 border-t border-amber-200">
+                  <div className="flex items-center justify-between pt-3 sm:pt-4 border-t border-amber-200">
                     <div>
-                      <div className="text-2xl font-bold text-amber-700">{service.price}</div>
-                      <div className="text-xs text-gray-500">{service.duration}</div>
+                      <div className="text-xl sm:text-2xl font-bold text-amber-700">{service.price}</div>
+                      <div className="text-[10px] sm:text-xs text-gray-500">{service.duration}</div>
                     </div>
-                    <Button className="bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white transition-all duration-300 hover:scale-105">
+                    <Button className="bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white transition-all duration-300 hover:scale-105 text-xs sm:text-sm">
                       Get Started
                     </Button>
                   </div>
@@ -999,22 +1083,22 @@ const Home = () => {
       </section>
 
       {/* Projects Section */}
-      <section id="projects" className="py-20 px-6 bg-white/50 backdrop-blur-sm">
+      <section id="projects" className="py-12 sm:py-16 lg:py-20 px-4 sm:px-6 bg-white/50 backdrop-blur-sm">
         <div className="container mx-auto">
-          <div className="text-center mb-16 animate-fade-in">
-            <h2 className="text-5xl lg:text-6xl font-bold mb-6">My Projects</h2>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+          <div className="text-center mb-10 sm:mb-12 lg:mb-16 animate-fade-in">
+            <h2 className="text-3xl sm:text-4xl lg:text-6xl font-bold mb-4 sm:mb-6">My Projects</h2>
+            <p className="text-base sm:text-lg lg:text-xl text-gray-600 max-w-3xl mx-auto px-4">
               A showcase of my recent work and creative solutions
             </p>
           </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8">
             {projects.map((project, index) => (
               <Card key={index} className="bg-white/70 backdrop-blur-sm border border-amber-200 overflow-hidden hover:shadow-xl transition-all duration-300 hover:scale-105 group" style={{ animationDelay: `${index * 0.2}s` }}>
-                <div className={`h-48 bg-gradient-to-br ${project.gradient} relative overflow-hidden`}>
+                <div className={`h-32 sm:h-40 lg:h-48 bg-gradient-to-br ${project.gradient} relative overflow-hidden`}>
                   <div className="absolute inset-0 bg-black/20 group-hover:bg-black/10 transition-colors flex items-center justify-center">
-                    <Badge className={`bg-white/20 text-white border-white/30 ${
-                      project.status === 'completed' ? 'bg-green-500/20 border-green-300' :
+                    <Badge className={`bg-white/20 text-white border-white/30 text-xs sm:text-sm ${
+                      project.status === 'Completed' ? 'bg-green-500/20 border-green-300' :
                         project.status === 'In Progress' ? 'bg-yellow-500/20 border-yellow-300' :
                           'bg-blue-500/20 border-blue-300'
                     }`}>
@@ -1023,57 +1107,57 @@ const Home = () => {
                   </div>
                 </div>
 
-                <CardContent className="p-6">
-                  <div className="space-y-4">
+                <CardContent className="p-4 sm:p-6">
+                  <div className="space-y-3 sm:space-y-4">
                     <div>
-                      <CardTitle className="text-xl mb-2 group-hover:text-amber-600 transition-colors">
+                      <CardTitle className="text-base sm:text-lg lg:text-xl mb-1 sm:mb-2 group-hover:text-amber-600 transition-colors">
                         {project.title}
                       </CardTitle>
-                      <CardDescription className="text-gray-600 leading-relaxed mb-3">
+                      <CardDescription className="text-gray-600 leading-relaxed mb-2 sm:mb-3 text-xs sm:text-sm">
                         {project.description}
                       </CardDescription>
                     </div>
 
-                    <div className="space-y-3">
+                    <div className="space-y-2 sm:space-y-3">
                       <div>
-                        <h4 className="font-semibold text-gray-800 text-sm mb-2">Key Features:</h4>
-                        <div className="grid grid-cols-1 gap-1">
+                        <h4 className="font-semibold text-gray-800 text-xs sm:text-sm mb-1 sm:mb-2">Key Features:</h4>
+                        <div className="grid grid-cols-1 gap-0.5 sm:gap-1">
                           {project.features.map((feature, featureIndex) => (
-                            <div key={featureIndex} className="flex items-center space-x-2">
-                              <Star className="h-3 w-3 text-amber-500" />
-                              <span className="text-sm text-gray-600">{feature}</span>
+                            <div key={featureIndex} className="flex items-center space-x-1.5 sm:space-x-2">
+                              <Star className="h-2.5 w-2.5 sm:h-3 sm:w-3 text-amber-500 flex-shrink-0" />
+                              <span className="text-xs sm:text-sm text-gray-600">{feature}</span>
                             </div>
                           ))}
                         </div>
                       </div>
 
-                      <div className="flex flex-wrap gap-2">
+                      <div className="flex flex-wrap gap-1.5 sm:gap-2">
                         {project.technologies.map((tech, techIndex) => (
-                          <Badge key={techIndex} variant="secondary" className="bg-amber-100 text-amber-700 text-xs">
+                          <Badge key={techIndex} variant="secondary" className="bg-amber-100 text-amber-700 text-[10px] sm:text-xs">
                             {tech}
                           </Badge>
                         ))}
                       </div>
 
-                      <div className="flex items-center justify-between text-sm text-gray-600">
+                      <div className="flex items-center justify-between text-xs sm:text-sm text-gray-600">
                         <div className="flex items-center space-x-1">
-                          <Users className="h-4 w-4" />
+                          <Users className="h-3 w-3 sm:h-4 sm:w-4" />
                           <span>{project.users}</span>
                         </div>
                         <div className="flex items-center space-x-1">
-                          <Calendar className="h-4 w-4" />
+                          <Calendar className="h-3 w-3 sm:h-4 sm:w-4" />
                           <span>{project.status}</span>
                         </div>
                       </div>
                     </div>
 
-                    <div className="flex gap-3 pt-4 border-t border-amber-200">
-                      <Button size="sm" className="bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white flex-1 transition-all hover:scale-105 duration-300">
-                        <ExternalLinkIcon className="mr-2 h-4 w-4" />
+                    <div className="flex gap-2 sm:gap-3 pt-3 sm:pt-4 border-t border-amber-200">
+                      <Button size="sm" className="bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white flex-1 transition-all hover:scale-105 duration-300 text-xs sm:text-sm">
+                        <ExternalLinkIcon className="mr-1.5 sm:mr-2 h-3 w-3 sm:h-4 sm:w-4" />
                         Live Demo
                       </Button>
-                      <Button size="sm" variant="outline" className="border-amber-300 text-gray-700 hover:bg-amber-50 transition-all hover:scale-110 duration-300 ml-3">
-                        <a href={project.github} target='_blank'><Github /></a>
+                      <Button size="sm" variant="outline" className="border-amber-300 text-gray-700 hover:bg-amber-50 transition-all hover:scale-110 duration-300">
+                        <a href={project.github} target='_blank' rel="noopener noreferrer"><Github className="h-3 w-3 sm:h-4 sm:w-4" /></a>
                       </Button>
                     </div>
                   </div>
@@ -1085,315 +1169,117 @@ const Home = () => {
       </section>
 
       {/* Resume & Certificates Section */}
-      <section id="resume" className="py-20 px-6">
+      <section id="resume" className="py-12 sm:py-16 lg:py-20 px-4 sm:px-6">
         <div className="container mx-auto">
-          <div className="text-center mb-16 animate-fade-in">
-            <div className="inline-flex items-center justify-center space-x-3 mb-4">
-              <GraduationCap className="h-12 w-12 text-amber-600" />
-              <h2 className="text-5xl lg:text-6xl font-bold">Resume</h2>
+          <div className="text-center mb-10 sm:mb-12 lg:mb-16 animate-fade-in">
+            <div className="inline-flex items-center justify-center space-x-2 sm:space-x-3 mb-3 sm:mb-4">
+              <GraduationCap className="h-8 w-8 sm:h-10 sm:w-10 lg:h-12 lg:w-12 text-amber-600" />
+              <h2 className="text-3xl sm:text-4xl lg:text-6xl font-bold">Resume</h2>
             </div>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+            <p className="text-base sm:text-lg lg:text-xl text-gray-600 max-w-3xl mx-auto px-4">
               My professional journey, qualifications, and achievements in technology
             </p>
           </div>
 
           {/* Education Section */}
-          <div className="mb-16">
-            <h3 className="text-3xl font-bold text-gray-800 mb-8 flex items-center justify-center animate-fade-in">
-              <GraduationCap className="h-8 w-8 text-amber-600 mr-3" />
+          <div className="mb-10 sm:mb-12 lg:mb-16">
+            <h3 className="text-2xl sm:text-3xl font-bold text-gray-800 mb-6 sm:mb-8 flex items-center justify-center animate-fade-in">
+              <GraduationCap className="h-6 w-6 sm:h-8 sm:w-8 text-amber-600 mr-2 sm:mr-3" />
               Education
             </h3>
-            <div className="max-w-4xl mx-auto">
-              <Card className="bg-white/70 backdrop-blur-sm border-2 border-amber-300 hover:shadow-xl transition-all duration-300 hover:scale-105">
-                <CardContent className="p-8">
-                  <div className="grid md:grid-cols-3 gap-6">
-                    <div className="md:col-span-2">
-                      <h4 className="text-2xl font-bold text-gray-800 mb-2">Matriculation-(10<sup>th</sup>)</h4>
-                      <p className="text-lg text-amber-600 font-semibold mb-2">SRT School</p>
-                      <p className="text-gray-600 mb-4"></p>
-                      <div className="flex flex-wrap gap-2 mb-4">
-                        <Badge className="bg-green-100 text-green-700">PERCENTAGE: 82.6/100</Badge>
-                        <Badge className="bg-blue-100 text-blue-700">First Division</Badge>
-                        <Badge className="bg-purple-100 text-purple-700">Science</Badge>
+            <div className="max-w-4xl mx-auto space-y-4 sm:space-y-6">
+              {[
+                {
+                  title: "Matriculation (10th)",
+                  school: "SRT School",
+                  percentage: "82.6/100",
+                  year: "2020",
+                  courses: ["Hindi", "English", "Maths", "Science", "Computer-IT", "Sanskrit"]
+                },
+                {
+                  title: "Intermediate (12th)",
+                  school: "SRT School",
+                  percentage: "83.2/100",
+                  year: "2022",
+                  courses: ["Maths", "Physics", "Chemistry", "English", "Computer-IT"]
+                },
+                {
+                  title: "Bachelor of Technology in CSE",
+                  school: "Government Engineering College",
+                  percentage: "CGPA: 8.54/10",
+                  year: "2023 - 2027",
+                  courses: ["Data Structures", "Algorithms", "Web Development", "Database Systems", "Operating Systems"]
+                }
+              ].map((edu, idx) => (
+                <Card key={idx} className="bg-white/70 backdrop-blur-sm border-2 border-amber-300 hover:shadow-xl transition-all duration-300 hover:scale-105">
+                  <CardContent className="p-4 sm:p-6 lg:p-8">
+                    <div className="grid md:grid-cols-3 gap-4 sm:gap-6">
+                      <div className="md:col-span-2">
+                        <h4 className="text-lg sm:text-xl lg:text-2xl font-bold text-gray-800 mb-1 sm:mb-2">{edu.title}</h4>
+                        <p className="text-base sm:text-lg text-amber-600 font-semibold mb-1 sm:mb-2">{edu.school}</p>
+                        <div className="flex flex-wrap gap-1.5 sm:gap-2 mb-3 sm:mb-4">
+                          <Badge className="bg-green-100 text-green-700 text-xs sm:text-sm">{edu.percentage}</Badge>
+                          <Badge className="bg-blue-100 text-blue-700 text-xs sm:text-sm">First Division</Badge>
+                        </div>
+                        <div className="space-y-1 sm:space-y-2">
+                          <p className="text-xs sm:text-sm text-gray-700"><strong>Relevant Coursework:</strong></p>
+                          <div className="flex flex-wrap gap-1.5 sm:gap-2">
+                            {edu.courses.map((course, courseIdx) => (
+                              <Badge key={courseIdx} variant="secondary" className="bg-gray-100 text-gray-800 text-[10px] sm:text-xs">
+                                {course}
+                              </Badge>
+                            ))}
+                          </div>
+                        </div>
                       </div>
-                      <div className="space-y-2">
-                        <p className="text-sm text-gray-700"><strong>Relevant Coursework:</strong></p>
-                        <div className="flex flex-wrap gap-2">
-                          {["Hindi", "English", "Maths", "Science", "Paintings", "Computer-IT", "Sanskrit"].map((course, idx) => (
-                            <Badge key={idx} variant="secondary" className="bg-gray-100 text-gray-800 text-xs">
-                              {course}
-                            </Badge>
-                          ))}
+                      <div className="flex flex-col justify-between items-end">
+                        <div className="text-right">
+                          <div className="text-2xl sm:text-3xl font-bold text-amber-600 mb-1 sm:mb-3">{edu.year}</div>
+                        </div>
+                        <div className="w-16 h-16 sm:w-20 sm:h-20 lg:w-24 lg:h-24 bg-gradient-to-br from-amber-400 to-orange-500 rounded-2xl flex items-center justify-center shadow-lg">
+                          <GraduationCap className="h-8 w-8 sm:h-10 sm:w-10 lg:h-12 lg:w-12 text-white" />
                         </div>
                       </div>
                     </div>
-                    <div className="flex flex-col justify-between items-end">
-                      <div className="text-right">
-                        <div className="text-3xl font-bold text-amber-600 mb-3">2020</div>
-                        <p className="text-sm textgray-red-700 text-center"><strong className='font-semibold'>Matriculation</strong></p>
-                      </div>
-                      <div className="w-24 h-24 bg-gradient-to-br from-amber-400 to-orange-500 rounded-2xl flex items-center justify-center shadow-lg">
-                        <GraduationCap className="h-12 w-12 text-white" />
-                      </div>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-              <Card className="bg-white/70 backdrop-blur-sm border-2 border-amber-300 hover:shadow-xl transition-all duration-300 hover:scale-105 mt-8">
-                <CardContent className="p-8">
-                  <div className="grid md:grid-cols-3 gap-6">
-                    <div className="md:col-span-2">
-                      <h4 className="text-2xl font-bold text-gray-800 mb-2">Intermediate-(12<sup>th</sup>)</h4>
-                      <p className="text-lg text-amber-600 font-semibold mb-2">SRT School</p>
-                      <p className="text-gray-600 mb-4"></p>
-                      <div className="flex flex-wrap gap-2 mb-4">
-                        <Badge className="bg-green-100 text-green-700">PERCENTAGE: 83.2/100</Badge>
-                        <Badge className="bg-blue-100 text-blue-700">First Division</Badge>
-                        <Badge className="bg-purple-100 text-purple-700">Science</Badge>
-                      </div>
-                      <div className="space-y-2">
-                        <p className="text-sm text-gray-700"><strong>Relevant Coursework:</strong></p>
-                        <div className="flex flex-wrap gap-2">
-                          {["Maths", "Physics", "Chemistry", "English", "Paintings", "Computer-IT"].map((course, idx) => (
-                            <Badge key={idx} variant="secondary" className="bg-gray-100 text-gray-700 text-xs">
-                              {course}
-                            </Badge>
-                          ))}
-                        </div>
-                      </div>
-                    </div>
-                    <div className="flex flex-col justify-between items-end">
-                      <div className="text-right">
-                        <div className="text-3xl font-bold text-amber-600 mb-1">2022</div>
-                        <p className="text-sm textgray-red-700 text-center"><strong className='font-semibold'>Intermediate</strong></p>
-                      </div>
-                      <div className="w-24 h-24 bg-gradient-to-br from-amber-400 to-orange-500 rounded-2xl flex items-center justify-center shadow-lg">
-                        <GraduationCap className="h-12 w-12 text-white" />
-                      </div>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-              <Card className="bg-white/70 backdrop-blur-sm border-2 border-amber-300 hover:shadow-xl transition-all duration-300 hover:scale-105 mt-8">
-                <CardContent className="p-8">
-                  <div className="grid md:grid-cols-3 gap-6">
-                    <div className="md:col-span-2">
-                      <h4 className="text-2xl font-bold text-gray-800 mb-2">Bachelor of Technology in Computer Science</h4>
-                      <p className="text-lg text-amber-600 font-semibold mb-2">Government Engineering College</p>
-                      <p className="text-gray-600 mb-4">Specialization in Software Engineering & Data Structures</p>
-                      <div className="flex flex-wrap gap-2 mb-4">
-                        <Badge className="bg-green-100 text-green-700">CGPA: 8.54/10</Badge>
-                        <Badge className="bg-blue-100 text-blue-700">First Division</Badge>
-                        <Badge className="bg-purple-100 text-purple-700">CSE</Badge>
-                      </div>
-                      <div className="space-y-2">
-                        <p className="text-sm text-gray-700"><strong>Relevant Coursework:</strong></p>
-                        <div className="flex flex-wrap gap-2">
-                          {["Data Structures", "Algorithms", "Web Development", "Database Systems", "Operating Systems", "Computer Networks", "COA", "Digital Electronics"].map((course, idx) => (
-                            <Badge key={idx} variant="secondary" className="bg-gray-100 text-gray-700 text-xs">
-                              {course}
-                            </Badge>
-                          ))}
-                        </div>
-                      </div>
-                    </div>
-                    <div className="flex flex-col justify-between items-end">
-                      <div className="text-right">
-                        <div className="text-3xl font-bold text-amber-600 mb-1">2023 - 2027</div>
-                        <p className="text-sm textgray-red-700 text-center"><strong className='font-semibold'>Graduation</strong></p>
-                      </div>
-                      <div className="w-24 h-24 bg-gradient-to-br from-amber-400 to-orange-500 rounded-2xl flex items-center justify-center shadow-lg">
-                        <GraduationCap className="h-12 w-12 text-white" />
-                      </div>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-            </div>
-          </div>
-
-          {/* Experience Section */}
-          <div className="mb-16">
-            <h3 className="text-3xl font-bold text-gray-800 mb-8 flex items-center justify-center animate-fade-in">
-              <Coffee className="h-8 w-8 text-amber-600 mr-3" />
-              Professional Experience
-            </h3>
-            <div className="max-w-4xl mx-auto space-y-6">
-              <Card className="bg-white/70 backdrop-blur-sm border border-amber-200 hover:shadow-xl transition-all duration-300 hover:scale-105">
-                <CardContent className="p-6">
-                  <div className="flex items-start justify-between mb-4">
-                    <div className="flex items-start space-x-4">
-                      <div className="w-12 h-12 bg-gradient-to-r from-amber-500 to-orange-500 rounded-xl flex items-center justify-center flex-shrink-0">
-                        <Code className="h-6 w-6 text-white" />
-                      </div>
-                      <div>
-                        <h4 className="text-xl font-bold text-gray-800">Programming Tutor & Mentor</h4>
-                        <p className="text-amber-600 font-semibold">Freelance</p>
-                      </div>
-                    </div>
-                    <Badge className="bg-amber-100 text-amber-700 whitespace-nowrap">2023 - Present</Badge>
-                  </div>
-                  <div className="ml-16 space-y-3">
-                    <p className="text-gray-700 leading-relaxed">
-                      Providing personalized programming instruction and mentorship to 100+ students across various skill levels.
-                    </p>
-                    <ul className="space-y-2 text-sm text-gray-600">
-                      <li className="flex items-start">
-                        <span className="w-2 h-2 bg-amber-500 rounded-full mt-1.5 mr-3 flex-shrink-0"></span>
-                        <span>Taught C++, Python, Data Structures & Algorithms to students preparing for technical interviews</span>
-                      </li>
-                      <li className="flex items-start">
-                        <span className="w-2 h-2 bg-amber-500 rounded-full mt-1.5 mr-3 flex-shrink-0"></span>
-                        <span>Helped 50+ students successfully crack coding interviews at top tech companies</span>
-                      </li>
-                      <li className="flex items-start">
-                        <span className="w-2 h-2 bg-amber-500 rounded-full mt-1.5 mr-3 flex-shrink-0"></span>
-                        <span>Developed custom learning curriculum and practice problem sets for individual student needs</span>
-                      </li>
-                      <li className="flex items-start">
-                        <span className="w-2 h-2 bg-amber-500 rounded-full mt-1.5 mr-3 flex-shrink-0"></span>
-                        <span>Conducted mock interviews and provided detailed feedback to improve problem-solving skills</span>
-                      </li>
-                    </ul>
-                    <div className="flex flex-wrap gap-2 pt-2">
-                      <Badge variant="outline" className="border-amber-300 text-amber-700 text-xs">C++</Badge>
-                      <Badge variant="outline" className="border-amber-300 text-amber-700 text-xs">Python</Badge>
-                      <Badge variant="outline" className="border-amber-300 text-amber-700 text-xs">DSA</Badge>
-                      <Badge variant="outline" className="border-amber-300 text-amber-700 text-xs">Interview Prep</Badge>
-                      <Badge variant="outline" className="border-amber-300 text-amber-700 text-xs">Mentoring</Badge>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-
-              <Card className="bg-white/70 backdrop-blur-sm border border-amber-200 hover:shadow-xl transition-all duration-300 hover:scale-105" style={{ animationDelay: '0.2s' }}>
-                <CardContent className="p-6">
-                  <div className="flex items-start justify-between mb-4">
-                    <div className="flex items-start space-x-4">
-                      <div className="w-12 h-12 bg-gradient-to-r from-blue-500 to-purple-500 rounded-xl flex items-center justify-center flex-shrink-0">
-                        <Users className="h-6 w-6 text-white" />
-                      </div>
-                      <div>
-                        <h4 className="text-xl font-bold text-gray-800">Programming Club Lead</h4>
-                        <p className="text-amber-600 font-semibold">Government Engineering College</p>
-                      </div>
-                    </div>
-                    <Badge className="bg-blue-100 text-blue-700 whitespace-nowrap">2023 - Present</Badge>
-                  </div>
-                  <div className="ml-16 space-y-3">
-                    <p className="text-gray-700 leading-relaxed">
-                      Leading the college programming club with 200+ active members and organizing technical events.
-                    </p>
-                    <ul className="space-y-2 text-sm text-gray-600">
-                      <li className="flex items-start">
-                        <span className="w-2 h-2 bg-blue-500 rounded-full mt-1.5 mr-3 flex-shrink-0"></span>
-                        <span>Organized 10+ technical workshops on web development, DSA, and competitive programming</span>
-                      </li>
-                      <li className="flex items-start">
-                        <span className="w-2 h-2 bg-blue-500 rounded-full mt-1.5 mr-3 flex-shrink-0"></span>
-                        <span>Coordinated coding competitions with 500+ participants across multiple colleges</span>
-                      </li>
-                      <li className="flex items-start">
-                        <span className="w-2 h-2 bg-blue-500 rounded-full mt-1.5 mr-3 flex-shrink-0"></span>
-                        <span>Mentored junior students in full-stack development and competitive programming</span>
-                      </li>
-                      <li className="flex items-start">
-                        <span className="w-2 h-2 bg-blue-500 rounded-full mt-1.5 mr-3 flex-shrink-0"></span>
-                        <span>Led development of college's official website and student portal projects</span>
-                      </li>
-                    </ul>
-                    <div className="flex flex-wrap gap-2 pt-2">
-                      <Badge variant="outline" className="border-blue-300 text-blue-700 text-xs">Leadership</Badge>
-                      <Badge variant="outline" className="border-blue-300 text-blue-700 text-xs">Event Management</Badge>
-                      <Badge variant="outline" className="border-blue-300 text-blue-700 text-xs">Public Speaking</Badge>
-                      <Badge variant="outline" className="border-blue-300 text-blue-700 text-xs">Team Building</Badge>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-
-              <Card className="bg-white/70 backdrop-blur-sm border border-amber-200 hover:shadow-xl transition-all duration-300 hover:scale-105" style={{ animationDelay: '0.4s' }}>
-                <CardContent className="p-6">
-                  <div className="flex items-start justify-between mb-4">
-                    <div className="flex items-start space-x-4">
-                      <div className="w-12 h-12 bg-gradient-to-r from-green-500 to-emerald-500 rounded-xl flex items-center justify-center flex-shrink-0">
-                        <Rocket className="h-6 w-6 text-white" />
-                      </div>
-                      <div>
-                        <h4 className="text-xl font-bold text-gray-800">Full-Stack Developer</h4>
-                        <p className="text-amber-600 font-semibold">Freelance Projects</p>
-                      </div>
-                    </div>
-                    <Badge className="bg-green-100 text-green-700 whitespace-nowrap">2023 - Present</Badge>
-                  </div>
-                  <div className="ml-16 space-y-3">
-                    <p className="text-gray-700 leading-relaxed">
-                      Developing custom web applications and solutions for clients across various industries.
-                    </p>
-                    <ul className="space-y-2 text-sm text-gray-600">
-                      <li className="flex items-start">
-                        <span className="w-2 h-2 bg-green-500 rounded-full mt-1.5 mr-3 flex-shrink-0"></span>
-                        <span>Built 15+ full-stack web applications using MERN stack for various clients</span>
-                      </li>
-                      <li className="flex items-start">
-                        <span className="w-2 h-2 bg-green-500 rounded-full mt-1.5 mr-3 flex-shrink-0"></span>
-                        <span>Implemented responsive UI/UX designs with React, Tailwind CSS, and modern frameworks</span>
-                      </li>
-                      <li className="flex items-start">
-                        <span className="w-2 h-2 bg-green-500 rounded-full mt-1.5 mr-3 flex-shrink-0"></span>
-                        <span>Developed RESTful APIs and integrated third-party services (Stripe, AWS, Google APIs)</span>
-                      </li>
-                      <li className="flex items-start">
-                        <span className="w-2 h-2 bg-green-500 rounded-full mt-1.5 mr-3 flex-shrink-0"></span>
-                        <span>Deployed applications on AWS, Vercel, and Heroku with CI/CD pipelines</span>
-                      </li>
-                    </ul>
-                    <div className="flex flex-wrap gap-2 pt-2">
-                      <Badge variant="outline" className="border-green-300 text-green-700 text-xs">React.js</Badge>
-                      <Badge variant="outline" className="border-green-300 text-green-700 text-xs">Node.js</Badge>
-                      <Badge variant="outline" className="border-green-300 text-green-700 text-xs">MongoDB</Badge>
-                      <Badge variant="outline" className="border-green-300 text-green-700 text-xs">REST APIs</Badge>
-                      <Badge variant="outline" className="border-green-300 text-green-700 text-xs">Deployment</Badge>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
+                  </CardContent>
+                </Card>
+              ))}
             </div>
           </div>
 
           {/* Certificates Section */}
-          <div className="mb-16">
-            <h3 className="text-3xl font-bold text-gray-800 mb-8 flex items-center justify-center animate-fade-in">
-              <Award className="h-8 w-8 text-amber-600 mr-3" />
+          <div className="mb-10 sm:mb-12 lg:mb-16">
+            <h3 className="text-2xl sm:text-3xl font-bold text-gray-800 mb-6 sm:mb-8 flex items-center justify-center animate-fade-in">
+              <Award className="h-6 w-6 sm:h-8 sm:w-8 text-amber-600 mr-2 sm:mr-3" />
               Professional Certifications
             </h3>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 max-w-6xl mx-auto">
               {certificates.map((cert, index) => (
                 <Card key={index} className="bg-white/70 backdrop-blur-sm border border-amber-200 hover:shadow-xl transition-all duration-300 hover:scale-105 group" style={{ animationDelay: `${index * 0.1}s` }}>
-                  <CardContent className="p-6">
-                    <div className="flex items-start justify-between mb-4">
-                      <div className="w-12 h-12 bg-gradient-to-r from-amber-500 to-orange-500 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform flex-shrink-0">
-                        <cert.icon className="h-6 w-6 text-white" />
+                  <CardContent className="p-4 sm:p-6">
+                    <div className="flex items-start justify-between mb-3 sm:mb-4">
+                      <div className="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-r from-amber-500 to-orange-500 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform flex-shrink-0">
+                        <cert.icon className="h-5 w-5 sm:h-6 sm:w-6 text-white" />
                       </div>
-                      <Badge className="bg-amber-100 text-amber-700">{cert.year}</Badge>
+                      <Badge className="bg-amber-100 text-amber-700 text-xs sm:text-sm">{cert.year}</Badge>
                     </div>
-                    <CardTitle className="text-lg mb-2 group-hover:text-amber-600 transition-colors">{cert.title}</CardTitle>
-                    <p className="text-amber-600 font-semibold text-sm mb-3">{cert.issuer}</p>
-                    <CardDescription className="text-gray-600 text-xs mb-4 leading-relaxed line-clamp-3">
+                    <CardTitle className="text-sm sm:text-base lg:text-lg mb-1 sm:mb-2 group-hover:text-amber-600 transition-colors">{cert.title}</CardTitle>
+                    <p className="text-amber-600 font-semibold text-xs sm:text-sm mb-2 sm:mb-3">{cert.issuer}</p>
+                    <CardDescription className="text-gray-600 text-[10px] sm:text-xs mb-3 sm:mb-4 leading-relaxed line-clamp-3">
                       {cert.description}
                     </CardDescription>
-                    <div className="flex flex-wrap gap-1 mb-4">
+                    <div className="flex flex-wrap gap-1 mb-3 sm:mb-4">
                       {cert.skills.slice(0, 3).map((skill, skillIndex) => (
-                        <Badge key={skillIndex} variant="secondary" className="bg-gray-100 text-gray-700 text-xs">
+                        <Badge key={skillIndex} variant="secondary" className="bg-gray-100 text-gray-700 text-[10px] sm:text-xs">
                           {skill}
                         </Badge>
                       ))}
                     </div>
-                    <div className="pt-4 border-t border-amber-200">
+                    <div className="pt-3 sm:pt-4 border-t border-amber-200">
                       <div className="flex items-center justify-between">
-                        <span className="text-xs text-gray-500 truncate">ID: {cert.credentialId}</span>
-                        <Button size="sm" variant="ghost" className="text-amber-700 hover:bg-amber-50 h-8 px-2">
-                          <ExternalLink className="h-3 w-3" />
+                        <span className="text-[10px] sm:text-xs text-gray-500 truncate">ID: {cert.credentialId}</span>
+                        <Button size="sm" variant="ghost" className="text-amber-700 hover:bg-amber-50 h-6 sm:h-8 px-1 sm:px-2">
+                          <ExternalLink className="h-2.5 w-2.5 sm:h-3 sm:w-3" />
                         </Button>
                       </div>
                     </div>
@@ -1404,21 +1290,21 @@ const Home = () => {
           </div>
 
           {/* Achievements Section */}
-          <div className="mb-16">
-            <h3 className="text-3xl font-bold text-gray-800 mb-8 flex items-center justify-center animate-fade-in">
-              <Trophy className="h-8 w-8 text-amber-600 mr-3" />
+          <div className="mb-10 sm:mb-12 lg:mb-16">
+            <h3 className="text-2xl sm:text-3xl font-bold text-gray-800 mb-6 sm:mb-8 flex items-center justify-center animate-fade-in">
+              <Trophy className="h-6 w-6 sm:h-8 sm:w-8 text-amber-600 mr-2 sm:mr-3" />
               Key Achievements
             </h3>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 max-w-6xl mx-auto">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 max-w-6xl mx-auto">
               {achievements.map((achievement, index) => (
                 <Card key={index} className="bg-gradient-to-br from-white to-amber-50 border-2 border-amber-200 hover:shadow-xl transition-all duration-300 hover:scale-105 group" style={{ animationDelay: `${index * 0.1}s` }}>
-                  <CardContent className="p-6 text-center">
-                    <div className="w-16 h-16 bg-gradient-to-r from-amber-500 to-orange-500 rounded-2xl flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform">
-                      <achievement.icon className="h-8 w-8 text-white" />
+                  <CardContent className="p-4 sm:p-6 text-center">
+                    <div className="w-12 h-12 sm:w-16 sm:h-16 bg-gradient-to-r from-amber-500 to-orange-500 rounded-2xl flex items-center justify-center mx-auto mb-3 sm:mb-4 group-hover:scale-110 transition-transform">
+                      <achievement.icon className="h-6 w-6 sm:h-8 sm:w-8 text-white" />
                     </div>
-                    <div className="text-3xl font-bold text-amber-600 mb-2">{achievement.metric}</div>
-                    <CardTitle className="text-base mb-2">{achievement.title}</CardTitle>
-                    <CardDescription className="text-xs text-gray-600">
+                    <div className="text-2xl sm:text-3xl font-bold text-amber-600 mb-1 sm:mb-2">{achievement.metric}</div>
+                    <CardTitle className="text-sm sm:text-base mb-1 sm:mb-2">{achievement.title}</CardTitle>
+                    <CardDescription className="text-[10px] sm:text-xs text-gray-600">
                       {achievement.description}
                     </CardDescription>
                   </CardContent>
@@ -1429,8 +1315,8 @@ const Home = () => {
 
           {/* Download Resume Button */}
           <div className="text-center animate-fade-in">
-            <Button size="lg" className="bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white px-8 py-4 text-lg shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105">
-              <Download className="mr-2 h-5 w-5" />
+            <Button size="lg" className="bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white px-6 sm:px-8 py-3 sm:py-4 text-sm sm:text-base lg:text-lg shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105">
+              <Download className="mr-2 h-4 w-4 sm:h-5 sm:w-5" />
               Download Full Resume
             </Button>
           </div>
@@ -1438,46 +1324,46 @@ const Home = () => {
       </section>
 
       {/* Contact Section */}
-      <section id="contact" className="py-20 px-6 bg-white/50 backdrop-blur-sm">
+      <section id="contact" className="py-12 sm:py-16 lg:py-20 px-4 sm:px-6 bg-white/50 backdrop-blur-sm">
         <div className="container mx-auto">
-          <div className="text-center mb-16 animate-fade-in">
-            <h2 className="text-5xl lg:text-6xl font-bold mb-6">Get In Touch</h2>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+          <div className="text-center mb-10 sm:mb-12 lg:mb-16 animate-fade-in">
+            <h2 className="text-3xl sm:text-4xl lg:text-6xl font-bold mb-4 sm:mb-6">Get In Touch</h2>
+            <p className="text-base sm:text-lg lg:text-xl text-gray-600 max-w-3xl mx-auto px-4">
               Let's discuss your next project, tutoring needs, or just connect and share ideas
             </p>
           </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 sm:gap-10 lg:gap-12">
             {/* Contact Form */}
             <Card className="bg-white/70 backdrop-blur-sm border border-amber-200 hover:shadow-xl transition-all duration-300 animate-slide-up">
-              <CardHeader>
-                <CardTitle className="text-3xl font-bold text-gray-800 flex items-center">
-                  <Mail className="h-8 w-8 text-amber-600 mr-3" />
+              <CardHeader className="p-4 sm:p-6">
+                <CardTitle className="text-2xl sm:text-3xl font-bold text-gray-800 flex items-center">
+                  <Mail className="h-6 w-6 sm:h-8 sm:w-8 text-amber-600 mr-2 sm:mr-3" />
                   Send a Message
                 </CardTitle>
-                <CardDescription className="text-lg text-gray-600">
-                  Share your project details, technical questions, or mentorship needs. I'll provide a personalized response.
+                <CardDescription className="text-sm sm:text-base lg:text-lg text-gray-600">
+                  Share your project details or questions. I'll provide a personalized response.
                 </CardDescription>
               </CardHeader>
-              <CardContent>
+              <CardContent className="p-4 sm:p-6 pt-0">
                 {alertMessage.message && (
-                  <div className={`mb-6 p-4 rounded-lg border flex items-center ${
+                  <div className={`mb-4 sm:mb-6 p-3 sm:p-4 rounded-lg border flex items-center ${
                     alertMessage.type === 'error'
                       ? 'border-red-200 bg-red-50 text-red-800'
                       : 'border-green-200 bg-green-50 text-green-800'
                   }`}>
                     {alertMessage.type === 'error' ? (
-                      <AlertCircle className="h-4 w-4 mr-2 flex-shrink-0" />
+                      <AlertCircle className="h-3 w-3 sm:h-4 sm:w-4 mr-2 flex-shrink-0" />
                     ) : (
-                      <CheckCircle className="h-4 w-4 mr-2 flex-shrink-0" />
+                      <CheckCircle className="h-3 w-3 sm:h-4 sm:w-4 mr-2 flex-shrink-0" />
                     )}
-                    <span className="text-sm">{alertMessage.message}</span>
+                    <span className="text-xs sm:text-sm">{alertMessage.message}</span>
                   </div>
                 )}
 
-                <form className="space-y-6" onSubmit={handleContactSubmit}>
-                  <div className="space-y-2">
-                    <Label htmlFor="name" className="text-gray-700 font-semibold">Full Name *</Label>
+                <form className="space-y-4 sm:space-y-6" onSubmit={handleContactSubmit}>
+                  <div className="space-y-1.5 sm:space-y-2">
+                    <Label htmlFor="name" className="text-gray-700 font-semibold text-xs sm:text-sm">Full Name *</Label>
                     <Input
                       id="name"
                       name="name"
@@ -1487,7 +1373,7 @@ const Home = () => {
                       onChange={handleChange}
                       required
                       disabled={isSending}
-                      className={`border-amber-200 focus:ring-amber-500 bg-white/50 ${
+                      className={`border-amber-200 focus:ring-amber-500 bg-white/50 text-xs sm:text-sm ${
                         errors.name ? 'border-red-300 focus:ring-red-500' : ''
                       }`}
                       aria-invalid={!!errors.name}
@@ -1495,15 +1381,15 @@ const Home = () => {
                       maxLength={50}
                     />
                     {errors.name && (
-                      <p id="name-error" className="text-red-500 text-sm flex items-center">
-                        <AlertCircle className="h-4 w-4 mr-1" />
+                      <p id="name-error" className="text-red-500 text-xs sm:text-sm flex items-center">
+                        <AlertCircle className="h-3 w-3 sm:h-4 sm:w-4 mr-1" />
                         {errors.name}
                       </p>
                     )}
                   </div>
 
-                  <div className="space-y-2">
-                    <Label htmlFor="email" className="text-gray-700 font-semibold">Email Address *</Label>
+                  <div className="space-y-1.5 sm:space-y-2">
+                    <Label htmlFor="email" className="text-gray-700 font-semibold text-xs sm:text-sm">Email Address *</Label>
                     <Input
                       id="email"
                       name="email"
@@ -1513,7 +1399,7 @@ const Home = () => {
                       onChange={handleChange}
                       required
                       disabled={isSending}
-                      className={`border-amber-200 focus:ring-amber-500 bg-white/50 ${
+                      className={`border-amber-200 focus:ring-amber-500 bg-white/50 text-xs sm:text-sm ${
                         errors.email ? 'border-red-300 focus:ring-red-500' : ''
                       }`}
                       aria-invalid={!!errors.email}
@@ -1521,25 +1407,25 @@ const Home = () => {
                       maxLength={100}
                     />
                     {errors.email && (
-                      <p id="email-error" className="text-red-500 text-sm flex items-center">
-                        <AlertCircle className="h-4 w-4 mr-1" />
+                      <p id="email-error" className="text-red-500 text-xs sm:text-sm flex items-center">
+                        <AlertCircle className="h-3 w-3 sm:h-4 sm:w-4 mr-1" />
                         {errors.email}
                       </p>
                     )}
                   </div>
 
-                  <div className="space-y-2">
-                    <Label htmlFor="subject" className="text-gray-700 font-semibold">Subject *</Label>
+                  <div className="space-y-1.5 sm:space-y-2">
+                    <Label htmlFor="subject" className="text-gray-700 font-semibold text-xs sm:text-sm">Subject *</Label>
                     <Input
                       id="subject"
                       name="subject"
                       type="text"
-                      placeholder="e.g., Project Collaboration or Tutoring Inquiry"
+                      placeholder="e.g., Project Collaboration"
                       value={formData.subject}
                       onChange={handleChange}
                       required
                       disabled={isSending}
-                      className={`border-amber-200 focus:ring-amber-500 bg-white/50 ${
+                      className={`border-amber-200 focus:ring-amber-500 bg-white/50 text-xs sm:text-sm ${
                         errors.subject ? 'border-red-300 focus:ring-red-500' : ''
                       }`}
                       aria-invalid={!!errors.subject}
@@ -1547,25 +1433,25 @@ const Home = () => {
                       maxLength={100}
                     />
                     {errors.subject && (
-                      <p id="subject-error" className="text-red-500 text-sm flex items-center">
-                        <AlertCircle className="h-4 w-4 mr-1" />
+                      <p id="subject-error" className="text-red-500 text-xs sm:text-sm flex items-center">
+                        <AlertCircle className="h-3 w-3 sm:h-4 sm:w-4 mr-1" />
                         {errors.subject}
                       </p>
                     )}
                   </div>
 
-                  <div className="space-y-2">
-                    <Label htmlFor="message" className="text-gray-700 font-semibold">Your Message *</Label>
+                  <div className="space-y-1.5 sm:space-y-2">
+                    <Label htmlFor="message" className="text-gray-700 font-semibold text-xs sm:text-sm">Your Message *</Label>
                     <Textarea
                       id="message"
                       name="message"
-                      rows={5}
-                      placeholder="Describe your project, requirements, or questions in detail..."
+                      rows={4}
+                      placeholder="Describe your project or questions..."
                       value={formData.message}
                       onChange={handleChange}
                       required
                       disabled={isSending}
-                      className={`border-amber-200 focus:ring-amber-500 bg-white/50 resize-none ${
+                      className={`border-amber-200 focus:ring-amber-500 bg-white/50 resize-none text-xs sm:text-sm ${
                         errors.message ? 'border-red-300 focus:ring-red-500' : ''
                       }`}
                       aria-invalid={!!errors.message}
@@ -1574,31 +1460,31 @@ const Home = () => {
                     />
                     <div className="flex justify-between items-center">
                       {errors.message && (
-                        <p id="message-error" className="text-red-500 text-sm flex items-center">
-                          <AlertCircle className="h-4 w-4 mr-1" />
+                        <p id="message-error" className="text-red-500 text-xs sm:text-sm flex items-center">
+                          <AlertCircle className="h-3 w-3 sm:h-4 sm:w-4 mr-1" />
                           {errors.message}
                         </p>
                       )}
-                      <p className="text-sm text-gray-500 ml-auto">{formData.message.length}/1000</p>
+                      <p className="text-xs text-gray-500 ml-auto">{formData.message.length}/1000</p>
                     </div>
                   </div>
 
-                  <p className="text-sm text-gray-500">* Required fields. Your information is kept confidential and used only for responding to your inquiry.</p>
+                  <p className="text-[10px] sm:text-xs text-gray-500">* Required fields. Your information is kept confidential.</p>
 
                   <Button
                     type="submit"
                     disabled={isSending}
-                    className="w-full bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 disabled:opacity-70 disabled:cursor-not-allowed"
+                    className="w-full bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 disabled:opacity-70 disabled:cursor-not-allowed text-xs sm:text-sm"
                   >
                     {isSending ? (
                       <>
-                        <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin mr-2"></div>
+                        <div className="w-4 h-4 sm:w-5 sm:h-5 border-2 border-white border-t-transparent rounded-full animate-spin mr-2"></div>
                         Sending...
                       </>
                     ) : (
                       <>
                         Send Message
-                        <Send className="ml-2 h-5 w-5" />
+                        <Send className="ml-2 h-4 w-4 sm:h-5 sm:w-5" />
                       </>
                     )}
                   </Button>
@@ -1607,69 +1493,61 @@ const Home = () => {
             </Card>
 
             {/* Contact Information */}
-            <div className="space-y-8">
+            <div className="space-y-6 sm:space-y-8">
               <Card className="bg-white/70 backdrop-blur-sm border border-amber-200 hover:shadow-xl transition-all duration-300 animate-slide-up" style={{ animationDelay: '0.2s' }}>
-                <CardHeader>
-                  <CardTitle className="text-2xl font-bold text-gray-800 flex items-center">
-                    <Mail className="h-6 w-6 text-amber-600 mr-3" />
+                <CardHeader className="p-4 sm:p-6">
+                  <CardTitle className="text-xl sm:text-2xl font-bold text-gray-800 flex items-center">
+                    <Mail className="h-5 w-5 sm:h-6 sm:w-6 text-amber-600 mr-2 sm:mr-3" />
                     Email
                   </CardTitle>
                 </CardHeader>
-                <CardContent>
-                  <p className="text-gray-600 mb-4">Reach out for project inquiries, technical consultations, or mentorship discussions.</p>
-                  <a href="mailto:surajkumarraj8888@gmail.com" className="text-amber-600 hover:text-amber-800 font-semibold flex items-center">
+                <CardContent className="p-4 sm:p-6 pt-0">
+                  <p className="text-gray-600 mb-3 sm:mb-4 text-xs sm:text-sm">Reach out for project inquiries or consultations.</p>
+                  <a href="mailto:surajkumarraj8888@gmail.com" className="text-amber-600 hover:text-amber-800 font-semibold flex items-center text-xs sm:text-sm">
                     surajkumarraj8888@gmail.com
-                    <ExternalLink className="ml-2 h-4 w-4" />
+                    <ExternalLink className="ml-2 h-3 w-3 sm:h-4 sm:w-4" />
                   </a>
                 </CardContent>
               </Card>
 
               <Card className="bg-white/70 backdrop-blur-sm border border-amber-200 hover:shadow-xl transition-all duration-300 animate-slide-up" style={{ animationDelay: '0.4s' }}>
-                <CardHeader>
-                  <CardTitle className="text-2xl font-bold text-gray-800 flex items-center">
-                    <GraduationCap className="h-6 w-6 text-amber-600 mr-3" />
+                <CardHeader className="p-4 sm:p-6">
+                  <CardTitle className="text-xl sm:text-2xl font-bold text-gray-800 flex items-center">
+                    <GraduationCap className="h-5 w-5 sm:h-6 sm:w-6 text-amber-600 mr-2 sm:mr-3" />
                     College
                   </CardTitle>
                 </CardHeader>
-                <CardContent>
-                  <p className="text-gray-600 mb-4">Studying at Government Engineering College, Vaishali.</p>
-                  <a href="https://www.gecvaishali.ac.in/" target="_blank" rel="noopener noreferrer" className="text-amber-600 hover:text-amber-800 font-semibold flex items-center">
-                    Government Engineering College, Vaishali
-                    <ExternalLink className="ml-2 h-4 w-4" />
+                <CardContent className="p-4 sm:p-6 pt-0">
+                  <p className="text-gray-600 mb-3 sm:mb-4 text-xs sm:text-sm">Studying at Government Engineering College, Vaishali.</p>
+                  <a href="https://www.gecvaishali.ac.in/" target="_blank" rel="noopener noreferrer" className="text-amber-600 hover:text-amber-800 font-semibold flex items-center text-xs sm:text-sm">
+                    GEC Vaishali
+                    <ExternalLink className="ml-2 h-3 w-3 sm:h-4 sm:w-4" />
                   </a>
                 </CardContent>
               </Card>
 
               <Card className="bg-white/70 backdrop-blur-sm border border-amber-200 hover:shadow-xl transition-all duration-300 animate-slide-up" style={{ animationDelay: '0.6s' }}>
-                <CardHeader>
-                  <CardTitle className="text-2xl font-bold text-gray-800 flex items-center">
-                    <Github className="h-6 w-6 text-amber-600 mr-3" />
+                <CardHeader className="p-4 sm:p-6">
+                  <CardTitle className="text-xl sm:text-2xl font-bold text-gray-800 flex items-center">
+                    <Github className="h-5 w-5 sm:h-6 sm:w-6 text-amber-600 mr-2 sm:mr-3" />
                     Connect on Social
                   </CardTitle>
                 </CardHeader>
-                <CardContent>
-                  <p className="text-gray-600 mb-4">Follow me for updates on projects, coding tips, and tech insights. Let's connect and grow together!</p>
-                  <div className="grid grid-cols-4 gap-4">
-                    <Button variant="ghost" className="p-0 hover:bg-amber-100 transition-all duration-300 hover:scale-110">
-                      <a href="https://github.com/Suraj1819" target="_blank" rel="noopener noreferrer">
-                        <Github className="h-8 w-8 text-amber-700" />
-                      </a>
-                    </Button>
-                    <Button variant="ghost" className="p-0 hover:bg-amber-100 transition-all duration-300 hover:scale-110">
-                      <a href="https://www.linkedin.com/in/suraj-kumar-72847b30a/" target="_blank" rel="noopener noreferrer">
-                        <Linkedin className="h-8 w-8 text-amber-700" />
-                      </a>
-                    </Button>
-                    <Button variant="ghost" className="p-0 hover:bg-amber-100 transition-all duration-300 hover:scale-110">
-                      <a href="https://leetcode.com/u/Suraj_1819/" target="_blank" rel="noopener noreferrer">
-                        <Code className="h-8 w-8 text-amber-700" />
-                      </a>
-                    </Button>
-                    <Button variant="ghost" className="p-0 hover:bg-amber-100 transition-all duration-300 hover:scale-110">
-                      <a href="https://www.geeksforgeeks.org/user/surajkuma16ts/" target="_blank" rel="noopener noreferrer">
-                        <Code2 className="h-8 w-8 text-amber-700" />
-                      </a>
-                    </Button>
+                <CardContent className="p-4 sm:p-6 pt-0">
+                  <p className="text-gray-600 mb-3 sm:mb-4 text-xs sm:text-sm">Follow me for updates and tech insights!</p>
+                  <div className="grid grid-cols-4 gap-3 sm:gap-4">
+                    {[
+                      { href: "https://github.com/Suraj1819", icon: Github },
+                      { href: "https://www.linkedin.com/in/suraj-kumar-72847b30a/", icon: Linkedin },
+                      { href: "https://leetcode.com/u/Suraj_1819/", icon: Code },
+                      { href: "https://www.geeksforgeeks.org/user/surajkuma16ts/", icon: Code2 }
+                    ].map((social, idx) => (
+                      <Button key={idx} variant="ghost" className="p-0 hover:bg-amber-100 transition-all duration-300 hover:scale-110">
+                        <a href={social.href} target="_blank" rel="noopener noreferrer">
+                          <social.icon className="h-6 w-6 sm:h-8 sm:w-8 text-amber-700" />
+                        </a>
+                      </Button>
+                    ))}
                   </div>
                 </CardContent>
               </Card>
