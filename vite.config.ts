@@ -9,10 +9,6 @@ export default defineConfig(({ mode }) => ({
     host: "::",
     port: 8080,
   },
-  base:
-    mode === "production"
-      ? "/portfolio-1/" //My github repo name
-      : "/",   
   plugins: [
     react(),
     mode === 'development' &&
