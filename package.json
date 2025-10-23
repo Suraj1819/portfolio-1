@@ -1,8 +1,10 @@
+
 {
   "name": "blog",
   "private": true,
   "version": "0.0.0",
   "type": "module",
+  "homepage": "https://suraj1819.github.io/portfolio-1//portfolio-1",
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
