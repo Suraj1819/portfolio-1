@@ -26,6 +26,8 @@ import CookiePolicy from "./pages/cookie";
 // import Blog from "./pages/blog";
 import Accessibility from "./pages/accessability";
 import ResumeDefault from "./pages/resumeShow";
+import PortfolioFeedback from "./pages/feedback";
+import Sitemap from "./pages/sitemap";
 
 
 
@@ -62,6 +64,9 @@ const App = () => (
              {/* <Route path="/blog" element={<Blog />} /> */}
              <Route path="/access" element={<Accessibility />} />
              <Route path="/res" element={<ResumeDefault />} />
+             <Route path="/your-feedback" element={<PortfolioFeedback />} />
+             <Route path="/sitemap" element={<Sitemap />} />
+             <Route path="/porto-feedback" element={<PortfolioFeedback />} />
 
 
             
