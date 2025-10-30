@@ -162,202 +162,6 @@ axiosInstance.interceptors.response.use(
   }
 );
 
-// ==================== CUSTOM STYLES ====================
-// const customStyles = `
-//   @keyframes float {
-//     0%, 100% { transform: translateY(0px); }
-//     50% { transform: translateY(-20px); }
-//   }
-  
-//   @keyframes pulse-slow {
-//     0%, 100% { opacity: 0.3; }
-//     50% { opacity: 0.5; }
-//   }
-  
-//   @keyframes scale-in {
-//     from { transform: scale(0.8); opacity: 0; }
-//     to { transform: scale(1); opacity: 1; }
-//   }
-  
-//   @keyframes bounce-gentle {
-//     0%, 100% { transform: translateY(0); }
-//     50% { transform: translateY(-10px); }
-//   }
-  
-//   @keyframes fadeIn {
-//     from { opacity: 0; transform: translateY(-10px); }
-//     to { opacity: 1; transform: translateY(0); }
-//   }
-
-//   @keyframes slideIn {
-//     from { transform: translateX(-100%); opacity: 0; }
-//     to { transform: translateX(0); opacity: 1; }
-//   }
-
-//   @keyframes slideUp {
-//     from { transform: translateY(20px); opacity: 0; }
-//     to { transform: translateY(0); opacity: 1; }
-//   }
-  
-//   .animate-float { animation: float 3s ease-in-out infinite; }
-//   .animate-pulse-slow { animation: pulse-slow 3s ease-in-out infinite; }
-//   .animate-scale-in { animation: scale-in 0.5s ease-out; }
-//   .animate-bounce-gentle { animation: bounce-gentle 2s ease-in-out infinite; }
-//   .animate-fade-in { animation: fadeIn 0.3s ease-out; }
-//   .animate-slide-in { animation: slideIn 0.5s ease-out; }
-//   .animate-slide-up { animation: slideUp 0.5s ease-out; }
-
-//   /* Mobile Responsive Utilities */
-//   @media (max-width: 640px) {
-//     .mobile-text-xs { font-size: 0.75rem; }
-//     .mobile-text-sm { font-size: 0.875rem; }
-//     .mobile-text-base { font-size: 1rem; }
-//     .mobile-text-lg { font-size: 1.125rem; }
-//     .mobile-text-xl { font-size: 1.25rem; }
-//     .mobile-text-2xl { font-size: 1.5rem; }
-//     .mobile-text-3xl { font-size: 1.875rem; }
-    
-//     .mobile-p-2 { padding: 0.5rem; }
-//     .mobile-p-4 { padding: 1rem; }
-//     .mobile-p-6 { padding: 1.5rem; }
-    
-//     .mobile-m-2 { margin: 0.5rem; }
-//     .mobile-m-4 { margin: 1rem; }
-    
-//     .mobile-gap-2 { gap: 0.5rem; }
-//     .mobile-gap-4 { gap: 1rem; }
-//   }
-
-//   /* Smooth Scrolling */
-//   html {
-//     scroll-behavior: smooth;
-//   }
-
-//   /* Hide scrollbar for Chrome, Safari and Opera */
-//   .hide-scrollbar::-webkit-scrollbar {
-//     display: none;
-//   }
-
-//   /* Hide scrollbar for IE, Edge and Firefox */
-//   .hide-scrollbar {
-//     -ms-overflow-style: none;
-//     scrollbar-width: none;
-//   }
-// `;
-
-// // ==================== LOADING SCREEN COMPONENT ====================
-// const PremiumLoadingScreen: React.FC = () => {
-//   const [progress, setProgress] = useState<number>(0);
-//   const [loadingMessage, setLoadingMessage] = useState<number>(0);
-
-//   const loadingMessages: string[] = [
-//     "Initializing components...",
-//     "Loading awesome content...",
-//     "Preparing amazing experience...",
-//     "Almost ready...",
-//     "Finalizing details...",
-//     "Thanks for waiting..."
-//   ];
-
-//   useEffect(() => {
-//     const interval = setInterval(() => {
-//       setProgress(prev => {
-//         if (prev >= 100) {
-//           clearInterval(interval);
-//           return 100;
-//         }
-//         return prev + 2;
-//       });
-//     }, 50);
-
-//     const messageInterval = setInterval(() => {
-//       setLoadingMessage(prev => (prev + 1) % loadingMessages.length);
-//     }, 400);
-
-//     return () => {
-//       clearInterval(interval);
-//       clearInterval(messageInterval);
-//     };
-//   }, [loadingMessages.length]);
-
-//   return (
-//     <>
-//       <style>{customStyles}</style>
-//       <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-amber-50 via-orange-50 to-yellow-50 px-4">
-//         <div className="text-center w-full max-w-md">
-//           {/* Animated Logo Container */}
-//           <div className="flex justify-center items-center space-x-4 sm:space-x-8 mb-8 sm:mb-12">
-//             {/* Left Side: Spinning Circle */}
-//             <div className="relative">
-//               <div className="w-24 h-24 sm:w-32 sm:h-32 border-4 border-amber-500 border-t-transparent rounded-full animate-spin mx-auto" style={{ animationDuration: '2s' }}></div>
-//               <div className="absolute inset-4 sm:inset-6 w-16 h-16 sm:w-20 sm:h-20 bg-gradient-to-br from-amber-400 to-orange-500 rounded-full flex items-center justify-center shadow-2xl">
-//                 <Code className="h-8 w-8 sm:h-10 sm:w-10 text-white animate-pulse" />
-//               </div>
-//             </div>
-
-//             {/* Right Side: Spinning Circle with Image */}
-//             <div className="relative">
-//               <div className="w-24 h-24 sm:w-32 sm:h-32 border-4 border-orange-500 border-t-transparent rounded-full animate-spin mx-auto" style={{ animationDuration: '2s', animationDirection: 'reverse' }}></div>
-//               <div className="absolute inset-4 sm:inset-6 w-16 h-16 sm:w-20 sm:h-20 bg-gradient-to-br from-orange-400 to-red-500 rounded-full flex items-center justify-center shadow-2xl overflow-hidden">
-//                 <img 
-//                   src="https://picsum.photos/200/300"
-//                   alt="Loading Icon"
-//                   className="h-12 w-12 sm:h-16 sm:w-16 object-cover rounded-full animate-pulse"
-//                 />
-//               </div>
-//             </div>
-//           </div>
-
-//           {/* Loading Text */}
-//           <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-800 mb-3 sm:mb-4 bg-gradient-to-r from-amber-600 to-orange-600 bg-clip-text text-transparent">
-//             Loading Portfolio
-//           </h2>
-//           <p className="text-sm sm:text-base text-gray-600 mb-6 sm:mb-8 max-w-md mx-auto min-h-[24px] px-4">
-//             {loadingMessages[loadingMessage]}
-//           </p>
-
-//           {/* Progress Bar */}
-//           <div className="w-full sm:w-64 mx-auto mb-6 sm:mb-8 px-4">
-//             <div className="flex justify-between text-xs sm:text-sm text-gray-600 mb-2">
-//               <span>Loading</span>
-//               <span>{progress}%</span>
-//             </div>
-//             <div className="w-full bg-gray-200 rounded-full h-2 sm:h-3 overflow-hidden">
-//               <div
-//                 className="bg-gradient-to-r from-amber-500 to-orange-500 h-2 sm:h-3 rounded-full transition-all duration-300 ease-out relative"
-//                 style={{ width: `${progress}%` }}
-//               >
-//                 <div className="absolute inset-0 bg-white/30 animate-pulse"></div>
-//               </div>
-//             </div>
-//           </div>
-
-//           {/* Loading Dots */}
-//           <div className="flex justify-center space-x-2 sm:space-x-3">
-//             {[0, 0.2, 0.4].map((delay, i) => (
-//               <div
-//                 key={i}
-//                 className="w-2 h-2 sm:w-3 sm:h-3 bg-amber-500 rounded-full animate-bounce"
-//                 style={{ animationDelay: `${delay}s` }}
-//               ></div>
-//             ))}
-//           </div>
-
-//           {/* Loading Tips */}
-//           <div className="mt-8 sm:mt-12 max-w-md mx-auto px-4">
-//             <div className="bg-white/80 backdrop-blur-sm p-3 sm:p-4 rounded-lg shadow-sm border border-amber-100">
-//               <p className="text-xs sm:text-sm text-gray-600 italic">
-//                 "Did you know? This portfolio is built with React, TypeScript, and Tailwind CSS!"
-//               </p>
-//             </div>
-//           </div>
-//         </div>
-//       </div>
-//     </>
-//   );
-// };
-
-
 const customStyles = `
   @keyframes float {
     0%, 100% { transform: translateY(0px); }
@@ -697,19 +501,24 @@ const PremiumLoadingScreen: React.FC = () => {
     "Step 6/6: Application Ready"
   ];
 
-  const codeSnippets = [
-    { text: "import React from 'react';", left: '5%', top: '15%', delay: 0, rotate: 0, mobileLeft: '2%', mobileTop: '10%' },
-    { text: "const PremiumLoadingScreen = () => {", left: '75%', top: '10%', delay: 0.5, rotate: -2, mobileLeft: '70%', mobileTop: '5%' },
-    { text: "useState, useEffect", left: '15%', top: '65%', delay: 1, rotate: 1, mobileLeft: '10%', mobileTop: '55%' },
-    { text: "export default PremiumLoadingScreen;", left: '80%', top: '75%', delay: 1.5, rotate: -1, mobileLeft: '75%', mobileTop: '65%' },
-    { text: "const [progress, setProgress] = useState(0);", left: '2%', top: '85%', delay: 2, rotate: 2, mobileLeft: '1%', mobileTop: '75%' },
-    { text: "await loading...", left: '65%', top: '35%', delay: 2.5, rotate: 0, mobileLeft: '60%', mobileTop: '30%' },
-    { text: "return <div>Loading...</div>", left: '35%', top: '90%', delay: 3, rotate: -3, mobileLeft: '30%', mobileTop: '80%' },
-    { text: "function App() {", left: '45%', top: '20%', delay: 3.5, rotate: 1, mobileLeft: '40%', mobileTop: '15%' },
-    { text: "return <PremiumLoadingScreen />", left: '10%', top: '45%', delay: 4, rotate: -1, mobileLeft: '5%', mobileTop: '40%' },
-    { text: "};", left: '85%', top: '50%', delay: 4.5, rotate: 0, mobileLeft: '80%', mobileTop: '45%' },
-    { text: "import { useState } from 'react';", left: '25%', top: '25%', delay: 5, rotate: 2, mobileLeft: '20%', mobileTop: '20%' },
-    { text: "const [isLoading, setIsLoading] = useState(true);", left: '60%', top: '60%', delay: 5.5, rotate: -2, mobileLeft: '55%', mobileTop: '50%' }
+  // REPLACED: Code Snippets with Mathematics Formulas
+  const mathFormulas = [
+    { text: "E = mc²", left: '5%', top: '15%', delay: 0, rotate: 0, mobileLeft: '2%', mobileTop: '10%' },
+    { text: "F = ma", left: '75%', top: '10%', delay: 0.5, rotate: -2, mobileLeft: '70%', mobileTop: '5%' },
+    { text: "a² + b² = c²", left: '15%', top: '65%', delay: 1, rotate: 1, mobileLeft: '10%', mobileTop: '55%' },
+    { text: "∫ sin(x) dx", left: '80%', top: '75%', delay: 1.5, rotate: -1, mobileLeft: '75%', mobileTop: '65%' },
+    { text: "lim(x→0) sin(x)/x", left: '2%', top: '85%', delay: 2, rotate: 2, mobileLeft: '1%', mobileTop: '75%' },
+    { text: "e^(iπ) + 1 = 0", left: '65%', top: '35%', delay: 2.5, rotate: 0, mobileLeft: '60%', mobileTop: '30%' },
+    { text: "∂f/∂x = df/dx", left: '35%', top: '90%', delay: 3, rotate: -3, mobileLeft: '30%', mobileTop: '80%' },
+    { text: "√(x² + y²)", left: '45%', top: '20%', delay: 3.5, rotate: 1, mobileLeft: '40%', mobileTop: '15%' },
+    { text: "∑(i=1 to n) i", left: '10%', top: '45%', delay: 4, rotate: -1, mobileLeft: '5%', mobileTop: '40%' },
+    { text: "log(ab) = log a + log b", left: '85%', top: '50%', delay: 4.5, rotate: 0, mobileLeft: '80%', mobileTop: '45%' },
+    { text: "d²y/dx² = 0", left: '25%', top: '25%', delay: 5, rotate: 2, mobileLeft: '20%', mobileTop: '20%' },
+    { text: "σ = √(Σ(xi-μ)²/n)", left: '60%', top: '60%', delay: 5.5, rotate: -2, mobileLeft: '55%', mobileTop: '50%' },
+    { text: "tan(θ) = sin/cos", left: '30%', top: '30%', delay: 6, rotate: 1, mobileLeft: '25%', mobileTop: '25%' },
+    { text: "n! = n×(n-1)×(n-2)", left: '70%', top: '80%', delay: 6.5, rotate: -1, mobileLeft: '65%', mobileTop: '70%' },
+    { text: "P(E) = n(E)/n(S)", left: '20%', top: '70%', delay: 7, rotate: 0, mobileLeft: '15%', mobileTop: '60%' },
+    { text: "f'(x) = lim(h→0) [f(x+h)-f(x)]/h", left: '90%', top: '20%', delay: 7.5, rotate: -2, mobileLeft: '85%', mobileTop: '15%' }
   ];
 
   useEffect(() => {
@@ -771,17 +580,17 @@ const PremiumLoadingScreen: React.FC = () => {
           <div className="absolute bottom-20 right-20 w-32 h-32 bg-amber-400/8 rounded-full blur-xl animate-pulse" style={{ animationDelay: '2.2s' }}></div>
         </div>
 
-        {/* Floating Code Snippets */}
+        {/* Floating Mathematics Formulas */}
         <div className="absolute inset-0 pointer-events-none">
-          {codeSnippets.map((snippet, index) => (
+          {mathFormulas.map((formula, index) => (
             <div
               key={index}
               className="absolute text-amber-600 text-xs sm:text-sm font-mono animate-code-float whitespace-pre-wrap mobile-code-snippet"
               style={{
-                left: window.innerWidth < 640 ? snippet.mobileLeft : snippet.left,
-                top: window.innerWidth < 640 ? snippet.mobileTop : snippet.top,
-                animationDelay: `${snippet.delay}s`,
-                transform: `rotate(${snippet.rotate}deg) translateZ(0)`,
+                left: window.innerWidth < 640 ? formula.mobileLeft : formula.left,
+                top: window.innerWidth < 640 ? formula.mobileTop : formula.top,
+                animationDelay: `${formula.delay}s`,
+                transform: `rotate(${formula.rotate}deg) translateZ(0)`,
                 opacity: 0.8,
                 maxWidth: '180px',
                 lineHeight: '1.1',
@@ -789,7 +598,7 @@ const PremiumLoadingScreen: React.FC = () => {
                 pointerEvents: 'none'
               }}
             >
-              {snippet.text}
+              {formula.text}
             </div>
           ))}
         </div>
@@ -848,7 +657,7 @@ const PremiumLoadingScreen: React.FC = () => {
                 <div className="absolute inset-0 animate-pulse-ring" style={{ backgroundColor: 'rgba(245, 158, 11, 0.2)', animationDelay: '0.6s' }}></div>
                 <div className="w-20 h-20 rounded-full bg-gradient-to-br from-orange-500 to-amber-600 flex items-center justify-center shadow-lg animate-glow-pulse mx-auto relative z-5 loading-circle">
                   <div className="absolute inset-0 rounded-full border-2 border-amber-400/50"></div>
-                  <Code2 className="w-8 h-8 text-white relative z-10 animate-bounce-gentle" style={{ animationDuration: '3.5s' }} />
+                  <Code className="w-8 h-8 text-white relative z-10 animate-bounce-gentle" style={{ animationDuration: '3.5s' }} />
                 </div>
                 <div className="absolute -bottom-6 left-1/2 transform -translate-x-1/2 text-xs text-amber-600 font-medium whitespace-nowrap">
                   <Cpu className="inline h-3 w-3 mr-1" />
@@ -885,12 +694,12 @@ const PremiumLoadingScreen: React.FC = () => {
             </div>
           </div>
 
-          {/* Loading Dots */}
+          {/* Loading Dots - REMOVED CIRCLE CLASS */}
           <div className="flex justify-center gap-4 mb-8">
             {[0, 0.25, 0.5].map((delay, i) => (
               <div
                 key={i}
-                className="w-3 h-3 bg-gradient-to-br from-amber-500 to-orange-500 rounded-full animate-bounce shadow-sm loading-circle"
+                className="w-3 h-3 bg-gradient-to-br from-amber-500 to-orange-500 rounded-full animate-bounce shadow-sm"
                 style={{ 
                   animationDelay: `${delay}s`, 
                   animationDuration: '1.2s',
@@ -954,7 +763,7 @@ const PremiumLoadingScreen: React.FC = () => {
               </>
             ) : (
               <>
-                <Loader2 className="w-5 h-5 text-amber-600 animate-rotate-slow loading-circle" style={{ animationDuration: '2s' }} />
+                <Loader2 className="w-5 h-5 text-amber-600 animate-rotate-slow" style={{ animationDuration: '2s' }} />
                 <span className="text-base font-semibold text-amber-700">Initializing Application...</span>
                 <Globe className="w-5 h-5 text-amber-500 animate-pulse" />
               </>
@@ -965,6 +774,8 @@ const PremiumLoadingScreen: React.FC = () => {
     </>
   );
 };
+
+
 
 // ==================== HERO SECTION COMPONENT ====================
 const HeroSection: React.FC = () => {
