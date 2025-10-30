@@ -116,7 +116,7 @@ const ThankYou = () => {
           <div className="bg-white/80 backdrop-blur-sm p-4 sm:p-6 rounded-2xl border-2 border-amber-200 inline-block shadow-lg mx-4">
             <p className="text-base sm:text-lg font-semibold text-amber-700 flex items-center gap-2 justify-center flex-wrap">
               <Sparkles className="w-5 h-5 sm:w-6 sm:h-6" />
-              <span>I'll respond within 24-48 hours!</span>
+              <span>ThankYou</span>
               <Sparkles className="w-5 h-5 sm:w-6 sm:h-6" />
             </p>
           </div>
@@ -140,7 +140,7 @@ const ThankYou = () => {
                   </div>
                   <h3 className="text-lg sm:text-xl font-bold text-cream-800 mb-3 text-center">Message Received</h3>
                   <p className="text-sm sm:text-base text-cream-600 text-center leading-relaxed">
-                    Your message is now in my priority inbox and flagged for immediate attention.
+                    Your message is now in my priority inbox
                   </p>
                 </div>
               </div>
@@ -214,7 +214,7 @@ const ThankYou = () => {
                 href="mailto:surajkr.sinha2003@gmail.com" 
                 className="block text-center text-sm sm:text-base text-amber-600 hover:text-amber-700 font-semibold hover:underline transition-colors"
               >
-                surajkr.sinha2003@gmail.com
+                surajkumarraj8888@gmail.com
               </a>
             </div>
 
