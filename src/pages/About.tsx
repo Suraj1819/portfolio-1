@@ -174,17 +174,17 @@ const About = () => {
 
   // Achievements
   const achievements: Achievement[] = [
-    {
-      icon: Trophy,
-      title: '100+ Students Mentored',
-      description: 'Successfully guided students in programming and interview preparation',
-      color: 'from-amber-400 to-orange-500',
-      value: '100+',
-      unit: 'Students'
-    },
+    // {
+    //   icon: Trophy,
+    //   title: '100+ Students Mentored',
+    //   description: 'Successfully guided students in programming and interview preparation',
+    //   color: 'from-amber-400 to-orange-500',
+    //   value: '100+',
+    //   unit: 'Students'
+    // },
     {
       icon: Star,
-      title: '500+ DSA Problems',
+      title: '300+ DSA Problems',
       description: 'Solved complex algorithmic problems across various platforms',
       color: 'from-blue-400 to-purple-500',
       value: '500+',
@@ -192,10 +192,10 @@ const About = () => {
     },
     {
       icon: Award,
-      title: 'Top Performer',
+      title: '3rd Topper Student',
       description: 'Consistently ranked among top students in academics',
       color: 'from-green-400 to-emerald-500',
-      value: 'Top 10%',
+      value: '3rd',
       unit: 'Academics'
     },
     {
@@ -210,6 +210,22 @@ const About = () => {
 
   // Timeline of journey
   const timeline: TimelineItem[] = [
+    {
+      year: '2020',
+      title: 'Started Matriculation',
+      description: 'Begain Matriculation at SRT Public School, Rautania',
+      icon: GraduationCap,
+      color: 'from-blue-400 to-cyan-500',
+      details: 'Foundation in Maths and Science'
+    },
+    {
+      year: '2022',
+      title: 'Started Intermediate',
+      description: 'Began Intermediate at SRT Public School, Rautania',
+      icon: GraduationCap,
+      color: 'from-blue-400 to-cyan-500',
+      details:'Foundation in Physics, Chemistry and Mathematics'
+    },
     {
       year: '2023',
       title: 'Started B.Tech Journey',
@@ -595,113 +611,216 @@ const About = () => {
       </section>
 
       {/* Skills Section */}
-      <section className="py-12 sm:py-20 px-4 sm:px-6 bg-white/50 backdrop-blur-sm">
-        <div className="container mx-auto">
-          <div className="text-center mb-10 sm:mb-16 animate-fade-in">
-            <Badge className="px-4 py-2 text-xs sm:text-sm bg-amber-100 text-amber-800 mb-4">
-              <Brain className="w-3 h-3 sm:w-4 sm:h-4 mr-2" />
-              Technical Expertise
-            </Badge>
-            <h2 className="text-3xl sm:text-5xl font-bold mb-4 sm:mb-6">Technical Skills & Technologies</h2>
-            <p className="text-base sm:text-xl text-gray-600 max-w-3xl mx-auto mb-8">
-              My expertise spans across programming languages, web development, databases, and core computer science concepts.
-            </p>
-
-            <div className="flex flex-wrap justify-center gap-2 mb-8">
-              <Button
-                variant={selectedSkillCategory === 'all' ? 'default' : 'outline'}
-                onClick={() => setSelectedSkillCategory('all')}
-                className={selectedSkillCategory === 'all' ? 'bg-gradient-to-r from-amber-500 to-orange-500' : 'border-amber-300'}
-              >
-                All Skills
-              </Button>
-              {Object.keys(skillsData).map((category: string) => (
-                <Button
-                  key={category}
-                  variant={selectedSkillCategory === category ? 'default' : 'outline'}
-                  onClick={() => setSelectedSkillCategory(category)}
-                  className={selectedSkillCategory === category ? 'bg-gradient-to-r from-amber-500 to-orange-500' : 'border-amber-300'}
-                >
-                  {category}
-                </Button>
-              ))}
+      <section className="py-16 sm:py-24 px-4 sm:px-6 bg-gradient-to-br from-amber-50 via-orange-50 to-yellow-50">
+        <div className="container mx-auto max-w-7xl">
+          
+          {/* Header */}
+          <div className="text-center mb-12 sm:mb-16 animate-fade-in">
+            <div className="inline-flex items-center px-5 py-3 text-sm sm:text-base bg-white/80 backdrop-blur-sm rounded-full shadow-lg border border-amber-200 mb-6">
+              <Brain className="w-4 h-4 sm:w-5 sm:h-5 text-amber-600 mr-2" />
+              <span className="font-medium text-amber-800">Core Competencies</span>
             </div>
+            
+            <h2 className="text-3xl sm:text-5xl md:text-6xl font-black mb-6 bg-gradient-to-r from-amber-900 to-orange-800 text-transparent bg-clip-text">
+              Skills & Technologies
+            </h2>
+            
+            <p className="text-base sm:text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
+              Expertise engineered for performance, scalability, and innovation across the full stack.
+            </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
+          {/* Category Filters */}
+          <div className="flex flex-wrap justify-center gap-3 mb-10 sm:mb-14">
+            <Button
+              variant="default"
+              onClick={() => setSelectedSkillCategory('all')}
+              className={`px-6 py-2.5 text-sm sm:text-base font-medium rounded-full transition-all duration-300 ${
+                selectedSkillCategory === 'all'
+                  ? 'bg-gradient-to-r from-amber-500 to-orange-500 text-white shadow-lg scale-105'
+                  : 'bg-white/70 text-amber-700 hover:bg-amber-50 border border-amber-300'
+              }`}
+            >
+              All Skills
+            </Button>
+            {Object.keys(skillsData).map((category: string) => (
+              <Button
+                key={category}
+                variant="outline"
+                onClick={() => setSelectedSkillCategory(category)}
+                className={`px-6 py-2.5 text-sm sm:text-base font-medium rounded-full transition-all duration-300 ${
+                  selectedSkillCategory === category
+                    ? 'bg-gradient-to-r from-amber-500 to-orange-500 text-white shadow-xl scale-105 border-amber-400'
+                    : 'bg-white/70 text-amber-700 hover:bg-amber-50 border border-amber-300'
+                }`}
+              >
+                {category}
+              </Button>
+            ))}
+          </div>
+
+          {/* Skills Grid */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-6">
             {filteredSkills.map((skill: Skill, index: number) => (
               <div
                 key={index}
-                className="bg-white/70 backdrop-blur-sm p-4 sm:p-6 rounded-xl border border-amber-200 hover:shadow-lg transition-all duration-300 animate-slide-up group hover:scale-[1.02]"
-                style={{ animationDelay: `${index * 0.05}s` }}
+                className="group relative bg-white/80 backdrop-blur-md p-5 sm:p-6 rounded-2xl border border-amber-200/60 shadow-sm hover:shadow-2xl transition-all duration-500 hover:scale-105 hover:border-amber-300 overflow-hidden"
+                style={{ animationDelay: `${index * 0.08}s` }}
               >
-                <div className="flex items-center justify-between mb-3">
-                  <div className="flex items-center space-x-3">
+                {/* Gradient Border Pulse (on hover) */}
+                <div className="absolute inset-0 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none">
+                  <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-amber-500 to-orange-500 animate-pulse"></div>
+                </div>
+
+                {/* Skill Content */}
+                <div className="relative flex items-center justify-between mb-4">
+                  <div className="flex items-center space-x-4">
                     {skill.logo ? (
-                      <img src={skill.logo} alt={skill.name} className="w-8 h-8 sm:w-10 sm:h-10" />
+                      <div className="w-10 h-10 sm:w-12 sm:h-12 bg-white rounded-xl p-2 shadow-md flex items-center justify-center border border-amber-100 group-hover:rotate-6 transition-transform">
+                        <img src={skill.logo} alt={skill.name} className="w-full h-full object-contain" />
+                      </div>
                     ) : (
-                      <span className="text-2xl sm:text-3xl">{skill.icon}</span>
+                      <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-gradient-to-br from-amber-400 to-orange-500 flex items-center justify-center text-white text-xl sm:text-2xl shadow-md">
+                        {skill.icon}
+                      </div>
                     )}
                     <div>
-                      <h3 className="font-semibold text-gray-800 text-base sm:text-lg">{skill.name}</h3>
+                      <h3 className="font-bold text-gray-800 text-lg sm:text-xl group-hover:text-amber-700 transition-colors">
+                        {skill.name}
+                      </h3>
                     </div>
                   </div>
-                  <span className="text-lg font-bold text-amber-600 group-hover:scale-110 transition-transform">{skill.level}%</span>
+                  <span className="text-xl font-extrabold text-amber-600 group-hover:text-orange-600 transition-colors">
+                    {skill.level}%
+                  </span>
                 </div>
-                <div className="relative h-2 bg-gray-200 rounded-full overflow-hidden">
+
+                {/* Progress Bar */}
+                <div className="relative h-2.5 bg-amber-100 rounded-full overflow-hidden">
                   <div
-                    className={`h-full bg-gradient-to-r ${skill.color} rounded-full transition-all duration-1000 ease-out`}
+                    className={`h-full rounded-full bg-gradient-to-r ${skill.color} transition-all duration-1000 ease-out origin-left transform scale-x-0 group-hover:scale-x-100`}
                     style={{ width: `${skill.level}%` }}
                   ></div>
+                  {/* Shine Effect */}
+                  <div className="absolute inset-0 -skew-x-12 bg-gradient-to-r from-transparent via-white/40 to-transparent animate-shine"></div>
                 </div>
               </div>
             ))}
           </div>
         </div>
+        <style>{`
+    @keyframes shine {
+      0% { transform: translateX(-100%); }
+      100% { transform: translateX(100%); }
+    }
+    .animate-shine {
+      animation: shine 2s infinite;
+    }
+  `}</style>
       </section>
 
       {/* Achievements */}
-      <section className="py-12 sm:py-20 px-4 sm:px-6">
-        <div className="container mx-auto">
-          <div className="text-center mb-10 sm:mb-16 animate-fade-in">
-            <Badge className="px-4 py-2 text-xs sm:text-sm bg-amber-100 text-amber-800 mb-4">
-              <Medal className="w-3 h-3 sm:w-4 sm:h-4 mr-2" />
-              Milestones
-            </Badge>
-            <h2 className="text-3xl sm:text-5xl font-bold mb-4 sm:mb-6">Achievements & Impact</h2>
-            <p className="text-base sm:text-xl text-gray-600 max-w-3xl mx-auto">
-              Milestones that reflect my dedication to excellence and community contribution.
+      <section className="py-16 sm:py-24 px-4 sm:px-6 bg-gradient-to-br from-amber-50/80 via-orange-50/50 to-yellow-50/30">
+  <div className="container mx-auto max-w-6xl">
+    
+    {/* Header */}
+    <div className="text-center mb-16 sm:mb-20 animate-fade-in">
+      <div className="inline-flex items-center px-6 py-3 bg-gradient-to-r from-amber-500/90 to-orange-500/90 backdrop-blur-sm rounded-2xl shadow-lg border border-amber-400/50 mb-8">
+        <Medal className="w-5 h-5 text-white mr-3" />
+        <span className="text-sm font-semibold text-white">Milestones Achieved</span>
+      </div>
+      
+      <h2 className="text-4xl sm:text-6xl md:text-7xl font-black mb-6 bg-gradient-to-r from-amber-900 via-orange-900 to-amber-800 text-transparent bg-clip-text">
+        Proven Impact
+      </h2>
+      
+      <p className="text-lg sm:text-xl text-amber-700 max-w-2xl mx-auto leading-relaxed font-medium">
+        Measurable results from years of dedication and excellence.
+      </p>
+    </div>
+
+    {/* Achievements Grid */}
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8">
+      {achievements.map((achievement: Achievement, index: number) => (
+        <div
+          key={index}
+          className="group relative bg-white/90 backdrop-blur-md p-8 rounded-3xl border border-amber-200/60 shadow-xl hover:shadow-2xl hover:shadow-amber-500/20 transition-all duration-700 hover:scale-[1.05] hover:-translate-y-2 overflow-hidden"
+          style={{ 
+            animationDelay: `${index * 0.15}s`,
+            animation: 'fadeInUp 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards',
+            opacity: 0,
+            transform: 'translateY(30px)'
+          }}
+        >
+          {/* Subtle Shine Border */}
+          <div className="absolute inset-0 rounded-3xl bg-gradient-to-r from-amber-400/20 to-orange-400/20 opacity-0 group-hover:opacity-100 transition-all duration-500 blur-sm animate-pulse"></div>
+          
+          {/* Gradient Ring */}
+          <div 
+            className="absolute -inset-1 bg-gradient-to-r from-amber-400/30 to-orange-400/30 rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"
+            style={{
+              animation: 'pingRing 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+              animationPlayState: 'paused'
+            }}
+          />
+
+          <div className="relative z-10 text-center">
+            {/* Icon */}
+            <div className={`w-20 h-20 mx-auto mb-6 p-4 bg-gradient-to-br ${achievement.color} rounded-2xl shadow-2xl group-hover:scale-110 transition-all duration-500 border-4 border-white/50`}>
+              <achievement.icon className="w-12 h-12 text-white drop-shadow-lg" />
+            </div>
+
+            {/* Counter */}
+            <div className="text-4xl sm:text-5xl font-black bg-gradient-to-r from-amber-800 to-orange-700 text-transparent bg-clip-text mb-2 group-hover:scale-110 transition-transform">
+              {achievement.value}
+            </div>
+            
+            <div className="text-sm font-semibold text-amber-600 uppercase tracking-wide mb-4">
+              {achievement.unit}
+            </div>
+
+            {/* Title */}
+            <h3 className="text-xl sm:text-2xl font-bold text-gray-800 mb-4 group-hover:text-amber-800 transition-all duration-300">
+              {achievement.title}
+            </h3>
+
+            {/* Description */}
+            <p className="text-sm text-gray-600 leading-relaxed opacity-80 group-hover:opacity-100 transition-all duration-300">
+              {achievement.description}
             </p>
           </div>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
-            {achievements.map((achievement: Achievement, index: number) => (
-              <Card
-                key={index}
-                className="bg-white/70 backdrop-blur-sm border border-amber-200 hover:shadow-xl transition-all duration-300 hover:scale-[1.02] animate-slide-up group"
-                style={{ animationDelay: `${index * 0.2}s` }}
-              >
-                <CardHeader className="text-center p-4 sm:p-6">
-                  <div className={`w-16 h-16 sm:w-20 sm:h-20 bg-gradient-to-br ${achievement.color} rounded-xl flex items-center justify-center mx-auto mb-3 sm:mb-4 group-hover:scale-110 transition-transform shadow-lg`}>
-                    <achievement.icon className="h-8 w-8 sm:h-10 sm:w-10 text-white" />
-                  </div>
-                  <div className="text-2xl sm:text-3xl font-bold text-gray-800">{achievement.value}</div>
-                  <div className="text-xs sm:text-sm text-gray-500">{achievement.unit}</div>
-                  <CardTitle className="text-base sm:text-lg group-hover:text-amber-600 transition-colors mt-2">{achievement.title}</CardTitle>
-                </CardHeader>
-                <CardContent className="p-4 pt-0 sm:p-6 sm:pt-0">
-                  <CardDescription className="text-gray-600 leading-relaxed text-center text-sm">
-                    {achievement.description}
-                  </CardDescription>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
         </div>
+      ))}
+    </div>
+  </div>
+
+  <style>{`
+    @keyframes fadeInUp {
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    
+    @keyframes pingRing {
+      0%, 100% {
+        transform: scale(1);
+        opacity: 1;
+      }
+      50% {
+        transform: scale(1.05);
+        opacity: 0.7;
+      }
+    }
+    
+    .group:hover [style*="animation-play-state: paused"] {
+      animation-play-state: running !important;
+    }
+  `}</style>
       </section>
 
       {/* Timeline */}
-      <section className="py-12 sm:py-20 px-4 sm:px-6 bg-white/50 backdrop-blur-sm">
+      {/* <section className="py-12 sm:py-20 px-4 sm:px-6 bg-white/50 backdrop-blur-sm">
         <div className="container mx-auto">
           <div className="text-center mb-10 sm:mb-16 animate-fade-in">
             <Badge className="px-4 py-2 text-xs sm:text-sm bg-amber-100 text-amber-800 mb-4">
@@ -760,6 +879,151 @@ const About = () => {
             ))}
           </div>
         </div>
+      </section> */}
+
+      <section className="py-16 sm:py-24 px-4 sm:px-6 bg-gradient-to-br from-amber-50 via-orange-50 to-yellow-50 relative overflow-hidden">
+  
+        {/* Background Effects */}
+        <div className="absolute inset-0 opacity-5">
+          <div className="absolute top-1/4 left-1/4 w-72 h-72 bg-amber-400 rounded-full blur-3xl animate-pulse"></div>
+          <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-orange-400 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '2s' }}></div>
+        </div>
+
+        <div className="container mx-auto max-w-6xl relative z-10">
+          
+          {/* Enhanced Header */}
+          <div className="text-center mb-16 sm:mb-20 animate-fade-in">
+            <div className="inline-flex items-center px-8 py-4 text-sm sm:text-base font-semibold bg-gradient-to-r from-amber-500/90 to-orange-500/90 backdrop-blur-sm text-white rounded-2xl shadow-xl border border-amber-400/50 mb-8 hover:scale-105 transition-transform duration-300">
+              <TrendingUp className="w-5 h-5 sm:w-6 sm:h-6 mr-3" />
+              <span>Professional Journey</span>
+            </div>
+            
+            <h2 className="text-4xl sm:text-6xl md:text-7xl font-black mb-6 bg-gradient-to-r from-amber-900 via-orange-800 to-amber-900 text-transparent bg-clip-text leading-tight">
+              Timeline of Growth
+            </h2>
+            
+            <p className="text-lg sm:text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed font-medium">
+              A curated path of achievements, learnings, and breakthrough moments.
+            </p>
+          </div>
+
+          {/* Enhanced Timeline Container */}
+          <div className="relative max-w-5xl mx-auto">
+            
+            {/* Central Timeline Line */}
+            <div className="absolute left-1/2 transform -translate-x-1/2 hidden md:block w-1 h-full bg-gradient-to-b from-amber-400 via-orange-400 to-amber-400 rounded-full shadow-lg"></div>
+            
+            {timeline.map((item: TimelineItem, index: number) => (
+              <React.Fragment key={index}>
+                
+                {/* Desktop Layout */}
+                <div className="hidden md:flex items-center mb-16 group animate-slide-up" style={{ animationDelay: `${index * 0.2}s` }}>
+                  
+                  {/* Year Badge (Left Side) */}
+                  <div className={`flex-1 ${index % 2 === 0 ? 'text-right pr-8' : 'order-3 text-left pl-8'}`}>
+                    <div className={`inline-block px-6 py-3 bg-gradient-to-r ${index % 2 === 0 ? 'from-amber-500 to-orange-500' : 'from-orange-500 to-amber-500'} text-white rounded-2xl shadow-2xl transform group-hover:scale-105 transition-all duration-300 border-2 border-white/20`}>
+                      <span className="text-xl font-black tracking-wide">{item.year}</span>
+                    </div>
+                  </div>
+
+                  {/* Timeline Node */}
+                  <div className="relative z-20 flex-shrink-0">
+                    <div className={`w-20 h-20 bg-gradient-to-br ${item.color} rounded-2xl flex items-center justify-center shadow-2xl border-4 border-white group-hover:scale-110 group-hover:rotate-12 transition-all duration-500`}>
+                      <item.icon className="h-10 w-10 text-white drop-shadow-lg" />
+                    </div>
+                    
+                    {/* Pulsing Ring */}
+                    <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-amber-400 to-orange-400 opacity-0 group-hover:opacity-30 animate-ping"></div>
+                  </div>
+
+                  {/* Content Card (Right Side) */}
+                  <div className={`flex-1 ${index % 2 === 0 ? 'order-3 pl-8' : 'pr-8'}`}>
+                    <div className="relative bg-white/90 backdrop-blur-md p-8 rounded-3xl border border-amber-200/60 shadow-xl hover:shadow-2xl hover:shadow-amber-500/20 transition-all duration-500 hover:scale-[1.02] hover:-translate-y-1 group-hover:border-amber-300">
+                      
+                      {/* Decorative Corner */}
+                      <div className="absolute top-0 right-0 w-12 h-12 bg-gradient-to-br from-amber-400/20 to-orange-400/20 rounded-bl-2xl rounded-tr-2xl"></div>
+                      
+                      <h3 className="text-2xl font-bold text-gray-800 mb-4 group-hover:text-amber-700 transition-colors">
+                        {item.title}
+                      </h3>
+                      
+                      <p className="text-gray-600 mb-4 leading-relaxed text-lg">
+                        {item.description}
+                      </p>
+                      
+                      <div className="flex items-center text-amber-600 font-semibold">
+                        <span className="w-2 h-2 bg-amber-500 rounded-full mr-3 animate-pulse"></span>
+                        {item.details}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Mobile Layout */}
+                <div className="md:hidden mb-12 animate-slide-up" style={{ animationDelay: `${index * 0.2}s` }}>
+                  <div className="relative flex">
+                    
+                    {/* Timeline Node & Line */}
+                    <div className="flex flex-col items-center mr-6">
+                      <div className={`w-14 h-14 bg-gradient-to-br ${item.color} rounded-2xl flex items-center justify-center shadow-xl border-2 border-white/30 group-hover:scale-110 transition-transform`}>
+                        <item.icon className="h-7 w-7 text-white" />
+                      </div>
+                      {index < timeline.length - 1 && (
+                        <div className="w-1 h-full bg-gradient-to-b from-amber-400 to-orange-400 mt-4 rounded-full"></div>
+                      )}
+                    </div>
+
+                    {/* Content */}
+                    <div className="flex-1 pb-8">
+                      <div className="bg-white/90 backdrop-blur-md p-6 rounded-2xl border border-amber-200/60 shadow-lg hover:shadow-xl hover:shadow-amber-500/20 transition-all duration-300">
+                        
+                        {/* Year Badge */}
+                        <div className="inline-block px-4 py-2 bg-gradient-to-r from-amber-500 to-orange-500 text-white rounded-xl text-sm font-bold mb-4 shadow-lg">
+                          {item.year}
+                        </div>
+                        
+                        <h3 className="text-xl font-bold text-gray-800 mb-3">
+                          {item.title}
+                        </h3>
+                        
+                        <p className="text-gray-600 mb-3 leading-relaxed">
+                          {item.description}
+                        </p>
+                        
+                        <div className="flex items-center text-amber-600 font-medium">
+                          <span className="w-2 h-2 bg-amber-500 rounded-full mr-3"></span>
+                          {item.details}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </React.Fragment>
+            ))}
+          </div>
+        </div>
+
+        {/* Enhanced Animations */}
+        <style>{`
+          @keyframes fadeInUp {
+            from {
+              opacity: 0;
+              transform: translateY(30px);
+            }
+            to {
+              opacity: 1;
+              transform: translateY(0);
+            }
+          }
+          
+          .animate-slide-up {
+            animation: fadeInUp 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+          }
+          
+          .animate-fade-in {
+            animation: fadeInUp 1s ease forwards;
+          }
+        `}</style>
       </section>
 
       {/* Values */}

@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios, { AxiosError } from 'axios';
+import {motion} from 'framer-motion';
+// import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/componen";
 import type { AxiosResponse, AxiosInstance } from 'axios';
 import {
   ArrowRight, Code, Star, Sparkles, Download, Mail,
@@ -1137,6 +1139,8 @@ const Home: React.FC = () => {
           </div>
         </div>
       </section>
+      
+                              
 
       {/* Services Section */}
       <section id="services" className="py-12 sm:py-16 lg:py-20 px-4 sm:px-6">
@@ -1291,172 +1295,337 @@ const Home: React.FC = () => {
       </section>
 
       {/* Resume & Certificates Section */}
-      <section id="resume" className="py-12 sm:py-16 lg:py-20 px-4 sm:px-6">
-        <div className="container mx-auto">
-          <div className={`text-center mb-10 sm:mb-12 lg:mb-16 animate-on-visible ${isVisible ? 'visible' : ''}`} style={{ transitionDelay: '0.5s' }}>
-            <div className="inline-flex items-center justify-center space-x-2 sm:space-x-3 mb-3 sm:mb-4">
-              <GraduationCap className="h-8 w-8 sm:h-10 sm:w-10 lg:h-12 lg:w-12 text-amber-600" />
-              <h2 className="text-3xl sm:text-4xl lg:text-6xl font-bold">Resume</h2>
-            </div>
-            <p className="text-base sm:text-lg lg:text-xl text-gray-600 max-w-3xl mx-auto px-4">
-              My professional journey, qualifications, and achievements in technology
-            </p>
-          </div>
+      <section id="resume" className="py-12 sm:py-16 lg:py-20 px-4 sm:px-6 bg-gradient-to-b from-white via-amber-50/20 to-white">
+  <div className="container mx-auto">
+    {/* Section Header */}
+    <motion.div 
+      initial={{ opacity: 0, y: -15 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: "-100px" }}
+      transition={{ duration: 0.5, ease: "easeOut" }}
+      className="text-center mb-10 sm:mb-12 lg:mb-16"
+    >
+      <div className="inline-flex items-center justify-center space-x-2 sm:space-x-3 mb-3 sm:mb-4">
+        <GraduationCap className="h-8 w-8 sm:h-10 sm:w-10 lg:h-12 lg:w-12 text-amber-600" />
+        <h2 className="text-3xl sm:text-4xl lg:text-6xl font-bold bg-gradient-to-r from-amber-600 to-orange-600 bg-clip-text text-transparent">
+          Resume
+        </h2>
+      </div>
+      <p className="text-base sm:text-lg lg:text-xl text-gray-600 max-w-3xl mx-auto px-4">
+        My professional journey, qualifications, and achievements in technology
+      </p>
+    </motion.div>
 
-          {/* Education Section */}
-          <div className="mb-10 sm:mb-12 lg:mb-16">
-            <h3 className="text-2xl sm:text-3xl font-bold text-gray-800 mb-6 sm:mb-8 flex items-center justify-center animate-on-visible ${isVisible ? 'visible' : ''}">
-              <GraduationCap className="h-6 w-6 sm:h-8 sm:w-8 text-amber-600 mr-2 sm:mr-3" />
-              Education
-            </h3>
-            <div className="max-w-4xl mx-auto space-y-4 sm:space-y-6">
-              {[
-                {
-                  title: "Matriculation (10th)",
-                  school: "SRT School",
-                  percentage: "82.6/100",
-                  year: "2020",
-                  courses: ["Hindi", "English", "Maths", "Science", "Computer-IT", "Sanskrit"]
-                },
-                {
-                  title: "Intermediate (12th)",
-                  school: "SRT School",
-                  percentage: "83.2/100",
-                  year: "2022",
-                  courses: ["Maths", "Physics", "Chemistry", "English", "Computer-IT"]
-                },
-                {
-                  title: "Bachelor of Technology in CSE",
-                  school: "Government Engineering College",
-                  percentage: "CGPA: 8.54/10",
-                  year: "2023 - 2027",
-                  courses: ["Data Structures", "Algorithms", "Web Development", "Database Systems", "Operating Systems"]
-                }
-              ].map((edu, idx) => (
-                <Card key={idx} className={`bg-white/70 backdrop-blur-sm border-2 border-amber-300 hover:shadow-xl transition-all duration-300 hover:scale-105 animate-on-visible ${isVisible ? 'visible' : ''}`} style={{ transitionDelay: `${idx * 0.1}s` }}>
-                  <CardContent className="p-4 sm:p-6 lg:p-8">
-                    <div className="grid md:grid-cols-3 gap-4 sm:gap-6">
-                      <div className="md:col-span-2">
-                        <h4 className="text-lg sm:text-xl lg:text-2xl font-bold text-gray-800 mb-1 sm:mb-2">{edu.title}</h4>
-                        <p className="text-base sm:text-lg text-amber-600 font-semibold mb-1 sm:mb-2">{edu.school}</p>
-                        <div className="flex flex-wrap gap-1.5 sm:gap-2 mb-3 sm:mb-4">
-                          <Badge className="bg-green-100 text-green-700 text-xs sm:text-sm">{edu.percentage}</Badge>
-                          <Badge className="bg-blue-100 text-blue-700 text-xs sm:text-sm">First Division</Badge>
-                        </div>
-                        <div className="space-y-1 sm:space-y-2">
-                          <p className="text-xs sm:text-sm text-gray-700"><strong>Relevant Coursework:</strong></p>
-                          <div className="flex flex-wrap gap-1.5 sm:gap-2">
-                            {edu.courses.map((course, courseIdx) => (
-                              <Badge key={courseIdx} variant="secondary" className="bg-gray-100 text-gray-800 text-[10px] sm:text-xs">
-                                {course}
-                              </Badge>
-                            ))}
+    {/* Education Section - Reorganized */}
+    <div className="mb-10 sm:mb-12 lg:mb-16">
+      <motion.h3 
+        initial={{ opacity: 0 }}
+        whileInView={{ opacity: 1 }}
+        viewport={{ once: true, margin: "-100px" }}
+        transition={{ duration: 0.4 }}
+        className="text-2xl sm:text-3xl font-bold text-gray-800 mb-6 sm:mb-8 flex items-center justify-center"
+      >
+        <GraduationCap className="h-6 w-6 sm:h-8 sm:w-8 text-amber-600 mr-2 sm:mr-3" />
+        Education
+      </motion.h3>
+      
+      <div className="max-w-5xl mx-auto">
+        {/* Timeline Container */}
+        <div className="relative">
+          {/* Vertical Timeline Line */}
+          <div className="absolute left-4 sm:left-6 md:left-1/2 top-0 bottom-0 w-0.5 bg-gradient-to-b from-amber-400 to-orange-500 transform -translate-x-1/2 hidden md:block"></div>
+          
+          {/* Education Items */}
+          <div className="space-y-8">
+            {[
+              {
+                title: "Bachelor of Technology in Computer Science & Engineering",
+                school: "Government Engineering College",
+                percentage: "CGPA: 8.54/10",
+                year: "2023 - 2027",
+                status: "Currently Pursuing",
+                courses: ["Data Structures & Algorithms", "Web Development", "Database Systems", "Operating Systems", "Computer Networks"],
+                description: "Comprehensive education in Computer Science with focus on modern software development practices and emerging technologies",
+                achievements: ["Academic Excellence", "Technical Projects", "Research Orientation"]
+              },
+              {
+                title: "Intermediate (12th Grade)",
+                school: "SRT School",
+                percentage: "83.2%",
+                year: "2022",
+                status: "Completed",
+                courses: ["Mathematics", "Physics", "Chemistry", "English", "Computer Science"],
+                description: "Higher secondary education with strong foundation in science and mathematics, preparing for engineering studies",
+                achievements: ["First Division", "Science Stream", "Computer Science Excellence"]
+              },
+              {
+                title: "Matriculation (10th Grade)",
+                school: "SRT School",
+                percentage: "82.6%",
+                year: "2020",
+                status: "Completed",
+                courses: ["Hindi", "English", "Mathematics", "Science", "Computer-IT", "Sanskrit"],
+                description: "Secondary education with excellent academic performance and early exposure to computer science fundamentals",
+                achievements: ["First Division", "Academic Excellence", "Computer IT Proficiency"]
+              }
+            ].map((edu, idx) => (
+              <motion.div
+                key={idx}
+                initial={{ opacity: 0, x: idx % 2 === 0 ? -20 : 20 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true, margin: "-50px" }}
+                transition={{ duration: 0.5, delay: idx * 0.1, ease: "easeOut" }}
+                className={`relative ${idx % 2 === 0 ? 'md:pr-8' : 'md:pl-8'} md:w-1/2 ${idx % 2 === 0 ? 'md:ml-auto' : 'md:mr-auto'}`}
+              >
+                {/* Timeline Dot */}
+                <div className="absolute left-4 sm:left-6 md:left-1/2 top-6 w-4 h-4 bg-amber-500 rounded-full border-4 border-white shadow-lg transform -translate-x-1/2 z-10 hidden md:block"></div>
+                
+                <Card className="bg-white/90 backdrop-blur-sm border-2 border-amber-200 hover:border-amber-300 hover:shadow-xl transition-all duration-300">
+                  <CardContent className="p-5 sm:p-6">
+                    {/* Header Section */}
+                    <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3 mb-4">
+                      <div className="flex-1">
+                        <div className="flex items-start gap-3">
+                          <div className="w-12 h-12 bg-gradient-to-br from-amber-400 to-orange-500 rounded-xl flex items-center justify-center flex-shrink-0 shadow-md">
+                            <GraduationCap className="h-6 w-6 text-white" />
+                          </div>
+                          <div className="flex-1">
+                            <h4 className="text-lg sm:text-xl font-bold text-gray-800 mb-1 leading-tight">
+                              {edu.title}
+                            </h4>
+                            <p className="text-amber-600 font-semibold text-sm flex items-center gap-2">
+                              <BookOpen className="h-4 w-4" />
+                              {edu.school}
+                            </p>
                           </div>
                         </div>
                       </div>
-                      <div className="flex flex-col justify-between items-end">
-                        <div className="text-right">
-                          <div className="text-2xl sm:text-3xl font-bold text-amber-600 mb-1 sm:mb-3">{edu.year}</div>
-                        </div>
-                        <div className="w-16 h-16 sm:w-20 sm:h-20 lg:w-24 lg:h-24 bg-gradient-to-br from-amber-400 to-orange-500 rounded-2xl flex items-center justify-center shadow-lg">
-                          <GraduationCap className="h-8 w-8 sm:h-10 sm:w-10 lg:h-12 lg:w-12 text-white" />
-                        </div>
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
-              ))}
-            </div>
-          </div>
-
-          {/* Certificates Section */}
-          <div className="mb-10 sm:mb-12 lg:mb-16">
-            <h3 className="text-2xl sm:text-3xl font-bold text-gray-800 mb-6 sm:mb-8 flex items-center justify-center animate-on-visible ${isVisible ? 'visible' : ''}">
-              <Award className="h-6 w-6 sm:h-8 sm:w-8 text-amber-600 mr-2 sm:mr-3" />
-              Professional Certifications
-            </h3>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 max-w-6xl mx-auto">
-              {certificates.map((cert, index) => (
-                <Card key={index} className={`bg-white/70 backdrop-blur-sm border border-amber-200 hover:shadow-xl transition-all duration-300 hover:scale-105 group animate-on-visible ${isVisible ? 'visible' : ''}`} style={{ transitionDelay: `${index * 0.1}s` }}>
-                  <CardContent className="p-4 sm:p-6">
-                    <div className="flex items-start justify-between mb-3 sm:mb-4">
-                      <div className="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-r from-amber-500 to-orange-500 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform flex-shrink-0">
-                        <cert.icon className="h-5 w-5 sm:h-6 sm:w-6 text-white" />
-                      </div>
-                      <Badge className="bg-amber-100 text-amber-700 text-xs sm:text-sm">{cert.year}</Badge>
-                    </div>
-                    <CardTitle className="text-sm sm:text-base lg:text-lg mb-1 sm:mb-2 group-hover:text-amber-600 transition-colors">{cert.title}</CardTitle>
-                    <p className="text-amber-600 font-semibold text-xs sm:text-sm mb-2 sm:mb-3">{cert.issuer}</p>
-                    <CardDescription className="text-gray-600 text-[10px] sm:text-xs mb-3 sm:mb-4 leading-relaxed line-clamp-3">
-                      {cert.description}
-                    </CardDescription>
-                    <div className="flex flex-wrap gap-1 mb-3 sm:mb-4">
-                      {cert.skills.slice(0, 3).map((skill, skillIndex) => (
-                        <Badge key={skillIndex} variant="secondary" className="bg-gray-100 text-gray-700 text-[10px] sm:text-xs">
-                          {skill}
+                      
+                      <div className="flex flex-col items-end gap-2">
+                        <Badge className={`${edu.status === 'Currently Pursuing' ? 'bg-green-50 text-green-700 border-green-200' : 'bg-blue-50 text-blue-700 border-blue-200'} border text-xs font-medium`}>
+                          {edu.status}
                         </Badge>
-                      ))}
+                        <Badge className="bg-amber-50 text-amber-700 border border-amber-200 text-sm font-semibold">
+                          <Calendar className="h-3 w-3 mr-1" />
+                          {edu.year}
+                        </Badge>
+                      </div>
                     </div>
-                    <div className="pt-3 sm:pt-4 border-t border-amber-200">
-                      <div className="flex items-center justify-between">
-                        <span className="text-[10px] sm:text-xs text-gray-500 truncate">ID: {cert.credentialId}</span>
-                        <Button size="sm" variant="ghost" className="text-amber-700 hover:bg-amber-50 h-6 sm:h-8 px-1 sm:px-2">
-                          <ExternalLink className="h-2.5 w-2.5 sm:h-3 sm:w-3" />
-                        </Button>
+
+                    {/* Description */}
+                    <p className="text-sm text-gray-600 leading-relaxed mb-4">
+                      {edu.description}
+                    </p>
+
+                    {/* Stats & Achievements */}
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
+                      {/* Performance Stats */}
+                      <div className="space-y-2">
+                        <div className="flex items-center justify-between bg-gray-50 rounded-lg px-3 py-2">
+                          <span className="text-sm font-medium text-gray-700">Performance</span>
+                          <Badge className="bg-green-50 text-green-700 border border-green-200 text-sm">
+                            <Star className="h-3 w-3 mr-1" />
+                            {edu.percentage}
+                          </Badge>
+                        </div>
+                        <div className="flex items-center justify-between bg-gray-50 rounded-lg px-3 py-2">
+                          <span className="text-sm font-medium text-gray-700">Division</span>
+                          <Badge className="bg-blue-50 text-blue-700 border border-blue-200 text-sm">
+                            <Trophy className="h-3 w-3 mr-1" />
+                            First Division
+                          </Badge>
+                        </div>
+                      </div>
+
+                      {/* Key Achievements */}
+                      <div className="space-y-2">
+                        <p className="text-sm font-medium text-gray-700 mb-1">Key Highlights</p>
+                        <div className="space-y-1">
+                          {edu.achievements.map((achievement, achievementIdx) => (
+                            <div key={achievementIdx} className="flex items-center gap-2 text-xs text-gray-600">
+                              <div className="w-1.5 h-1.5 bg-amber-400 rounded-full"></div>
+                              {achievement}
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Coursework */}
+                    <div>
+                      <div className="flex items-center gap-2 mb-3">
+                        <Target className="h-4 w-4 text-amber-600" />
+                        <p className="text-sm font-medium text-gray-700">Relevant Coursework</p>
+                      </div>
+                      <div className="flex flex-wrap gap-2">
+                        {edu.courses.map((course, courseIdx) => (
+                          <Badge 
+                            key={courseIdx} 
+                            variant="secondary" 
+                            className="bg-gray-50 text-gray-700 border border-gray-200 text-xs hover:bg-amber-50 hover:border-amber-200 hover:text-amber-700 transition-all duration-200 cursor-default"
+                          >
+                            {course}
+                          </Badge>
+                        ))}
                       </div>
                     </div>
                   </CardContent>
                 </Card>
-              ))}
-            </div>
+              </motion.div>
+            ))}
           </div>
-
-          {/* Achievements Section */}
-          <div className="mb-10 sm:mb-12 lg:mb-16">
-            <h3 className="text-2xl sm:text-3xl font-bold text-gray-800 mb-6 sm:mb-8 flex items-center justify-center animate-on-visible ${isVisible ? 'visible' : ''}">
-              <Trophy className="h-6 w-6 sm:h-8 sm:w-8 text-amber-600 mr-2 sm:mr-3" />
-              Key Achievements
-            </h3>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 max-w-6xl mx-auto">
-              {achievements.map((achievement, index) => (
-                <Card key={index} className={`bg-gradient-to-br from-white to-amber-50 border-2 border-amber-200 hover:shadow-xl transition-all duration-300 hover:scale-105 group animate-on-visible ${isVisible ? 'visible' : ''}`} style={{ transitionDelay: `${index * 0.1}s` }}>
-                  <CardContent className="p-4 sm:p-6 text-center">
-                    <div className="w-12 h-12 sm:w-16 sm:h-16 bg-gradient-to-r from-amber-500 to-orange-500 rounded-2xl flex items-center justify-center mx-auto mb-3 sm:mb-4 group-hover:scale-110 transition-transform">
-                      <achievement.icon className="h-6 w-6 sm:h-8 sm:w-8 text-white" />
-                    </div>
-                    <div className="text-2xl sm:text-3xl font-bold text-amber-600 mb-1 sm:mb-2">{achievement.metric}</div>
-                    <CardTitle className="text-sm sm:text-base mb-1 sm:mb-2">{achievement.title}</CardTitle>
-                    <CardDescription className="text-[10px] sm:text-xs text-gray-600">
-                      {achievement.description}
-                    </CardDescription>
-                  </CardContent>
-                </Card>
-              ))}
-            </div>
-          </div>
-
-          {/* Download Resume Button */}
-          <div
-            className={`text-center animate-on-visible ${isVisible ? 'visible' : ''}`}
-            style={{ transitionDelay: '0.6s' }}
-          >
-            <a
-              href="/resume.pdf"
-              download="Suraj_Kumar.pdf"
-              rel="noopener noreferrer"
-            >
-              <Button
-                size="lg"
-                className="bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white px-6 sm:px-8 py-3 sm:py-4 text-sm sm:text-base lg:text-lg shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105"
-              >
-                <Download className="mr-2 h-4 w-4 sm:h-5 sm:w-5" />
-                Download Full Resume
-              </Button>
-            </a>
-          </div>
-
         </div>
-      </section>
+      </div>
+    </div>
+
+    {/* Certificates Section */}
+    <div className="mb-10 sm:mb-12 lg:mb-16">
+      <motion.h3 
+        initial={{ opacity: 0 }}
+        whileInView={{ opacity: 1 }}
+        viewport={{ once: true, margin: "-100px" }}
+        transition={{ duration: 0.4 }}
+        className="text-2xl sm:text-3xl font-bold text-gray-800 mb-6 sm:mb-8 flex items-center justify-center"
+      >
+        <Award className="h-6 w-6 sm:h-8 sm:w-8 text-amber-600 mr-2 sm:mr-3" />
+        Professional Certifications
+      </motion.h3>
+      
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 max-w-6xl mx-auto">
+        {certificates.map((cert, index) => (
+          <motion.div
+            key={index}
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-50px" }}
+            transition={{ duration: 0.4, delay: index * 0.05, ease: "easeOut" }}
+          >
+            <Card className="bg-white/80 backdrop-blur-sm border border-amber-200 hover:border-amber-300 hover:shadow-xl transition-all duration-300 h-full group">
+              <CardContent className="p-4 sm:p-6 flex flex-col h-full">
+                {/* Header */}
+                <div className="flex items-start justify-between mb-3 sm:mb-4">
+                  <div className="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-amber-500 to-orange-500 rounded-xl flex items-center justify-center flex-shrink-0 shadow-sm">
+                    <cert.icon className="h-5 w-5 sm:h-6 sm:w-6 text-white" />
+                  </div>
+                  <Badge className="bg-amber-50 text-amber-700 border border-amber-200 text-xs">
+                    {cert.year}
+                  </Badge>
+                </div>
+
+                {/* Content */}
+                <div className="flex-1">
+                  <CardTitle className="text-sm sm:text-base lg:text-lg mb-2 text-gray-800 group-hover:text-amber-600 transition-colors">
+                    {cert.title}
+                  </CardTitle>
+                  <p className="text-amber-600 font-semibold text-xs sm:text-sm mb-2">
+                    {cert.issuer}
+                  </p>
+                  <CardDescription className="text-gray-600 text-xs mb-3 leading-relaxed line-clamp-3">
+                    {cert.description}
+                  </CardDescription>
+                  
+                  <div className="flex flex-wrap gap-1 mb-3">
+                    {cert.skills.slice(0, 3).map((skill, skillIndex) => (
+                      <Badge 
+                        key={skillIndex} 
+                        variant="secondary" 
+                        className="bg-gray-50 text-gray-700 border border-gray-200 text-[10px] hover:bg-amber-50 hover:border-amber-200 transition-colors"
+                      >
+                        {skill}
+                      </Badge>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Footer */}
+                <div className="pt-3 border-t border-gray-100">
+                  <div className="flex items-center justify-between gap-2">
+                    <span className="text-[10px] sm:text-xs text-gray-500 truncate flex-1">
+                      ID: {cert.credentialId}
+                    </span>
+                    <Button 
+                      size="sm" 
+                      variant="ghost" 
+                      className="text-amber-600 hover:text-amber-700 hover:bg-amber-50 h-7 px-2 flex-shrink-0"
+                    >
+                      <ExternalLink className="h-3 w-3" />
+                    </Button>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </motion.div>
+        ))}
+      </div>
+    </div>
+
+    {/* Achievements Section */}
+    <div className="mb-10 sm:mb-12 lg:mb-16">
+      <motion.h3 
+        initial={{ opacity: 0 }}
+        whileInView={{ opacity: 1 }}
+        viewport={{ once: true, margin: "-100px" }}
+        transition={{ duration: 0.4 }}
+        className="text-2xl sm:text-3xl font-bold text-gray-800 mb-6 sm:mb-8 flex items-center justify-center"
+      >
+        <Trophy className="h-6 w-6 sm:h-8 sm:w-8 text-amber-600 mr-2 sm:mr-3" />
+        Key Achievements
+      </motion.h3>
+      
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 max-w-6xl mx-auto">
+        {achievements.map((achievement, index) => (
+          <motion.div
+            key={index}
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-50px" }}
+            transition={{ duration: 0.4, delay: index * 0.05, ease: "easeOut" }}
+          >
+            <Card className="bg-gradient-to-br from-white to-amber-50/50 border-2 border-amber-200 hover:border-amber-300 hover:shadow-xl transition-all duration-300 h-full">
+              <CardContent className="p-4 sm:p-6 text-center">
+                <div className="w-12 h-12 sm:w-16 sm:h-16 bg-gradient-to-br from-amber-500 to-orange-500 rounded-2xl flex items-center justify-center mx-auto mb-3 sm:mb-4 shadow-sm">
+                  <achievement.icon className="h-6 w-6 sm:h-8 sm:w-8 text-white" />
+                </div>
+                
+                <div className="text-2xl sm:text-3xl font-bold text-amber-600 mb-2">
+                  {achievement.metric}
+                </div>
+                
+                <CardTitle className="text-sm sm:text-base mb-2 text-gray-800">
+                  {achievement.title}
+                </CardTitle>
+                
+                <CardDescription className="text-[10px] sm:text-xs text-gray-600 leading-relaxed">
+                  {achievement.description}
+                </CardDescription>
+              </CardContent>
+            </Card>
+          </motion.div>
+        ))}
+      </div>
+    </div>
+
+    {/* Download Resume Button */}
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: "-50px" }}
+      transition={{ duration: 0.5 }}
+      className="text-center"
+    >
+      <a href="/resume.pdf" download="Suraj_Kumar_Resume.pdf" rel="noopener noreferrer">
+        <Button
+          size="lg"
+          className="bg-gradient-to-r from-amber-500 via-orange-500 to-orange-600 hover:from-amber-600 hover:via-orange-600 hover:to-orange-700 text-white px-6 sm:px-8 py-3 sm:py-4 text-sm sm:text-base lg:text-lg shadow-md hover:shadow-lg transition-all duration-300"
+        >
+          <Download className="mr-2 h-4 w-4 sm:h-5 sm:w-5" />
+          Download Full Resume
+        </Button>
+      </a>
+    </motion.div>
+  </div>
+</section>
+            
 
       {/* Contact Section */}
       <section id="contact" className="py-12 sm:py-16 lg:py-20 px-4 sm:px-6 bg-white/50 backdrop-blur-sm">

@@ -106,10 +106,10 @@ const Skills = () => {
       color: 'from-blue-400 to-cyan-500',
       skills: [
         { name: 'C++', level: 92, icon: Cpu },
-        { name: 'Python', level: 88, icon: Binary },
+        { name: 'Python', level: 65, icon: Binary },
         { name: 'JavaScript', level: 85, icon: Terminal },
-        { name: 'TypeScript', level: 80, icon: Book },
-        { name: 'Java', level: 75, icon: Cpu },
+        { name: 'TypeScript', level: 70, icon: Book },
+        // { name: 'Java', level: 75, icon: Cpu },
       ]
     },
     {
@@ -117,7 +117,7 @@ const Skills = () => {
       icon: Globe,
       color: 'from-purple-400 to-violet-500',
       skills: [
-        { name: 'React.js', level: 85, icon: Monitor },
+        { name: 'React.js', level: 75, icon: Monitor },
         { name: 'Next.js', level: 80, icon: Smartphone },
         { name: 'Node.js', level: 78, icon: Server },
         { name: 'Express.js', level: 75, icon: Cloud },
@@ -129,10 +129,10 @@ const Skills = () => {
       icon: Database,
       color: 'from-green-400 to-emerald-500',
       skills: [
-        { name: 'MongoDB', level: 80, icon: Database },
-        { name: 'PostgreSQL', level: 78, icon: Server },
-        { name: 'Firebase', level: 75, icon: Cloud },
-        { name: 'MySQL', level: 70, icon: Database },
+        { name: 'MongoDB', level: 85, icon: Database },
+        { name: 'PostgreSQL', level: 60, icon: Server },
+        // { name: 'Firebase', level: 75, icon: Cloud },
+        // { name: 'MySQL', level: 70, icon: Database },
       ]
     },
     {
@@ -141,9 +141,9 @@ const Skills = () => {
       color: 'from-red-400 to-orange-500',
       skills: [
         { name: 'Git/GitHub', level: 90, icon: GitBranch },
-        { name: 'Docker', level: 75, icon: Cloud },
-        { name: 'AWS', level: 70, icon: Server },
-        { name: 'CI/CD', level: 72, icon: Terminal },
+        // { name: 'Docker', level: 75, icon: Cloud },
+        // { name: 'AWS', level: 70, icon: Server },
+        // { name: 'CI/CD', level: 72, icon: Terminal },
       ]
     },
     {
@@ -155,7 +155,7 @@ const Skills = () => {
         { name: 'Algorithms', level: 92, icon: Brain },
         { name: 'OOP', level: 88, icon: Cpu },
         { name: 'OS', level: 80, icon: Terminal },
-        { name: 'Computer Networks', level: 78, icon: Globe },
+        // { name: 'Computer Networks', level: 78, icon: Globe },
       ]
     },
     {
@@ -163,9 +163,9 @@ const Skills = () => {
       icon: Star,
       color: 'from-pink-400 to-rose-500',
       skills: [
-        { name: 'Competitive Programming', level: 90, icon: Award },
-        { name: 'Problem Solving', level: 92, icon: Brain },
-        { name: 'Mentoring', level: 88, icon: Users },
+        { name: 'Competitive Programming', level: 70, icon: Award },
+        { name: 'Problem Solving', level: 80, icon: Brain },
+        // { name: 'Mentoring', level: 88, icon: Users },
         { name: 'Technical Writing', level: 80, icon: BookOpen },
       ]
     }
@@ -633,10 +633,10 @@ const Skills = () => {
                 icon: Award,
                 color: 'from-green-400 to-emerald-500',
                 items: [
-                  'Completed 500+ LeetCode Problems',
-                  'Built 15+ Full-Stack Projects',
-                  'Mentored 50+ Students',
-                  'Published Technical Articles',
+                  'Completed 300+ LeetCode Problems',
+                  'Built 5+ Full-Stack Projects',
+                  // 'Mentored 50+ Students',
+                  // 'Published Technical Articles',
                   'Contributed to Open Source'
                 ]
               },
@@ -645,11 +645,11 @@ const Skills = () => {
                 icon: Star,
                 color: 'from-purple-400 to-pink-500',
                 items: [
-                  'Master DevOps & CI/CD',
+                  // 'Master DevOps & CI/CD',
                   'Learn Kubernetes & Docker',
                   'Contribute to Major Open Source',
                   'Become a Tech Lead',
-                  'Start a Tech Blog/YouTube'
+                  // 'Start a Tech Blog/YouTube'
                 ]
               }
             ].map((section, index) => (

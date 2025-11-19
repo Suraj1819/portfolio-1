@@ -1,17 +1,18 @@
 import React, { useState, useEffect } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { Link, useNavigate } from 'react-router-dom';
 import {
   ArrowRight, Code, Mail, Github, Linkedin, Phone, Star, Sparkles,
   Heart, ExternalLink, Menu, X, Calendar, MapPin, Award, Zap,
   Target, Globe, Lightbulb, CheckCircle, Clock, Users,
   Database, Brain, ChevronDown,
-  Loader2, Send, Terminal, GraduationCap,Cpu,Settings,
+  Loader2, Send, Terminal, GraduationCap,
   Facebook,
   Code2,
   Instagram,
   School,
   School2,
-  AlertCircle
+  AlertCircle,Trophy
 } from "lucide-react";
 import { Button } from "../components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../components/ui/card";
@@ -80,6 +81,7 @@ interface SkillCategory {
   skills: Skill[];
 }
 
+
 interface Project {
   title: string;
   description: string;
@@ -91,6 +93,19 @@ interface Project {
   live: string;
   image: string;
   gradient: string;
+  category: string;
+  duration?: string;
+  teamSize?: string;
+  challenges?: string[];
+  achievements?: string[];
+  role?: string;
+  screenshots?: string[];
+  stats?: {
+    commits?: number;
+    issues?: number;
+    contributors?: number;
+    downloads?: number;
+  };
 }
 
 interface Achievement {
@@ -470,55 +485,35 @@ const PremiumLoadingScreen: React.FC = () => {
 
   const loadingMessages: string[] = [
     "Initializing components...",
-    "Loading awesome content...",
-    "Preparing amazing experience...",
+    "Loading content...",
+    "Preparing experience...",
     "Almost ready...",
-    "Finalizing details...",
+    "Finalizing...",
     "Thanks for waiting..."
   ];
 
   const systemDetails: string[] = [
-    "🔧 Compiling TypeScript modules...",
-    "📦 Resolving package dependencies...",
-    "🎨 Rendering CSS animations...",
-    "🚀 Optimizing bundle size...",
-    "💾 Loading application state...",
-    "🌐 Fetching API configurations...",
-    "⚡ Initializing performance monitoring...",
-    "🔒 Verifying security protocols...",
-    "📱 Preparing responsive layouts...",
-    "🎭 Loading UI components...",
-    "🎯 Configuring routing system...",
-    "✨ Applying final optimizations..."
+    "🔧 Compiling modules...",
+    "📦 Resolving dependencies...",
+    "🎨 Rendering styles...",
+    "🚀 Optimizing performance...",
+    "💾 Loading state...",
+    "🌐 Fetching configs...",
+    "⚡ Starting monitor...",
+    "🔒 Verifying security...",
+    "📱 Preparing layout...",
+    "🎭 Loading UI...",
+    "🎯 Configuring routes...",
+    "✨ Finalizing..."
   ];
 
-  const loadingSteps: string[] = [
-    "Step 1/6: System Initialization",
-    "Step 2/6: Resource Loading",
-    "Step 3/6: Component Rendering",
-    "Step 4/6: Performance Tuning",
-    "Step 5/6: Final Configuration",
-    "Step 6/6: Application Ready"
-  ];
-
-  // REPLACED: Code Snippets with Mathematics Formulas
   const mathFormulas = [
-    { text: "E = mc²", left: '5%', top: '15%', delay: 0, rotate: 0, mobileLeft: '2%', mobileTop: '10%' },
-    { text: "F = ma", left: '75%', top: '10%', delay: 0.5, rotate: -2, mobileLeft: '70%', mobileTop: '5%' },
-    { text: "a² + b² = c²", left: '15%', top: '65%', delay: 1, rotate: 1, mobileLeft: '10%', mobileTop: '55%' },
-    { text: "∫ sin(x) dx", left: '80%', top: '75%', delay: 1.5, rotate: -1, mobileLeft: '75%', mobileTop: '65%' },
-    { text: "lim(x→0) sin(x)/x", left: '2%', top: '85%', delay: 2, rotate: 2, mobileLeft: '1%', mobileTop: '75%' },
-    { text: "e^(iπ) + 1 = 0", left: '65%', top: '35%', delay: 2.5, rotate: 0, mobileLeft: '60%', mobileTop: '30%' },
-    { text: "∂f/∂x = df/dx", left: '35%', top: '90%', delay: 3, rotate: -3, mobileLeft: '30%', mobileTop: '80%' },
-    { text: "√(x² + y²)", left: '45%', top: '20%', delay: 3.5, rotate: 1, mobileLeft: '40%', mobileTop: '15%' },
-    { text: "∑(i=1 to n) i", left: '10%', top: '45%', delay: 4, rotate: -1, mobileLeft: '5%', mobileTop: '40%' },
-    { text: "log(ab) = log a + log b", left: '85%', top: '50%', delay: 4.5, rotate: 0, mobileLeft: '80%', mobileTop: '45%' },
-    { text: "d²y/dx² = 0", left: '25%', top: '25%', delay: 5, rotate: 2, mobileLeft: '20%', mobileTop: '20%' },
-    { text: "σ = √(Σ(xi-μ)²/n)", left: '60%', top: '60%', delay: 5.5, rotate: -2, mobileLeft: '55%', mobileTop: '50%' },
-    { text: "tan(θ) = sin/cos", left: '30%', top: '30%', delay: 6, rotate: 1, mobileLeft: '25%', mobileTop: '25%' },
-    { text: "n! = n×(n-1)×(n-2)", left: '70%', top: '80%', delay: 6.5, rotate: -1, mobileLeft: '65%', mobileTop: '70%' },
-    { text: "P(E) = n(E)/n(S)", left: '20%', top: '70%', delay: 7, rotate: 0, mobileLeft: '15%', mobileTop: '60%' },
-    { text: "f'(x) = lim(h→0) [f(x+h)-f(x)]/h", left: '90%', top: '20%', delay: 7.5, rotate: -2, mobileLeft: '85%', mobileTop: '15%' }
+    { text: "E = mc²", left: '5%', top: '15%', delay: 0, mobileLeft: '2%', mobileTop: '10%' },
+    { text: "F = ma", left: '75%', top: '10%', delay: 0.5, mobileLeft: '70%', mobileTop: '5%' },
+    { text: "a² + b² = c²", left: '15%', top: '65%', delay: 1, mobileLeft: '10%', mobileTop: '55%' },
+    { text: "∫ sin(x) dx", left: '80%', top: '75%', delay: 1.5, mobileLeft: '75%', mobileTop: '65%' },
+    { text: "e^(iπ) + 1 = 0", left: '65%', top: '35%', delay: 2.5, mobileLeft: '60%', mobileTop: '30%' },
+    { text: "σ = √(Σ(xi-μ)²/n)", left: '60%', top: '60%', delay: 5.5, mobileLeft: '55%', mobileTop: '50%' },
   ];
 
   useEffect(() => {
@@ -527,9 +522,7 @@ const PremiumLoadingScreen: React.FC = () => {
         if (prev >= 100) {
           clearInterval(interval);
           setIsComplete(true);
-          setTimeout(() => {
-            setFadeOut(true);
-          }, 1000);
+          setTimeout(() => setFadeOut(true), 1000);
           return 100;
         }
         const increment = 1.8 + Math.random() * 2;
@@ -550,52 +543,79 @@ const PremiumLoadingScreen: React.FC = () => {
       clearInterval(messageInterval);
       clearInterval(detailInterval);
     };
-  }, [loadingMessages.length, systemDetails.length]);
+  }, []);
 
   if (fadeOut) {
     return (
-      <div className="fixed inset-0 z-50 fade-out bg-gradient-to-br from-amber-50 via-orange-50 to-yellow-50 transition-opacity duration-1200 ease-in-out">
-        <div className="center-container">
-          <div className="content-wrapper">
-            <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black gradient-text-amber text-center">
-              <span>LOADED</span>
-              <CheckCircle className="inline ml-3 w-10 h-10 sm:w-12 sm:h-12 text-green-600 animate-bounce" />
-            </h1>
-          </div>
-        </div>
+      <div className="fixed inset-0 z-50 bg-white flex items-center justify-center transition-opacity duration-1000">
+        <h1 className="text-5xl sm:text-6xl font-semibold text-slate-800 flex items-center animate-fade-in">
+          Ready
+          <CheckCircle className="ml-4 w-10 h-10 text-emerald-500 animate-bounce" />
+        </h1>
       </div>
     );
   }
 
   return (
     <>
-      <style>{customStyles}</style>
-      <div className="fixed inset-0 z-50 center-container bg-gradient-to-br from-amber-50 via-orange-50 to-yellow-50 px-4 sm:px-6 lg:px-8 relative overflow-hidden">
-        
-        {/* Perfectly Centered Background Glows */}
-        <div className="absolute inset-0 overflow-hidden pointer-events-none">
-          <div className="absolute inset-0 bg-gradient-to-r from-amber-400/6 via-transparent to-orange-400/6"></div>
-          <div className="absolute top-1/2 left-1/2 w-96 h-96 bg-amber-400/10 rounded-full blur-3xl animate-pulse transform -translate-x-1/2 -translate-y-1/2"></div>
-          <div className="absolute top-20 left-20 w-32 h-32 bg-orange-400/8 rounded-full blur-xl animate-pulse" style={{ animationDelay: '1.2s' }}></div>
-          <div className="absolute bottom-20 right-20 w-32 h-32 bg-amber-400/8 rounded-full blur-xl animate-pulse" style={{ animationDelay: '2.2s' }}></div>
-        </div>
+      <style>{`
+        @keyframes float {
+          0%, 100% { transform: translateY(0); }
+          50% { transform: translateY(-10px); }
+        }
+        @keyframes fadeIn {
+          from { opacity: 0; }
+          to { opacity: 1; }
+        }
+        @keyframes glowPulse {
+          0% { box-shadow: 0 0 10px rgba(234, 88, 12, 0.2); }
+          50% { box-shadow: 0 0 20px rgba(234, 88, 12, 0.4); }
+          100% { box-shadow: 0 0 10px rgba(234, 88, 12, 0.2); }
+        }
 
-        {/* Floating Mathematics Formulas */}
+        .animate-float { animation: float 4s ease-in-out infinite; }
+        .animate-fade-in { animation: fadeIn 0.8s ease forwards; }
+        .animate-glow { animation: glowPulse 3s ease-in-out infinite; }
+
+        .gradient-text {
+          background: linear-gradient(90deg, #d97706, #ea580c);
+          -webkit-background-clip: text;
+          -webkit-text-fill-color: transparent;
+          background-clip: text;
+        }
+
+        .bg-grid {
+          background-image: 
+            radial-gradient(circle at 1px 1px, rgba(251, 146, 60, 0.1) 1px, transparent 0);
+          background-size: 30px 30px;
+          opacity: 0.1;
+        }
+
+        .min-h-screen-full { min-height: 100vh; }
+      `}</style>
+
+      <div className="fixed inset-0 z-50 min-h-screen-full w-full flex items-center justify-center bg-gradient-to-br from-amber-50 via-orange-50 to-yellow-50 overflow-hidden relative">
+        
+        {/* Subtle Grid Pattern */}
+        <div className="absolute inset-0 bg-grid pointer-events-none"></div>
+
+        {/* Ambient Background Glows */}
+        <div className="absolute inset-0 bg-gradient-to-r from-amber-400/8 via-transparent to-orange-400/8 pointer-events-none"></div>
+        <div className="absolute top-1/2 left-1/2 w-[500px] h-[500px] bg-amber-400/10 rounded-full blur-3xl animate-pulse -translate-x-1/2 -translate-y-1/2"></div>
+        <div className="absolute top-20 left-1/4 w-64 h-64 bg-orange-400/15 rounded-full blur-2xl animate-pulse" style={{ animationDelay: '1s' }}></div>
+        <div className="absolute bottom-20 right-1/4 w-64 h-64 bg-amber-400/15 rounded-full blur-2xl animate-pulse" style={{ animationDelay: '2s' }}></div>
+
+        {/* Floating Math Formulas (Minimal & Decorative) */}
         <div className="absolute inset-0 pointer-events-none">
           {mathFormulas.map((formula, index) => (
             <div
               key={index}
-              className="absolute text-amber-600 text-xs sm:text-sm font-mono animate-code-float whitespace-pre-wrap mobile-code-snippet"
+              className="absolute text-amber-600/15 text-sm font-mono animate-pulse select-none"
               style={{
                 left: window.innerWidth < 640 ? formula.mobileLeft : formula.left,
                 top: window.innerWidth < 640 ? formula.mobileTop : formula.top,
                 animationDelay: `${formula.delay}s`,
-                transform: `rotate(${formula.rotate}deg) translateZ(0)`,
-                opacity: 0.8,
-                maxWidth: '180px',
-                lineHeight: '1.1',
-                zIndex: 1,
-                pointerEvents: 'none'
+                transform: 'translateZ(0)',
               }}
             >
               {formula.text}
@@ -603,171 +623,65 @@ const PremiumLoadingScreen: React.FC = () => {
           ))}
         </div>
 
-        {/* Main Content Wrapper - Perfectly Centered */}
-        <div className="content-wrapper relative z-10 px-6">
+        {/* Main Content - Full Screen Centered */}
+        <div className="relative z-10 w-full max-w-2xl px-8 text-center animate-fade-in">
           
-          {/* LOADING TEXT WITH SIDE-TO-SIDE WAVE - PERFECTLY CENTERED */}
-          <div className="loading-container mb-8 animate-scale-in">
-            
-            {/* Loading Text Container */}
-            <div className="loading-text-wrapper">
-              <div className="animate-wave-side">
-                <h1 className="mobile-loading-text text-6xl sm:text-7xl md:text-8xl lg:text-9xl font-black gradient-text-amber">
-                  LOADING
-                </h1>
-              </div>
-            </div>
-            
-            {/* Loading Dots with Wave */}
-            <div className="loading-dots-wrapper mb-6">
-              <div className="animate-wave-dots">
-                <span className="gradient-text-amber text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black">...</span>
-              </div>
-            </div>
-            
-            {/* Progress Bar */}
-            <div className="w-full max-w-sm mx-auto mb-4">
-              <div className="h-2 bg-amber-200 rounded-full overflow-hidden">
-                <div 
-                  className="h-full bg-gradient-to-r from-amber-500 to-orange-500 transition-all duration-500 ease-out"
-                  style={{ width: `${progress}%` }}
-                ></div>
-              </div>
-              <div className="text-sm text-amber-600 mt-2 font-medium">
-                {Math.round(progress)}% Complete
-              </div>
-            </div>
+          {/* LOADING Header */}
+          <h1 className="text-6xl sm:text-8xl md:text-9xl font-black gradient-text mb-4 tracking-tight">
+            LOADING
+          </h1>
 
-            <div className="h-0.5 w-32 bg-gradient-to-r from-amber-500 to-orange-500 rounded-full shadow-md animate-pulse mx-auto"></div>
-          </div>
-
-          {/* Secondary Message */}
-          <div className="text-center mb-8 min-h-[48px] flex items-center justify-center">
-            <p className="text-base sm:text-lg text-amber-700 font-medium animate-pulse transition-all duration-600 leading-relaxed">
-              {loadingMessages[loadingMessage]}
-            </p>
-          </div>
-
-          {/* Icons Section - PERFECTLY CENTERED */}
-          <div className="flex justify-center items-center mb-8 animate-float" style={{ animationDuration: '5s' }}>
-            <div className="icon-row">
-
-              {/* Left Icon */}
-              <div className="relative animate-scale-in" style={{ animationDelay: '0.4s' }}>
-                <div className="absolute inset-0 animate-pulse-ring" style={{ backgroundColor: 'rgba(245, 158, 11, 0.2)', animationDelay: '0.6s' }}></div>
-                <div className="w-20 h-20 rounded-full bg-gradient-to-br from-orange-500 to-amber-600 flex items-center justify-center shadow-lg animate-glow-pulse mx-auto relative z-5 loading-circle">
-                  <div className="absolute inset-0 rounded-full border-2 border-amber-400/50"></div>
-                  <Code className="w-8 h-8 text-white relative z-10 animate-bounce-gentle" style={{ animationDuration: '3.5s' }} />
-                </div>
-                <div className="absolute -bottom-6 left-1/2 transform -translate-x-1/2 text-xs text-amber-600 font-medium whitespace-nowrap">
-                  <Cpu className="inline h-3 w-3 mr-1" />
-                  Components
-                </div>
-              </div>
-                {/* Center Icon */}
-              <div className="relative animate-scale-in" style={{ animationDelay: '0.4s' }}>
-                <div className="absolute inset-0 animate-pulse-ring" style={{ backgroundColor: 'rgba(245, 158, 11, 0.2)', animationDelay: '0.6s' }}></div>
-                <div className="w-20 h-20 rounded-full bg-gradient-to-br from-orange-500 to-amber-600 flex items-center justify-center shadow-lg animate-glow-pulse mx-auto relative z-5 loading-circle">
-                  <div className="absolute inset-0 rounded-full border-2 border-amber-400/50"></div>
-                  <Zap className="w-8 h-8 text-white relative z-10 animate-bounce-gentle" style={{ animationDuration: '3.5s' }} />
-                </div>
-                <div className="absolute -bottom-6 left-1/2 transform -translate-x-1/2 text-xs text-amber-600 font-medium whitespace-nowrap">
-                  <Zap className="inline h-3 w-3 mr-1" />
-                  Processing
-                </div>
-              </div>
-
-              {/* Right Icon */}
-
-              <div className="relative animate-scale-in" style={{ animationDelay: '0.4s' }}>
-                <div className="absolute inset-0 animate-pulse-ring" style={{ backgroundColor: 'rgba(245, 158, 11, 0.2)', animationDelay: '0.6s' }}></div>
-                <div className="w-20 h-20 rounded-full bg-gradient-to-br from-orange-500 to-amber-600 flex items-center justify-center shadow-lg animate-glow-pulse mx-auto relative z-5 loading-circle">
-                  <div className="absolute inset-0 rounded-full border-2 border-amber-400/50"></div>
-                  <Sparkles className="w-8 h-8 text-white relative z-10 animate-bounce-gentle" style={{ animationDuration: '3.5s' }} />
-                </div>
-                <div className="absolute -bottom-6 left-1/2 transform -translate-x-1/2 text-xs text-amber-600 font-medium whitespace-nowrap">
-                  <Sparkles className="inline h-3 w-3 mr-1" />
-                  Magic
-                </div>
-              </div>
-             
-            </div>
-          </div>
-
-          {/* Loading Dots - REMOVED CIRCLE CLASS */}
-          <div className="flex justify-center gap-4 mb-8">
-            {[0, 0.25, 0.5].map((delay, i) => (
-              <div
-                key={i}
-                className="w-3 h-3 bg-gradient-to-br from-amber-500 to-orange-500 rounded-full animate-bounce shadow-sm"
-                style={{ 
-                  animationDelay: `${delay}s`, 
-                  animationDuration: '1.2s',
-                  transition: 'all 0.4s ease'
-                }}
+          {/* Progress Bar */}
+          <div className="w-full max-w-lg mx-auto my-8">
+            <div className="h-2 bg-amber-200/70 rounded-full overflow-hidden backdrop-blur-sm">
+              <div 
+                className="h-full bg-gradient-to-r from-amber-500 to-orange-500 rounded-full transition-all duration-300 ease-out animate-glow"
+                style={{ width: `${progress}%`, minWidth: '2%' }}
               ></div>
-            ))}
-          </div>
-
-          {/* System Information Panels - Centered */}
-          <div className="w-full max-w-4xl mb-8">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              
-              {/* Loading Steps */}
-              <div className="info-panel rounded-xl p-6 animate-slide-in">
-                <h3 className="text-base font-bold text-amber-800 mb-4 flex items-center justify-center">
-                  <Settings className="h-4 w-4 mr-2" />
-                  Progress Steps
-                </h3>
-                <div className="space-y-2">
-                  {loadingSteps.map((step, index) => (
-                    <div key={index} className={`text-sm text-center transition-all duration-500 ${
-                      index === loadingMessage ? 'text-amber-600 font-semibold animate-pulse' : 'text-amber-700'
-                    }`}>
-                      {index === loadingMessage ? '▶' : '○'} {step}
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              {/* System Details */}
-              <div className="info-panel rounded-xl p-6 animate-slide-in" style={{ animationDelay: '0.2s' }}>
-                <h3 className="text-base font-bold text-amber-800 mb-4 flex items-center justify-center">
-                  <Database className="h-4 w-4 mr-2" />
-                  System Activity
-                </h3>
-                <div className="space-y-2">
-                  {systemDetails.slice(currentDetail, currentDetail + 3).map((detail, index) => (
-                    <div key={index} className="text-sm text-amber-600 font-medium animate-fade-in text-center">
-                      {detail}
-                    </div>
-                  ))}
-                  {currentDetail + 3 < systemDetails.length ? null : (
-                    systemDetails.slice(0, (currentDetail + 3) - systemDetails.length).map((detail, index) => (
-                      <div key={`wrap-${index}`} className="text-sm text-amber-600 font-medium animate-fade-in text-center">
-                        {detail}
-                      </div>
-                    ))
-                  )}
-                </div>
-              </div>
+            </div>
+            <div className="text-sm text-amber-700 font-medium mt-2">
+              {Math.round(progress)}% Complete
             </div>
           </div>
 
-          {/* Status Footer */}
-          <div className="flex items-center justify-center gap-3 transition-all duration-600">
-            {isComplete ? (
-              <>
-                <CheckCircle className="w-5 h-5 text-green-600 animate-bounce" />
-                <span className="text-base font-semibold text-amber-700">Application Ready!</span>
-              </>
-            ) : (
-              <>
-                <Loader2 className="w-5 h-5 text-amber-600 animate-rotate-slow" style={{ animationDuration: '2s' }} />
-                <span className="text-base font-semibold text-amber-700">Initializing Application...</span>
-                <Globe className="w-5 h-5 text-amber-500 animate-pulse" />
-              </>
-            )}
+          {/* Status Message */}
+          <p className="text-lg sm:text-xl text-amber-700 font-medium mb-10 leading-relaxed">
+            {loadingMessages[loadingMessage]}
+          </p>
+
+          {/* Icon Triad with Float */}
+          <div className="flex justify-center items-center gap-12 mb-12 animate-float" style={{ animationDuration: '4s' }}>
+            <div className="text-center group">
+              <div className="w-16 h-16 bg-gradient-to-br from-orange-500 to-amber-600 rounded-full flex items-center justify-center mx-auto mb-2 shadow-lg border border-amber-400/30 animate-glow">
+                <Code className="w-7 h-7 text-white" />
+              </div>
+              <span className="text-sm text-amber-600 font-medium">Code</span>
+            </div>
+            <div className="text-center group">
+              <div className="w-16 h-16 bg-gradient-to-br from-orange-500 to-amber-600 rounded-full flex items-center justify-center mx-auto mb-2 shadow-lg border border-amber-400/30 animate-glow" style={{ animationDelay: '0.5s' }}>
+                <Zap className="w-7 h-7 text-white" />
+              </div>
+              <span className="text-sm text-amber-600 font-medium">Speed</span>
+            </div>
+            <div className="text-center group">
+              <div className="w-16 h-16 bg-gradient-to-br from-orange-500 to-amber-600 rounded-full flex items-center justify-center mx-auto mb-2 shadow-lg border border-amber-400/30 animate-glow" style={{ animationDelay: '1s' }}>
+                <Sparkles className="w-7 h-7 text-white" />
+              </div>
+              <span className="text-sm text-amber-600 font-medium">Magic</span>
+            </div>
+          </div>
+
+          {/* Live System Detail */}
+          <div className="text-sm text-amber-500 font-mono mb-6 min-h-6 flex justify-center">
+            <span className="px-4 py-2 bg-white/30 rounded-full backdrop-blur-sm border border-amber-200/50">
+              {systemDetails[currentDetail]}
+            </span>
+          </div>
+
+          {/* Final Status */}
+          <div className="flex items-center justify-center gap-3 text-base text-amber-700 font-semibold">
+            <Loader2 className="w-5 h-5 animate-spin text-amber-600" />
+            {isComplete ? "Application Ready" : "Initializing..."}
           </div>
         </div>
       </div>
@@ -775,103 +689,255 @@ const PremiumLoadingScreen: React.FC = () => {
   );
 };
 
-
-
 // ==================== HERO SECTION COMPONENT ====================
+
 const HeroSection: React.FC = () => {
   return (
     <section id="home" className="relative pt-20 sm:pt-24 pb-12 sm:pb-16 px-4 sm:px-6 overflow-hidden min-h-screen flex items-center">
-      {/* Animated Background */}
-      <div className="absolute inset-0 overflow-hidden">
-        <div className="absolute top-10 sm:top-20 left-5 sm:left-10 w-48 sm:w-72 h-48 sm:h-72 bg-amber-300/20 rounded-full blur-3xl animate-pulse-slow"></div>
-        <div className="absolute top-20 sm:top-40 right-5 sm:right-10 w-64 sm:w-96 h-64 sm:h-96 bg-orange-300/20 rounded-full blur-3xl animate-pulse-slow" style={{animationDelay: '1s'}}></div>
-        <div className="absolute bottom-10 sm:bottom-20 left-1/4 sm:left-1/3 w-56 sm:w-80 h-56 sm:h-80 bg-yellow-300/20 rounded-full blur-3xl animate-pulse-slow" style={{animationDelay: '2s'}}></div>
-      </div>
+      {/* Animated Background with Framer Motion */}
+      <motion.div
+        className="absolute inset-0 overflow-hidden"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 1 }}
+      >
+        <motion.div
+          className="absolute top-10 sm:top-20 left-5 sm:left-10 w-48 sm:w-72 h-48 sm:h-72 bg-amber-300/20 rounded-full blur-3xl"
+          animate={{
+            scale: [1, 1.1, 1],
+            opacity: [0.6, 0.8, 0.6]
+          }}
+          transition={{
+            duration: 5,
+            repeat: Infinity,
+            repeatType: "reverse"
+          }}
+        ></motion.div>
 
-      {/* Floating Elements - Hidden on mobile for performance */}
-      <div className="absolute inset-0 pointer-events-none hidden sm:block">
-        <div className="absolute top-32 left-20 animate-float" style={{animationDelay: '0.3s'}}>
+        <motion.div
+          className="absolute top-20 sm:top-40 right-5 sm:right-10 w-64 sm:w-96 h-64 sm:h-96 bg-orange-300/20 rounded-full blur-3xl"
+          animate={{
+            scale: [1, 1.2, 1],
+            opacity: [0.5, 0.7, 0.5]
+          }}
+          transition={{
+            duration: 6,
+            repeat: Infinity,
+            repeatType: "reverse",
+            delay: 1
+          }}
+        ></motion.div>
+
+        <motion.div
+          className="absolute bottom-10 sm:bottom-20 left-1/4 sm:left-1/3 w-56 sm:w-80 h-56 sm:h-80 bg-yellow-300/20 rounded-full blur-3xl"
+          animate={{
+            scale: [1, 1.15, 1],
+            opacity: [0.55, 0.75, 0.55]
+          }}
+          transition={{
+            duration: 7,
+            repeat: Infinity,
+            repeatType: "reverse",
+            delay: 2
+          }}
+        ></motion.div>
+      </motion.div>
+
+      {/* Floating Elements with Framer Motion */}
+      <motion.div
+        className="absolute inset-0 pointer-events-none hidden sm:block"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.8, delay: 0.5 }}
+      >
+        <motion.div
+          className="absolute top-32 left-20"
+          animate={{
+            y: [-10, 10, -10],
+            x: [0, 5, 0]
+          }}
+          transition={{
+            duration: 4,
+            repeat: Infinity,
+            repeatType: "mirror",
+            delay: 0.3
+          }}
+        >
           <div className="w-12 sm:w-16 h-12 sm:h-16 bg-gradient-to-r from-amber-400 to-orange-400 rounded-lg flex items-center justify-center shadow-lg hover:shadow-xl transition-shadow">
             <Code className="h-6 sm:h-8 w-6 sm:w-8 text-white" />
           </div>
-        </div>
-        <div className="absolute top-48 right-32 animate-float" style={{animationDelay: '0.7s'}}>
+        </motion.div>
+
+        <motion.div
+          className="absolute top-48 right-32"
+          animate={{
+            y: [-15, 15, -15],
+            x: [0, -8, 0]
+          }}
+          transition={{
+            duration: 5,
+            repeat: Infinity,
+            repeatType: "mirror",
+            delay: 0.7
+          }}
+        >
           <div className="w-10 sm:w-12 h-10 sm:h-12 bg-gradient-to-r from-orange-400 to-red-400 rounded-full flex items-center justify-center shadow-lg hover:shadow-xl transition-shadow">
             <Sparkles className="h-5 sm:h-6 w-5 sm:w-6 text-white" />
           </div>
-        </div>
-        <div className="absolute bottom-40 left-16 animate-float" style={{animationDelay: '1s'}}>
+        </motion.div>
+
+        <motion.div
+          className="absolute bottom-40 left-16"
+          animate={{
+            y: [-12, 12, -12],
+            x: [0, 7, 0]
+          }}
+          transition={{
+            duration: 3.5,
+            repeat: Infinity,
+            repeatType: "mirror",
+            delay: 1
+          }}
+        >
           <div className="w-12 sm:w-14 h-12 sm:h-14 bg-gradient-to-r from-yellow-400 to-amber-400 rounded-lg rotate-12 flex items-center justify-center shadow-lg hover:shadow-xl transition-shadow">
             <Star className="h-6 sm:h-7 w-6 sm:w-7 text-white" />
           </div>
-        </div>
-      </div>
+        </motion.div>
+      </motion.div>
 
       <div className="container mx-auto relative z-10">
-        <div className="flex flex-col lg:flex-row items-center justify-between gap-8 sm:gap-12">
+        <motion.div
+          className="flex flex-col lg:flex-row items-center justify-between gap-8 sm:gap-12"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8 }}
+        >
           {/* Left Content */}
-          <div className="w-full lg:w-1/2 space-y-6 sm:space-y-8 text-center lg:text-left">
-            <div className="inline-flex items-center space-x-2 bg-white/80 backdrop-blur-sm border border-amber-200 rounded-full px-3 sm:px-4 py-1.5 sm:py-2 text-xs sm:text-sm shadow-sm">
-              <div className="w-1.5 sm:w-2 h-1.5 sm:h-2 bg-green-500 rounded-full animate-pulse"></div>
+          <motion.div
+            className="w-full lg:w-1/2 space-y-6 sm:space-y-8 text-center lg:text-left"
+            initial={{ opacity: 0, x: -50 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.8, delay: 0.2 }}
+          >
+            <motion.div
+              className="inline-flex items-center space-x-2 bg-white/80 backdrop-blur-sm border border-amber-200 rounded-full px-3 sm:px-4 py-1.5 sm:py-2 text-xs sm:text-sm shadow-sm"
+              initial={{ scale: 0.9 }}
+              animate={{ scale: 1 }}
+              transition={{ duration: 0.4 }}
+            >
+              <motion.div
+                className="w-1.5 sm:w-2 h-1.5 sm:h-2 bg-green-500 rounded-full"
+                animate={{ scale: [1, 1.5, 1] }}
+                transition={{ duration: 1.5, repeat: Infinity }}
+              ></motion.div>
               <span className="text-gray-700">Available for opportunities</span>
-            </div>
+            </motion.div>
 
-            <div className="space-y-4 sm:space-y-6">
-              <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-7xl font-bold leading-tight tracking-tight">
+            <motion.div
+              className="space-y-4 sm:space-y-6"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.5, delay: 0.4 }}
+            >
+              <motion.h1
+                className="text-3xl sm:text-4xl md:text-5xl lg:text-7xl font-bold leading-tight tracking-tight"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: 0.5 }}
+              >
                 <span className="block text-gray-800 mb-1 sm:mb-2">Hello,</span>
                 <span className="block bg-gradient-to-r from-amber-600 via-orange-600 to-red-500 bg-clip-text text-transparent">
                   I'm SuraJz
                 </span>
-              </h1>
+              </motion.h1>
 
-              <div className="space-y-3 sm:space-y-4">
+              <motion.div
+                className="space-y-3 sm:space-y-4"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ duration: 0.5, delay: 0.6 }}
+              >
                 <p className="text-xl sm:text-2xl lg:text-3xl font-semibold text-gray-800">
                   Aspiring Software Engineer
                 </p>
                 <div className="flex flex-wrap justify-center lg:justify-start gap-2 sm:gap-3">
                   {['C++', 'Python', 'JavaScript', 'DSA', 'MERN', 'Tailwindcss'].map((skill, index) => (
-                    <Badge
+                    <motion.div
                       key={index}
-                      variant="secondary"
-                      className="bg-amber-100 text-red-700 border-amber-200 px-2 sm:px-3 py-0.5 sm:py-1 text-xs sm:text-sm hover:bg-amber-200 transition-all hover:-translate-y-1 hover:cursor-pointer"
+                      initial={{ opacity: 0, scale: 0.8 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      transition={{ duration: 0.3, delay: 0.7 + index * 0.1 }}
                     >
-                      {skill}
-                    </Badge>
+                      <Badge
+                        variant="secondary"
+                        className="bg-amber-100 text-red-700 border-amber-200 px-2 sm:px-3 py-0.5 sm:py-1 text-xs sm:text-sm hover:bg-amber-200 transition-all hover:-translate-y-1 hover:cursor-pointer"
+                      >
+                        {skill}
+                      </Badge>
+                    </motion.div>
                   ))}
                 </div>
-              </div>
+              </motion.div>
 
-              <p className="text-sm sm:text-base lg:text-xl text-gray-700 leading-relaxed max-w-2xl mx-auto lg:mx-0">
+              <motion.p
+                className="text-sm sm:text-base lg:text-xl text-gray-700 leading-relaxed max-w-2xl mx-auto lg:mx-0"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ duration: 0.5, delay: 0.9 }}
+              >
                 I'm a <span className='bg-amber-200 rounded-lg px-1 sm:px-2 text-red-600 font-semibold text-xs sm:text-sm lg:text-base'>3<sup>rd</sup> Year B.Tech</span> student passionate about coding, problem-solving, and full-stack development. Skilled in
                 <span className='text-red-600 font-semibold bg-amber-200 px-1 sm:px-2 rounded-lg ml-1 mr-1 text-xs sm:text-sm lg:text-base'>MERN</span>,
                 <span className='text-red-600 font-semibold bg-amber-200 px-1 sm:px-2 rounded-md ml-1 mr-1 text-xs sm:text-sm lg:text-base'>TailwindCss</span>,
                 <span className='text-red-600 font-semibold bg-amber-200 px-1 sm:px-2 rounded-md text-xs sm:text-sm lg:text-base'>PostgreSQL</span>,
                 <span className='text-red-600 font-semibold bg-amber-200 px-1 sm:px-2 rounded-md text-xs sm:text-sm lg:text-base'>C++</span>, and
                 <span className='text-red-600 font-semibold bg-amber-200 px-1 sm:px-2 rounded-md text-xs sm:text-sm lg:text-base'>Python</span>.
-              </p>
-            </div>
+              </motion.p>
+            </motion.div>
 
-            <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center lg:justify-start">
-              <Button
-                size="lg"
-                className="w-full sm:w-auto bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white border-0 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 text-sm sm:text-base"
-                onClick={() => document.getElementById('projects')?.scrollIntoView({ behavior: 'smooth' })}
+            <motion.div
+              className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center lg:justify-start"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.5, delay: 1.1 }}
+            >
+              <motion.div
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                transition={{ duration: 0.2 }}
               >
-                <span>Explore My Work</span>
-                <ArrowRight className="ml-2 h-3 w-3 sm:h-4 sm:w-4" />
-              </Button>
-              <Button
-                size="lg"
-                variant="outline"
-                className="w-full sm:w-auto border-amber-300 text-gray-700 hover:bg-amber-50 backdrop-blur-sm bg-white/50 hover:border-amber-400 transition-all duration-300 hover:scale-105 text-sm sm:text-base"
-                onClick={() => document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' })}
-              >
-                Let's Connect
-                <ExternalLink className='ml-2 h-3 w-3 sm:h-4 sm:w-4'/>
-              </Button>
-            </div>
+                <Button
+                  size="lg"
+                  className="w-full sm:w-auto bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white border-0 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 text-sm sm:text-base"
+                  onClick={() => document.getElementById('projects')?.scrollIntoView({ behavior: 'smooth' })}
+                >
+                  <span>Explore My Work</span>
+                  <ArrowRight className="ml-2 h-3 w-3 sm:h-4 sm:w-4" />
+                </Button>
+              </motion.div>
 
-            <div className="flex justify-center lg:justify-start space-x-3 sm:space-x-6">
+              <motion.div
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                transition={{ duration: 0.2 }}
+              >
+                <Button
+                  size="lg"
+                  variant="outline"
+                  className="w-full sm:w-auto border-amber-300 text-gray-700 hover:bg-amber-50 backdrop-blur-sm bg-white/50 hover:border-amber-400 transition-all duration-300 hover:scale-105 text-sm sm:text-base"
+                  onClick={() => document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' })}
+                >
+                  Let's Connect
+                  <ExternalLink className='ml-2 h-3 w-3 sm:h-4 sm:w-4'/>
+                </Button>
+              </motion.div>
+            </motion.div>
+
+            <motion.div
+              className="flex justify-center lg:justify-start space-x-3 sm:space-x-6"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.5, delay: 1.3 }}
+            >
               {[
                 { href: "https://github.com/Suraj1819", icon: Github },
                 { href: "https://www.linkedin.com/in/suraj-kumar-72847b30a/", icon: Linkedin },
@@ -881,57 +947,524 @@ const HeroSection: React.FC = () => {
                 { href: "https://x.com/SuraJzRt", icon: X },
                 { href: "https://www.instagram.com/risu2948/", icon: Instagram },
               ].map((social, index) => (
-                <a
+                <motion.a
                   key={index}
                   href={social.href}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-gray-600 hover:text-amber-700 transition-all duration-300 hover:scale-110 p-1.5 sm:p-2 rounded-full hover:bg-amber-200"
+                  whileHover={{ scale: 1.1 }}
+                  whileTap={{ scale: 0.9 }}
+                  className="text-gray-600 hover:text-amber-700 transition-all duration-300 hover:bg-amber-200 p-1.5 sm:p-2 rounded-full"
+                  initial={{ opacity: 0, x: -10 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ duration: 0.3, delay: 1.4 + index * 0.05 }}
                 >
                   <social.icon className="h-4 w-4 sm:h-5 sm:w-5 lg:h-6 lg:w-6" />
-                </a>
+                </motion.a>
               ))}
-            </div>
-          </div>
+            </motion.div>
+          </motion.div>
 
           {/* Right Content - Profile Image */}
-          <div className="w-full lg:w-1/2 flex justify-center mt-8 lg:mt-0">
-            <div className="relative animate-scale-in">
-              <div className="absolute inset-0 bg-gradient-to-r from-amber-400 via-orange-400 to-red-400 rounded-full blur-xl opacity-30 animate-pulse-slow"></div>
-              <div className="relative w-64 h-64 sm:w-80 sm:h-80 lg:w-96 lg:h-96 bg-gradient-to-br from-amber-400 via-orange-400 to-red-400 rounded-full flex items-center justify-center shadow-2xl hover:shadow-3xl transition-shadow duration-500">
-                <div className="w-56 h-56 sm:w-72 sm:h-72 lg:w-88 lg:h-88 bg-white rounded-full flex items-center justify-center border border-amber-200 overflow-hidden">
+          <motion.div
+            className="w-full lg:w-1/2 flex justify-center mt-8 lg:mt-0"
+            initial={{ opacity: 0, x: 50 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.8, delay: 0.3 }}
+          >
+            <div className="relative">
+              {/* Glow Background */}
+              <motion.div
+                className="absolute inset-0 bg-gradient-to-r from-amber-400 via-orange-400 to-red-400 rounded-full blur-2xl opacity-30"
+                animate={{
+                  scale: [1, 1.15, 1],
+                  opacity: [0.3, 0.5, 0.3],
+                }}
+                transition={{
+                  duration: 4,
+                  repeat: Infinity,
+                  repeatType: 'reverse',
+                }}
+              />
+
+              {/* Profile Circle */}
+              <motion.div
+                className="relative w-64 h-64 sm:w-80 sm:h-80 lg:w-96 lg:h-96 bg-gradient-to-br from-amber-400 via-orange-400 to-red-400 rounded-full flex items-center justify-center shadow-2xl"
+                whileHover={{ 
+                  scale: 1.02,
+                  boxShadow: "0 25px 50px rgba(245, 158, 11, 0.6)" 
+                }}
+                transition={{ duration: 0.3 }}
+              >
+                <div className="w-56 h-56 sm:w-72 sm:h-72 lg:w-88 lg:h-88 bg-white rounded-full flex items-center justify-center border-4 border-amber-200 overflow-hidden">
                   <img
                     src="https://wallpapercave.com/wp/wp6690023.jpg"
                     alt="Profile Picture"
                     className="w-full h-full object-cover"
                   />
                 </div>
-              </div>
-              <div className="absolute -top-2 sm:-top-4 -right-2 sm:-right-4 w-14 h-14 sm:w-20 sm:h-20 bg-gradient-to-r from-yellow-400 to-orange-400 rounded-full flex items-center justify-center animate-bounce-gentle shadow-lg">
-                <span className="text-white font-bold text-xs sm:text-sm lg:text-md">2027</span>
-              </div>
-              <div className="absolute top-1/2 left-1/2 w-[120%] h-[120%] -translate-x-1/2 -translate-y-1/2 hidden sm:block">
-                <div className="relative w-full h-full animate-spin" style={{ animationDuration: '20s' }}>
-                  <div className="absolute top-0 left-1/2 w-3 h-3 sm:w-4 sm:h-4 bg-amber-400 rounded-full -translate-x-1/2 -translate-y-1/2 shadow-lg"></div>
-                  <div className="absolute bottom-0 left-1/2 w-3 h-3 sm:w-4 sm:h-4 bg-orange-400 rounded-full -translate-x-1/2 translate-y-1/2 shadow-lg"></div>
-                  <div className="absolute left-0 top-1/2 w-3 h-3 sm:w-4 sm:h-4 bg-red-400 rounded-full -translate-x-1/2 -translate-y-1/2 shadow-lg"></div>
-                  <div className="absolute right-0 top-1/2 w-3 h-3 sm:w-4 sm:h-4 bg-yellow-400 rounded-full translate-x-1/2 -translate-y-1/2 shadow-lg"></div>
-                </div>
-              </div>
+              </motion.div>
+
+              {/* Year Badge */}
+              <motion.div
+                className="absolute -top-2 sm:-top-4 -right-2 sm:-right-4 w-14 h-14 sm:w-20 sm:h-20 bg-gradient-to-r from-yellow-400 to-orange-400 rounded-full flex items-center justify-center shadow-lg font-bold"
+                animate={{
+                  y: [-8, 8, -8],
+                  rotate: [0, 5, -5, 0],
+                }}
+                transition={{
+                  duration: 3,
+                  repeat: Infinity,
+                  ease: "easeInOut",
+                }}
+                whileHover={{ scale: 1.1 }}
+              >
+                <span className="text-white font-bold text-xs sm:text-sm lg:text-base">
+                  2027
+                </span>
+              </motion.div>
+
+              {/* Orbital Elements - Integrated with proper centering */}
+              <motion.div
+                className="absolute top-1/2 left-1/2 w-[130%] h-[130%] -translate-x-1/2 -translate-y-1/2 hidden sm:block"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ duration: 0.8, delay: 0.5 }}
+              >
+                <motion.div
+                  className="relative w-full h-full"
+                  animate={{ rotate: 360 }}
+                  transition={{
+                    duration: 25,
+                    repeat: Infinity,
+                    ease: "linear",
+                  }}
+                  style={{ transformOrigin: "center center" }}
+                >
+                  {/* Top Orbital Dot */}
+                  <motion.div
+                    className="absolute w-3 h-3 sm:w-4 sm:h-4 bg-amber-400 rounded-full shadow-lg"
+                    style={{
+                      top: "-50%",
+                      left: "50%",
+                      transform: "translateX(-50%) translateY(0%)",
+                    }}
+                    animate={{
+                      scale: [1, 1.4, 1],
+                      opacity: [1, 0.6, 1],
+                    }}
+                    transition={{
+                      duration: 2,
+                      repeat: Infinity,
+                      repeatType: "mirror",
+                    }}
+                  />
+
+                  {/* Bottom Orbital Dot */}
+                  <motion.div
+                    className="absolute w-3 h-3 sm:w-4 sm:h-4 bg-orange-400 rounded-full shadow-lg"
+                    style={{
+                      top: "50%",
+                      left: "50%",
+                      transform: "translateX(-50%) translateY(50%)",
+                    }}
+                    animate={{
+                      scale: [1, 1.4, 1],
+                      opacity: [1, 0.6, 1],
+                    }}
+                    transition={{
+                      duration: 2,
+                      repeat: Infinity,
+                      repeatType: "mirror",
+                      delay: 0.5,
+                    }}
+                  />
+
+                  {/* Left Orbital Dot */}
+                  <motion.div
+                    className="absolute w-3 h-3 sm:w-4 sm:h-4 bg-red-400 rounded-full shadow-lg"
+                    style={{
+                      top: "50%",
+                      left: "-50%",
+                      transform: "translateX(0%) translateY(-50%)",
+                    }}
+                    animate={{
+                      scale: [1, 1.4, 1],
+                      opacity: [1, 0.6, 1],
+                    }}
+                    transition={{
+                      duration: 2,
+                      repeat: Infinity,
+                      repeatType: "mirror",
+                      delay: 1,
+                    }}
+                  />
+
+                  {/* Right Orbital Dot */}
+                  <motion.div
+                    className="absolute w-3 h-3 sm:w-4 sm:h-4 bg-yellow-400 rounded-full shadow-lg"
+                    style={{
+                      top: "50%",
+                      left: "50%",
+                      transform: "translateX(50%) translateY(-50%)",
+                    }}
+                    animate={{
+                      scale: [1, 1.4, 1],
+                      opacity: [1, 0.6, 1],
+                    }}
+                    transition={{
+                      duration: 2,
+                      repeat: Infinity,
+                      repeatType: "mirror",
+                      delay: 1.5,
+                    }}
+                  />
+                </motion.div>
+              </motion.div>
             </div>
-          </div>
-        </div>
+          </motion.div>
+        </motion.div>
 
         {/* Scroll Indicator - Hidden on mobile */}
-        <div className="absolute bottom-4 sm:bottom-8 left-1/2 transform -translate-x-1/2 animate-bounce-gentle hidden sm:block">
-          <div className="w-5 h-8 sm:w-6 sm:h-10 border-2 border-amber-400 rounded-full flex justify-center">
-            <div className="w-1 h-2 sm:h-3 bg-amber-400 rounded-full mt-2 animate-pulse"></div>
-          </div>
-        </div>
+        <motion.div
+          className="absolute bottom-4 sm:bottom-8 left-1/2 transform -translate-x-1/2 hidden sm:flex flex-col items-center"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 1.5 }}
+          whileHover={{ scale: 1.1 }}
+        >
+          <motion.div
+            className="w-5 h-8 sm:w-6 sm:h-10 border-2 border-amber-400 rounded-full flex justify-center items-center"
+            animate={{
+              boxShadow: [
+                '0 0 0 0px rgba(251, 191, 36, 0)',
+                '0 0 0 8px rgba(251, 191, 36, 0.1)',
+              ],
+            }}
+            transition={{
+              duration: 2,
+              repeat: Infinity,
+            }}
+          >
+            <motion.div
+              className="w-1 h-2 sm:h-3 bg-amber-400 rounded-full"
+              animate={{
+                y: [0, 8, 0],
+                opacity: [0.5, 1, 0.5],
+              }}
+              transition={{
+                duration: 1.5,
+                repeat: Infinity,
+                ease: "easeInOut",
+              }}
+            />
+          </motion.div>
+          <motion.span
+            className="text-xs text-gray-500 mt-2"
+            animate={{ opacity: [0.5, 1, 0.5] }}
+            transition={{ duration: 2, repeat: Infinity }}
+          >
+            Scroll down
+          </motion.span>
+        </motion.div>
       </div>
     </section>
   );
-};
+}
+
+
+// ==================== ABOUT SECTION COMPONENT ====================
+//   const containerVariants = {
+//     hidden: { opacity: 0 },
+//     visible: {
+//       opacity: 1,
+//       transition: {
+//         staggerChildren: 0.2,
+//         delayChildren: 0.3,
+//       },
+//     },
+//   };
+
+//   const itemVariants = {
+//     hidden: { opacity: 0, y: 20 },
+//     visible: {
+//       opacity: 1,
+//       y: 0,
+//       transition: { duration: 0.8, ease: "easeOut" },
+//     },
+//   };
+
+//   const floatingVariants = {
+//     animate: {
+//       y: [0, -20, 0],
+//       transition: {
+//         duration: 3,
+//         repeat: Infinity,
+//         ease: "easeInOut",
+//       },
+//     },
+//   };
+
+//   const pulseVariants = {
+//     animate: {
+//       opacity: [0.5, 1, 0.5],
+//       transition: {
+//         duration: 2,
+//         repeat: Infinity,
+//       },
+//     },
+//   };
+
+//   const rotateVariants = {
+//     animate: {
+//       rotate: 360,
+//       transition: {
+//         duration: 20,
+//         repeat: Infinity,
+//         ease: "linear",
+//       },
+//     },
+//   };
+
+//   return (
+//     <section id="home" className="relative pt-20 sm:pt-24 pb-12 sm:pb-16 px-4 sm:px-6 overflow-hidden min-h-screen flex items-center">
+//       {/* Animated Background */}
+//       <div className="absolute inset-0 overflow-hidden">
+//         <motion.div
+//           className="absolute top-10 sm:top-20 left-5 sm:left-10 w-48 sm:w-72 h-48 sm:h-72 bg-amber-300/20 rounded-full blur-3xl"
+//           variants={pulseVariants}
+//           animate="animate"
+//         />
+//         <motion.div
+//           className="absolute top-20 sm:top-40 right-5 sm:right-10 w-64 sm:w-96 h-64 sm:h-96 bg-orange-300/20 rounded-full blur-3xl"
+//           variants={pulseVariants}
+//           animate="animate"
+//           transition={{ delay: 1 }}
+//         />
+//         <motion.div
+//           className="absolute bottom-10 sm:bottom-20 left-1/4 sm:left-1/3 w-56 sm:w-80 h-56 sm:h-80 bg-yellow-300/20 rounded-full blur-3xl"
+//           variants={pulseVariants}
+//           animate="animate"
+//           transition={{ delay: 2 }}
+//         />
+//       </div>
+
+//       {/* Floating Elements */}
+//       <div className="absolute inset-0 pointer-events-none hidden sm:block">
+//         <motion.div
+//           className="absolute top-32 left-20"
+//           variants={floatingVariants}
+//           animate="animate"
+//           transition={{ delay: 0.3 }}
+//         >
+//           <div className="w-12 sm:w-16 h-12 sm:h-16 bg-gradient-to-r from-amber-400 to-orange-400 rounded-lg flex items-center justify-center shadow-lg">
+//             <Code className="h-6 sm:h-8 w-6 sm:w-8 text-white" />
+//           </div>
+//         </motion.div>
+
+//         <motion.div
+//           className="absolute top-48 right-32"
+//           variants={floatingVariants}
+//           animate="animate"
+//           transition={{ delay: 0.7 }}
+//         >
+//           <div className="w-10 sm:w-12 h-10 sm:h-12 bg-gradient-to-r from-orange-400 to-red-400 rounded-full flex items-center justify-center shadow-lg">
+//             <Sparkles className="h-5 sm:h-6 w-5 sm:w-6 text-white" />
+//           </div>
+//         </motion.div>
+
+//         <motion.div
+//           className="absolute bottom-40 left-16"
+//           variants={floatingVariants}
+//           animate="animate"
+//           transition={{ delay: 1 }}
+//         >
+//           <div className="w-12 sm:w-14 h-12 sm:h-14 bg-gradient-to-r from-yellow-400 to-amber-400 rounded-lg rotate-12 flex items-center justify-center shadow-lg">
+//             <Star className="h-6 sm:h-7 w-6 sm:w-7 text-white" />
+//           </div>
+//         </motion.div>
+//       </div>
+
+//       <div className="container mx-auto relative z-10">
+//         <div className="flex flex-col lg:flex-row items-center justify-between gap-8 sm:gap-12">
+//           {/* Left Content */}
+//           <motion.div
+//             className="w-full lg:w-1/2 space-y-6 sm:space-y-8 text-center lg:text-left"
+//             variants={containerVariants}
+//             initial="hidden"
+//             animate="visible"
+//           >
+//             <motion.div
+//               className="inline-flex items-center space-x-2 bg-white/80 backdrop-blur-sm border border-amber-200 rounded-full px-3 sm:px-4 py-1.5 sm:py-2 text-xs sm:text-sm shadow-sm"
+//               variants={itemVariants}
+//             >
+//               <div className="w-1.5 sm:w-2 h-1.5 sm:h-2 bg-green-500 rounded-full animate-pulse" />
+//               <span className="text-gray-700">Available for opportunities</span>
+//             </motion.div>
+
+//             <div className="space-y-4 sm:space-y-6">
+//               <motion.h1
+//                 className="text-3xl sm:text-4xl md:text-5xl lg:text-7xl font-bold leading-tight tracking-tight"
+//                 variants={itemVariants}
+//               >
+//                 <span className="block text-gray-800 mb-1 sm:mb-2">Hello,</span>
+//                 <span className="block bg-gradient-to-r from-amber-600 via-orange-600 to-red-500 bg-clip-text text-transparent">
+//                   I'm SuraJz
+//                 </span>
+//               </motion.h1>
+
+//               <motion.div className="space-y-3 sm:space-y-4" variants={itemVariants}>
+//                 <p className="text-xl sm:text-2xl lg:text-3xl font-semibold text-gray-800">
+//                   Aspiring Software Engineer
+//                 </p>
+//                 <div className="flex flex-wrap justify-center lg:justify-start gap-2 sm:gap-3">
+//                   {['C++', 'Python', 'JavaScript', 'DSA', 'MERN', 'Tailwindcss'].map((skill, index) => (
+//                     <motion.div
+//                       key={index}
+//                       whileHover={{ y: -4 }}
+//                       transition={{ duration: 0.2 }}
+//                     >
+//                       <Badge className="bg-amber-100 text-red-700 border-amber-200 px-2 sm:px-3 py-0.5 sm:py-1 text-xs sm:text-sm cursor-pointer">
+//                         {skill}
+//                       </Badge>
+//                     </motion.div>
+//                   ))}
+//                 </div>
+//               </motion.div>
+
+//               <motion.p
+//                 className="text-sm sm:text-base lg:text-xl text-gray-700 leading-relaxed max-w-2xl mx-auto lg:mx-0"
+//                 variants={itemVariants}
+//               >
+//                 I'm a <span className='bg-amber-200 rounded-lg px-1 sm:px-2 text-red-600 font-semibold text-xs sm:text-sm lg:text-base'>3<sup>rd</sup> Year B.Tech</span> student passionate about coding, problem-solving, and full-stack development. Skilled in
+//                 <span className='text-red-600 font-semibold bg-amber-200 px-1 sm:px-2 rounded-lg ml-1 mr-1 text-xs sm:text-sm lg:text-base'>MERN</span>,
+//                 <span className='text-red-600 font-semibold bg-amber-200 px-1 sm:px-2 rounded-md ml-1 mr-1 text-xs sm:text-sm lg:text-base'>TailwindCss</span>,
+//                 <span className='text-red-600 font-semibold bg-amber-200 px-1 sm:px-2 rounded-md text-xs sm:text-sm lg:text-base'>PostgreSQL</span>,
+//                 <span className='text-red-600 font-semibold bg-amber-200 px-1 sm:px-2 rounded-md text-xs sm:text-sm lg:text-base'>C++</span>, and
+//                 <span className='text-red-600 font-semibold bg-amber-200 px-1 sm:px-2 rounded-md text-xs sm:text-sm lg:text-base'>Python</span>.
+//               </motion.p>
+//             </div>
+
+//             <motion.div
+//               className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center lg:justify-start"
+//               variants={itemVariants}
+//             >
+//               <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+//                 <Button
+//                   size="lg"
+//                   className="w-full sm:w-auto bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white border-0 shadow-lg text-sm sm:text-base"
+//                   onClick={() => document.getElementById('projects')?.scrollIntoView({ behavior: 'smooth' })}
+//                 >
+//                   <span>Explore My Work</span>
+//                   <ArrowRight className="ml-2 h-3 w-3 sm:h-4 sm:w-4" />
+//                 </Button>
+//               </motion.div>
+//               <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+//                 <Button
+//                   size="lg"
+//                   variant="outline"
+//                   className="w-full sm:w-auto border-amber-300 text-gray-700 hover:bg-amber-50 backdrop-blur-sm bg-white/50 hover:border-amber-400 text-sm sm:text-base"
+//                   onClick={() => document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' })}
+//                 >
+//                   Let's Connect
+//                   <ExternalLink className='ml-2 h-3 w-3 sm:h-4 sm:w-4'/>
+//                 </Button>
+//               </motion.div>
+//             </motion.div>
+
+//             <motion.div
+//               className="flex justify-center lg:justify-start space-x-3 sm:space-x-6"
+//               variants={itemVariants}
+//             >
+//               {[
+//                 { href: "https://github.com/Suraj1819", icon: Github },
+//                 { href: "https://www.linkedin.com/in/suraj-kumar-72847b30a/", icon: Linkedin },
+//                 { href: "https://leetcode.com/u/Suraj_1819/", icon: Code },
+//                 { href: "https://www.geeksforgeeks.org/user/surajkuma16ts/", icon: Code2 },
+//                 { href: "https://github.com/Suraj1819", icon: Facebook },
+//                 { href: "https://x.com/SuraJzRt", icon: X },
+//                 { href: "https://www.instagram.com/risu2948/", icon: Instagram },
+//               ].map((social, index) => (
+//                 <motion.a
+//                   key={index}
+//                   href={social.href}
+//                   target="_blank"
+//                   rel="noopener noreferrer"
+//                   className="text-gray-600 hover:text-amber-700 p-1.5 sm:p-2 rounded-full hover:bg-amber-200 transition-colors"
+//                   whileHover={{ scale: 1.1 }}
+//                   whileTap={{ scale: 0.95 }}
+//                 >
+//                   <social.icon className="h-4 w-4 sm:h-5 sm:w-5 lg:h-6 lg:w-6" />
+//                 </motion.a>
+//               ))}
+//             </motion.div>
+//           </motion.div>
+
+//           {/* Right Content - Profile Image */}
+//           <motion.div
+//             className="w-full lg:w-1/2 flex justify-center mt-8 lg:mt-0"
+//             initial={{ opacity: 0, scale: 0.8 }}
+//             animate={{ opacity: 1, scale: 1 }}
+//             transition={{ duration: 0.8, delay: 0.3 }}
+//           >
+//             <div className="relative">
+//               <motion.div
+//                 className="absolute inset-0 bg-gradient-to-r from-amber-400 via-orange-400 to-red-400 rounded-full blur-xl opacity-30"
+//                 variants={pulseVariants}
+//                 animate="animate"
+//               />
+//               <div className="relative w-64 h-64 sm:w-80 sm:h-80 lg:w-96 lg:h-96 bg-gradient-to-br from-amber-400 via-orange-400 to-red-400 rounded-full flex items-center justify-center shadow-2xl">
+//                 <div className="w-56 h-56 sm:w-72 sm:h-72 lg:w-88 lg:h-88 bg-white rounded-full flex items-center justify-center border border-amber-200 overflow-hidden">
+//                   <img
+//                     src="https://wallpapercave.com/wp/wp6690023.jpg"
+//                     alt="Profile Picture"
+//                     className="w-full h-full object-cover"
+//                   />
+//                 </div>
+//               </div>
+
+//               <motion.div
+//                 className="absolute -top-2 sm:-top-4 -right-2 sm:-right-4 w-14 h-14 sm:w-20 sm:h-20 bg-gradient-to-r from-yellow-400 to-orange-400 rounded-full flex items-center justify-center shadow-lg"
+//                 animate={{ y: [-10, 10, -10] }}
+//                 transition={{ duration: 2, repeat: Infinity }}
+//               >
+//                 <span className="text-white font-bold text-xs sm:text-sm lg:text-md">2027</span>
+//               </motion.div>
+
+//               <motion.div
+//                 className="absolute top-1/2 left-1/2 w-[120%] h-[120%] -translate-x-1/2 -translate-y-1/2 hidden sm:block"
+//                 variants={rotateVariants}
+//                 animate="animate"
+//               >
+//                 <div className="relative w-full h-full">
+//                   <div className="absolute top-0 left-1/2 w-3 h-3 sm:w-4 sm:h-4 bg-amber-400 rounded-full -translate-x-1/2 -translate-y-1/2 shadow-lg" />
+//                   <div className="absolute bottom-0 left-1/2 w-3 h-3 sm:w-4 sm:h-4 bg-orange-400 rounded-full -translate-x-1/2 translate-y-1/2 shadow-lg" />
+//                   <div className="absolute left-0 top-1/2 w-3 h-3 sm:w-4 sm:h-4 bg-red-400 rounded-full -translate-x-1/2 -translate-y-1/2 shadow-lg" />
+//                   <div className="absolute right-0 top-1/2 w-3 h-3 sm:w-4 sm:h-4 bg-yellow-400 rounded-full translate-x-1/2 -translate-y-1/2 shadow-lg" />
+//                 </div>
+//               </motion.div>
+//             </div>
+//           </motion.div>
+//         </div>
+
+//         {/* Scroll Indicator */}
+//         <motion.div
+//           className="absolute bottom-4 sm:bottom-8 left-1/2 transform -translate-x-1/2 hidden sm:block"
+//           animate={{ y: [0, 8, 0] }}
+//           transition={{ duration: 1.5, repeat: Infinity }}
+//         >
+//           <div className="w-5 h-8 sm:w-6 sm:h-10 border-2 border-amber-400 rounded-full flex justify-center">
+//             <motion.div
+//               className="w-1 h-2 sm:h-3 bg-amber-400 rounded-full mt-2"
+//               animate={{ opacity: [0.3, 1, 0.3] }}
+//               transition={{ duration: 1.5, repeat: Infinity }}
+//             />
+//           </div>
+//         </motion.div>
+//       </div>
+//     </section>
+//   );
+// };
 
 // ==================== ABOUT SECTION COMPONENT ====================
 const AboutSection: React.FC = () => {
@@ -1412,6 +1945,8 @@ const SkillsSection: React.FC = () => {
   );
 };
 
+
+
 // ==================== SERVICES SECTION COMPONENT ====================
 const ServicesSection: React.FC = () => {
   const services: Service[] = [
@@ -1498,6 +2033,9 @@ const ServicesSection: React.FC = () => {
 
 // ==================== PROJECTS SECTION COMPONENT ====================
 const ProjectsSection: React.FC = () => {
+  const [selectedProject, setSelectedProject] = useState<Project | null>(null);
+  const [filter, setFilter] = useState<string>('all');
+
   const projects: Project[] = [
     {
       title: "Calculator App",
@@ -1509,126 +2047,767 @@ const ProjectsSection: React.FC = () => {
       github: "https://github.com/Suraj1819/SimpleCalculator",
       live: "#",
       image: "https://wallpapercave.com/wp/wp15709336.jpg",
-      gradient: "from-amber-400 to-orange-600"
+      gradient: "from-amber-400 to-orange-600",
+      category  : "utility"
     },
     {
       title: "Portfolio Website",
-      description: "Modern responsive portfolio built with React and Tailwind CSS",
+      description: "Modern responsive portfolio built with React and Tailwind CSS.",
       longDescription: "A stunning portfolio website showcasing projects, skills, and professional experience with smooth animations and modern design. This project demonstrates my expertise in React, TypeScript, and responsive design principles.",
       technologies: ["React", "Tailwind CSS", "TypeScript", "Responsive Design"],
       features: ["Responsive Design", "Smooth Animations", "Contact Form", "Project Showcase", "Resume Download"],
       status: "Completed",
       github: "https://github.com/Suraj1819",
       live: "https://surajzxrt.netlify.app/",
-      image: "https://via.placeholder.com/400x250",
-      gradient: "from-blue-400 to-purple-600"
+      image: "../../assets/Screenshot 2025-11-08 175007.png",
+      gradient: "from-blue-400 to-purple-600",
+      category: "web development"
     },
     {
       title: "E-commerce Platform",
-      description: "Full-stack e-commerce solution with product management and payment integration",
+      description: "Full-stack e-commerce solution with product management and payment integration.",
       longDescription: "A complete e-commerce platform with user authentication, product catalog, shopping cart, and payment processing. Built with the MERN stack, this project showcases my full-stack development skills and understanding of modern web applications.",
       technologies: ["MongoDB", "Express", "React", "Node.js", "Stripe API"],
       features: ["User Authentication", "Product Management", "Shopping Cart", "Payment Processing"],
       status: "In Progress",
       github: "#",
-      live: "2",
+      live: "#",
       image: "https://via.placeholder.com/400x250",
-      gradient: "from-green-400 to-emerald-600"
+      gradient: "from-green-400 to-emerald-600",
+      category: "e-commerce"
+    },
+    {
+      title: "Weather Forecast App",
+      description: "A sleek weather app providing real-time forecasts using the OpenWeatherMap API.",
+      longDescription: "A beautifully designed weather application that delivers current weather conditions, hourly forecasts, and a 7-day outlook. It uses geolocation to provide local weather data or allows users to search for any city worldwide. The interface changes dynamically based on the weather conditions.",
+      technologies: ["React", "API Integration", "Geolocation", "Tailwind CSS", "Axios"],
+      features: ["Real-time Weather Data", "City Search", "Geolocation Support", "7-Day Forecast", "Dynamic Backgrounds"],
+      status: "Completed",
+      github: "#",
+      live: "#",
+      image: "https://via.placeholder.com/400x250",
+      gradient: "from-cyan-400 to-light-blue-600",
+      category: "weather"
+    },
+    {
+      title: "Real-Time Chat App",
+      description: "A full-stack real-time chat application built with Socket.IO and the MERN stack.",
+      longDescription: "A real-time messaging application that allows users to join chat rooms, send messages, and see who is currently online. It features a persistent message history stored in MongoDB and uses WebSockets for instant communication.",
+      technologies: ["React", "Node.js", "Express", "MongoDB", "Socket.IO", "JWT"],
+      features: ["Real-time Messaging", "User Authentication", "Multiple Chat Rooms", "Online User List", "Typing Indicators"],
+      status: "In Progress",
+      github: "#",
+      live: "#",
+      image: "https://via.placeholder.com/400x250",
+      gradient: "from-teal-400 to-cyan-500",
+      category: "communication"
+    },
+    {
+      title: "Analytics Dashboard",
+      description: "An interactive dashboard for visualizing complex datasets using Chart.js.",
+      longDescription: "This project is a powerful analytics dashboard that transforms raw data into beautiful and interactive charts and graphs. It allows users to filter data by date ranges and other parameters, providing insightful visualizations of key metrics. Built with React and Chart.js.",
+      technologies: ["React", "Chart.js", "Data Handling", "UI/UX Design", "REST API"],
+      features: ["Interactive Charts", "Data Filtering", "Exportable Reports", "Customizable Widgets", "Real-time Data Sync"],
+      status: "Completed",
+      github: "#",
+      live: "#",
+      image: "https://via.placeholder.com/400x250",
+      gradient: "from-indigo-400 to-purple-500",
+      category: "data visualization"
+    },
+    {
+      title: "Blog Platform (CMS)",
+      description: "A full-featured blog platform with a Markdown editor and user management.",
+      longDescription: "A complete Content Management System (CMS) for bloggers. It features a rich Markdown editor for writing posts, user authentication for authors, a comment system, and an admin panel for managing content. The frontend is server-side rendered for better SEO.",
+      technologies: ["Next.js", "React", "Prisma", "PostgreSQL", "Tailwind CSS", "NextAuth.js"],
+      features: ["Markdown Editor", "User Authentication", "SEO-Friendly", "Comment System", "Admin Dashboard", "Post Categories & Tags"],
+      status: "In Progress",
+      github: "#",
+      live: "#",
+      image: "https://via.placeholder.com/400x250",
+      gradient: "from-rose-400 to-red-500",
+      category: "content management"
     }
   ];
 
+  const statusFilters = ['all', 'completed', 'in progress'];
+
+  const filteredProjects = filter === 'all' 
+    ? projects 
+    : projects.filter(project => 
+        project.status.toLowerCase() === filter.toLowerCase()
+      );
+
+  const openProjectModal = (project: Project) => {
+    setSelectedProject(project);
+    document.body.style.overflow = 'hidden';
+  };
+
+  const closeProjectModal = () => {
+    setSelectedProject(null);
+    document.body.style.overflow = 'auto';
+  };
+
   return (
-    <section id="projects" className="py-12 sm:py-16 lg:py-20 px-4 sm:px-6">
-      <div className="container mx-auto">
-        <div className="text-center mb-10 sm:mb-12 lg:mb-16">
-          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold mb-3 sm:mb-4">My Projects</h2>
-          <p className="text-base sm:text-lg lg:text-xl text-gray-600 max-w-3xl mx-auto px-4">
-            Showcasing my work and technical skills through real-world projects
-          </p>
+    <section id="projects" className="py-16 sm:py-20 lg:py-24 px-4 sm:px-6 bg-gradient-to-b from-white to-amber-50">
+      <div className="container mx-auto max-w-7xl">
+        <div className="text-center mb-12 lg:mb-16">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+            viewport={{ once: true }}
+          >
+            <span className="text-amber-600 font-medium text-sm sm:text-base mb-2 inline-block">
+              PORTFOLIO
+            </span>
+            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold mb-4 text-gray-900">
+              Featured Projects
+            </h2>
+            <p className="text-gray-600 max-w-2xl mx-auto text-base sm:text-lg">
+              Explore my collection of projects that demonstrate my skills and expertise in modern web development
+            </p>
+          </motion.div>
+
+          <div className="flex justify-center mt-6">
+            <div className="inline-flex bg-white rounded-lg p-1 border border-gray-200 shadow-sm">
+              {statusFilters.map((status) => (
+                <button
+                  key={status}
+                  onClick={() => setFilter(status)}
+                  className={`px-4 py-2 text-sm font-medium rounded-md capitalize transition-colors ${
+                    filter === status
+                      ? 'bg-amber-500 text-white'
+                      : 'text-gray-600 hover:text-amber-600'
+                  }`}
+                >
+                  {status}
+                </button>
+              ))}
+            </div>
+          </div>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8">
-          {projects.map((project, index) => (
-            <Card
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
+          {filteredProjects.map((project, index) => (
+            <motion.div
               key={index}
-              className="bg-white/70 backdrop-blur-sm border border-amber-200 overflow-hidden hover:border-amber-400 transition-all duration-300 hover:scale-105 hover:shadow-lg group"
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: index * 0.1 }}
+              viewport={{ once: true }}
+              whileHover={{ y: -5 }}
             >
-              <div className={`h-32 sm:h-40 lg:h-48 bg-gradient-to-br ${project.gradient} relative overflow-hidden`}>
-                <div className="absolute inset-0 bg-black/20 group-hover:bg-black/10 transition-colors flex items-center justify-center">
-                  <Badge className={`bg-white/20 text-white border-white/30 text-xs sm:text-sm ${
-                    project.status === "Completed" ? "bg-green-500/20 border-green-300" : "bg-yellow-500/20 border-yellow-300"
-                  }`}>
-                    {project.status}
-                  </Badge>
+              <div 
+                className="bg-white rounded-xl overflow-hidden shadow-lg border border-gray-100 hover:shadow-xl transition-all duration-300 h-full flex flex-col cursor-pointer"
+                onClick={() => openProjectModal(project)}
+              >
+                <div className={`h-48 relative overflow-hidden group`}>
+                  <div 
+                    className={`absolute inset-0 bg-gradient-to-br ${project.gradient} transition-transform duration-500 group-hover:scale-110`}
+                  />
+                  <div className="absolute inset-0 bg-black/10 group-hover:bg-black/20 transition-colors flex items-center justify-center">
+                    <span className={`px-3 py-1 rounded-full text-xs font-medium text-white ${
+                      project.status === "Completed" 
+                        ? "bg-green-500/90" 
+                        : "bg-yellow-500/90"
+                    }`}>
+                      {project.status}
+                    </span>
+                  </div>
                 </div>
-              </div>
 
-              <CardContent className="p-4 sm:p-6">
-                <div className="space-y-3 sm:space-y-4">
-                  <div>
-                    <CardTitle className="text-lg sm:text-xl mb-1 sm:mb-2 group-hover:text-amber-600 transition-colors">
+                <div className="p-6 flex-1 flex flex-col">
+                  <div className="flex-1">
+                    <h3 className="text-xl font-bold text-gray-900 mb-2 group-hover:text-amber-600 transition-colors">
                       {project.title}
-                    </CardTitle>
-                    <CardDescription className="text-gray-600 leading-relaxed text-xs sm:text-sm">
+                    </h3>
+                    <p className="text-gray-600 text-sm mb-4 line-clamp-3">
                       {project.description}
-                    </CardDescription>
+                    </p>
                   </div>
 
-                  <div className="space-y-2 sm:space-y-3">
-                    <div>
-                      <h4 className="font-semibold text-gray-800 text-xs sm:text-sm mb-1 sm:mb-2">Key Features:</h4>
-                      <div className="grid grid-cols-1 gap-0.5 sm:gap-1">
-                        {project.features.map((feature, featureIndex) => (
-                          <div key={featureIndex} className="flex items-center space-x-1.5 sm:space-x-2">
-                            <Star className="h-2.5 w-2.5 sm:h-3 sm:w-3 text-amber-500 flex-shrink-0" />
-                            <span className="text-xs sm:text-sm text-gray-600">{feature}</span>
-                          </div>
-                        ))}
+                  <div className="mt-4">
+                    <div className="flex flex-wrap gap-2 mb-4">
+                      {project.technologies.slice(0, 4).map((tech, techIndex) => (
+                        <span 
+                          key={techIndex}
+                          className="px-2.5 py-1 bg-amber-50 text-amber-700 text-xs font-medium rounded-full border border-amber-100"
+                        >
+                          {tech}
+                        </span>
+                      ))}
+                    </div>
+
+                    <div className="flex justify-between items-center pt-4 border-t border-gray-100">
+                      <div className="flex items-center space-x-4">
+                        <a 
+                          href={project.github}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-gray-500 hover:text-gray-900 transition-colors p-1"
+                          onClick={(e) => e.stopPropagation()}
+                        >
+                          <Github className="h-5 w-5" />
+                        </a>
+                        {project.live !== '#' && (
+                          <a 
+                            href={project.live}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-gray-500 hover:text-gray-900 transition-colors p-1"
+                            onClick={(e) => e.stopPropagation()}
+                          >
+                            <ExternalLink className="h-5 w-5" />
+                          </a>
+                        )}
+                      </div>
+                      <button className="text-sm font-medium text-amber-600 hover:text-amber-700 transition-colors">
+                        View Details
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </motion.div>
+          ))}
+        </div>
+
+        {/* Project Modal */}
+        <AnimatePresence>
+          {selectedProject && (
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4"
+              onClick={closeProjectModal}
+            >
+              <motion.div
+                initial={{ opacity: 0, y: 50 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: 50 }}
+                className="bg-white rounded-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto"
+                onClick={(e) => e.stopPropagation()}
+              >
+                <div className="relative">
+                  <button
+                    onClick={closeProjectModal}
+                    className="absolute top-4 right-4 z-10 bg-white rounded-full p-2 shadow-lg hover:bg-gray-100 transition-colors"
+                  >
+                    <X className="h-5 w-5 text-gray-600" />
+                  </button>
+
+                  <div className={`h-64 w-full bg-gradient-to-r ${selectedProject.gradient} relative`}>
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent flex items-end p-6">
+                      <h3 className="text-2xl font-bold text-white">
+                        {selectedProject.title}
+                      </h3>
+                    </div>
+                  </div>
+
+                  <div className="p-6">
+                    <div className="flex items-center space-x-4 mb-6">
+                      <span className={`px-3 py-1 rounded-full text-sm font-medium ${
+                        selectedProject.status === "Completed" 
+                          ? "bg-green-100 text-green-800" 
+                          : "bg-yellow-100 text-yellow-800"
+                      }`}>
+                        {selectedProject.status}
+                      </span>
+                      <div className="flex items-center space-x-4">
+                        <a 
+                          href={selectedProject.github}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-gray-700 hover:text-amber-600 transition-colors flex items-center"
+                        >
+                          <Github className="h-5 w-5 mr-1" /> GitHub
+                        </a>
+                        {selectedProject.live !== '#' && (
+                          <a 
+                            href={selectedProject.live}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-gray-700 hover:text-amber-600 transition-colors flex items-center"
+                          >
+                            <ExternalLink className="h-5 w-5 mr-1" /> Live Demo
+                          </a>
+                        )}
                       </div>
                     </div>
 
-                    <div className="flex flex-wrap gap-1.5 sm:gap-2">
-                      {project.technologies.map((tech, techIndex) => (
-                        <Badge key={techIndex} variant="outline" className="border-amber-200 text-amber-700 text-[10px] sm:text-xs">
-                          {tech}
-                        </Badge>
-                      ))}
+                    <div className="space-y-6">
+                      <div>
+                        <h4 className="text-lg font-semibold text-gray-900 mb-2">Project Description</h4>
+                        <p className="text-gray-600 leading-relaxed">
+                          {selectedProject.longDescription}
+                        </p>
+                      </div>
+
+                      <div>
+                        <h4 className="text-lg font-semibold text-gray-900 mb-3">Key Features</h4>
+                        <ul className="space-y-2">
+                          {selectedProject.features.map((feature, index) => (
+                            <li key={index} className="flex items-start">
+                              <span className="text-amber-500 mr-2 mt-1">•</span>
+                              <span className="text-gray-600">{feature}</span>
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+
+                      <div>
+                        <h4 className="text-lg font-semibold text-gray-900 mb-3">Technologies Used</h4>
+                        <div className="flex flex-wrap gap-2">
+                          {selectedProject.technologies.map((tech, index) => (
+                            <span 
+                              key={index}
+                              className="px-3 py-1 bg-amber-50 text-amber-700 text-sm font-medium rounded-full border border-amber-100"
+                            >
+                              {tech}
+                            </span>
+                          ))}
+                        </div>
+                      </div>
                     </div>
                   </div>
-
-                  <div className="flex gap-2 sm:gap-3 pt-3 sm:pt-4 border-t border-amber-200">
-                    <Button size="sm" className="bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white flex-1 text-xs sm:text-sm">
-                      <a href={project.live}
-                         target="_blank"
-                          rel="noopener noreferrer"
-                      >
-                        <ExternalLink className="h-3 w-3 sm:h-4 sm:w-4 mr-1" />
-                        
-                      </a>
-                      Live Demo
-                    </Button>
-                    <Button size="sm" variant="outline" className="border-amber-300 text-gray-700 hover:bg-amber-50">
-                      <a href={project.github} target="_blank" rel="noopener noreferrer">
-                        <Github className="h-3 w-3 sm:h-4 sm:w-4" />
-                      </a>
-                    </Button>
-                  </div>
                 </div>
-              </CardContent>
-            </Card>
-          ))}
-        </div>
+              </motion.div>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </div>
     </section>
   );
 };
+
+//   const [selectedProject, setSelectedProject] = useState<Project | null>(null);
+//   const [filter, setFilter] = useState<string>('all');
+//   // const [hoveredProject, setHoveredProject] = useState<number | null>(null);
+
+//   const projects: Project[] = [
+//     {
+//       title: "Calculator App",
+//       description: "A functional calculator application built using Python. Performs basic arithmetic operations with a clean user interface.",
+//       longDescription: "A comprehensive calculator application with advanced mathematical operations, memory functions, and a clean, intuitive interface. Built with Python and Tkinter, this project demonstrates my understanding of GUI development and mathematical operations in programming.",
+//       technologies: ["Python", "Tkinter", "Math Logic", "UI Design"],
+//       features: ["Basic Arithmetic", "Memory Functions", "History", "Keyboard Support"],
+//       status: "Completed",
+//       github: "https://github.com/Suraj1819/SimpleCalculator",
+//       live: "#",
+//       image: "https://images.unsplash.com/photo-1587145820266-a5951ee6f620?w=500&h=300&fit=crop",
+//       gradient: "from-amber-400 to-orange-600",
+//       category: "utility"
+//     },
+//     {
+//       title: "Portfolio Website",
+//       description: "Modern responsive portfolio built with React and Tailwind CSS.",
+//       longDescription: "A stunning portfolio website showcasing projects, skills, and professional experience with smooth animations and modern design. This project demonstrates my expertise in React, TypeScript, and responsive design principles.",
+//       technologies: ["React", "Tailwind CSS", "TypeScript", "Responsive Design"],
+//       features: ["Responsive Design", "Smooth Animations", "Contact Form", "Project Showcase", "Resume Download"],
+//       status: "Completed",
+//       github: "https://github.com/Suraj1819",
+//       live: "https://surajzxrt.netlify.app/",
+//       image: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=500&h=300&fit=crop",
+//       gradient: "from-blue-400 to-purple-600",
+//       category: "web development"
+//     },
+//     {
+//       title: "E-commerce Platform",
+//       description: "Full-stack e-commerce solution with product management and payment integration.",
+//       longDescription: "A complete e-commerce platform with user authentication, product catalog, shopping cart, and payment processing. Built with the MERN stack, this project showcases my full-stack development skills and understanding of modern web applications.",
+//       technologies: ["MongoDB", "Express", "React", "Node.js", "Stripe API"],
+//       features: ["User Authentication", "Product Management", "Shopping Cart", "Payment Processing"],
+//       status: "Completed",
+//       github: "#",
+//       live: "#",
+//       image: "https://images.unsplash.com/photo-1557821552-17105176677c?w=500&h=300&fit=crop",
+//       gradient: "from-green-400 to-emerald-600",
+//       category: "e-commerce"
+//     },
+//     {
+//       title: "Weather Forecast App",
+//       description: "A sleek weather app providing real-time forecasts using the OpenWeatherMap API.",
+//       longDescription: "A beautifully designed weather application that delivers current weather conditions, hourly forecasts, and a 7-day outlook. It uses geolocation to provide local weather data or allows users to search for any city worldwide. The interface changes dynamically based on the weather conditions.",
+//       technologies: ["React", "API Integration", "Geolocation", "Tailwind CSS", "Axios"],
+//       features: ["Real-time Weather Data", "City Search", "Geolocation Support", "7-Day Forecast", "Dynamic Backgrounds"],
+//       status: "Completed",
+//       github: "#",
+//       live: "#",
+//       image: "https://images.unsplash.com/photo-1592210454359-9043f067919b?w=500&h=300&fit=crop",
+//       gradient: "from-cyan-400 to-blue-600",
+//       category: "weather"
+//     },
+//     {
+//       title: "Real-Time Chat App",
+//       description: "A full-stack real-time chat application built with Socket.IO and the MERN stack.",
+//       longDescription: "A real-time messaging application that allows users to join chat rooms, send messages, and see who is currently online. It features a persistent message history stored in MongoDB and uses WebSockets for instant communication.",
+//       technologies: ["React", "Node.js", "Express", "MongoDB", "Socket.IO", "JWT"],
+//       features: ["Real-time Messaging", "User Authentication", "Multiple Chat Rooms", "Online User List", "Typing Indicators"],
+//       status: "Completed",
+//       github: "#",
+//       live: "#",
+//       image: "https://images.unsplash.com/photo-1611606063065-ee7946f0787a?w=500&h=300&fit=crop",
+//       gradient: "from-teal-400 to-cyan-500",
+//       category: "communication"
+//     },
+//     {
+//       title: "Analytics Dashboard",
+//       description: "An interactive dashboard for visualizing complex datasets using Chart.js.",
+//       longDescription: "This project is a powerful analytics dashboard that transforms raw data into beautiful and interactive charts and graphs. It allows users to filter data by date ranges and other parameters, providing insightful visualizations of key metrics. Built with React and Chart.js.",
+//       technologies: ["React", "Chart.js", "Data Handling", "UI/UX Design", "REST API"],
+//       features: ["Interactive Charts", "Data Filtering", "Exportable Reports", "Customizable Widgets", "Real-time Data Sync"],
+//       status: "Completed",
+//       github: "#",
+//       live: "#",
+//       image: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=500&h=300&fit=crop",
+//       gradient: "from-indigo-400 to-purple-500",
+//       category: "data visualization"
+//     },
+//     {
+//       title: "Blog Platform (CMS)",
+//       description: "A full-featured blog platform with a Markdown editor and user management.",
+//       longDescription: "A complete Content Management System (CMS) for bloggers. It features a rich Markdown editor for writing posts, user authentication for authors, a comment system, and an admin panel for managing content. The frontend is server-side rendered for better SEO.",
+//       technologies: ["Next.js", "React", "Prisma", "PostgreSQL", "Tailwind CSS", "NextAuth.js"],
+//       features: ["Markdown Editor", "User Authentication", "SEO-Friendly", "Comment System", "Admin Dashboard", "Post Categories & Tags"],
+//       status: "Completed",
+//       github: "#",
+//       live: "#",
+//       image: "https://images.unsplash.com/photo-1499750310107-5fef28a66643?w=500&h=300&fit=crop",
+//       gradient: "from-rose-400 to-red-500",
+//       category: "content management"
+//     }
+//   ];
+
+//   const statusFilters = ['all', 'completed', 'in progress'];
+
+//   const filteredProjects = filter === 'all' 
+//     ? projects 
+//     : projects.filter(project => 
+//         project.status.toLowerCase() === filter.toLowerCase()
+//       );
+
+//   const openProjectModal = (project: Project) => {
+//     setSelectedProject(project);
+//     document.body.style.overflow = 'hidden';
+//   };
+
+//   const closeProjectModal = () => {
+//     setSelectedProject(null);
+//     document.body.style.overflow = 'auto';
+//   };
+
+//   return (
+//     <section id="projects" className="py-16 sm:py-20 lg:py-24 px-4 sm:px-6 bg-gradient-to-b from-white to-amber-50">
+//       <div className="container mx-auto max-w-7xl">
+//         <div className="text-center mb-12 lg:mb-16">
+//           <motion.div
+//             initial={{ opacity: 0, y: 20 }}
+//             whileInView={{ opacity: 1, y: 0 }}
+//             transition={{ duration: 0.5 }}
+//             viewport={{ once: true }}
+//           >
+//             <span className="text-amber-600 font-medium text-sm sm:text-base mb-2 inline-block">
+//               PORTFOLIO
+//             </span>
+//             <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold mb-4 text-gray-900">
+//               Featured Projects
+//             </h2>
+//             <p className="text-gray-600 max-w-2xl mx-auto text-base sm:text-lg">
+//               Explore my collection of projects that demonstrate my skills and expertise in modern web development
+//             </p>
+//           </motion.div>
+
+//           <div className="flex justify-center mt-6">
+//             <div className="inline-flex bg-white rounded-lg p-1 border border-gray-200 shadow-sm">
+//               {statusFilters.map((status) => (
+//                 <button
+//                   key={status}
+//                   onClick={() => setFilter(status)}
+//                   className={`px-4 py-2 text-sm font-medium rounded-md capitalize transition-colors ${
+//                     filter === status
+//                       ? 'bg-amber-500 text-white'
+//                       : 'text-gray-600 hover:text-amber-600'
+//                   }`}
+//                 >
+//                   {status}
+//                 </button>
+//               ))}
+//             </div>
+//           </div>
+//         </div>
+
+//         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
+//           {filteredProjects.map((project, index) => (
+//             <motion.div
+//               key={index}
+//               initial={{ opacity: 0, y: 30 }}
+//               whileInView={{ opacity: 1, y: 0 }}
+//               transition={{ duration: 0.5, delay: index * 0.1 }}
+//               viewport={{ once: true }}
+//               whileHover={{ y: -8 }}
+//               onMouseEnter={() => setHoveredProject(index)}
+//               onMouseLeave={() => setHoveredProject(null)}
+//               className="group"
+//             >
+//               <div 
+//                 className="bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 h-full flex flex-col cursor-pointer border border-gray-100"
+//                 onClick={() => openProjectModal(project)}
+//               >
+//                 {/* Project Image */}
+//                 <div className="relative h-56 overflow-hidden">
+//                   <img 
+//                     src={project.image} 
+//                     alt={project.title}
+//                     className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+//                   />
+//                   <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                  
+//                   {/* Status Badge */}
+//                   <div className="absolute top-4 right-4">
+//                     <span className={`px-3 py-1 rounded-full text-xs font-medium backdrop-blur-sm ${
+//                       project.status === "Completed" 
+//                         ? "bg-green-500/90 text-white" 
+//                         : "bg-yellow-500/90 text-white"
+//                     }`}>
+//                       {project.status}
+//                     </span>
+//                   </div>
+
+//                   {/* Category Badge */}
+//                   <div className="absolute top-4 left-4">
+//                     <span className="px-3 py-1 rounded-full text-xs font-medium bg-white/90 text-gray-800 backdrop-blur-sm">
+//                       {project.category}
+//                     </span>
+//                   </div>
+
+//                   {/* Hover Overlay */}
+//                   <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+//                     <div className="flex space-x-3">
+//                       <a 
+//                         href={project.github}
+//                         target="_blank"
+//                         rel="noopener noreferrer"
+//                         className="bg-white p-3 rounded-full hover:bg-gray-100 transition-colors shadow-lg transform hover:scale-110"
+//                         onClick={(e) => e.stopPropagation()}
+//                       >
+//                         <Github className="h-5 w-5 text-gray-800" />
+//                       </a>
+//                       {project.live !== '#' && (
+//                         <a 
+//                           href={project.live}
+//                           target="_blank"
+//                           rel="noopener noreferrer"
+//                           className="bg-white p-3 rounded-full hover:bg-gray-100 transition-colors shadow-lg transform hover:scale-110"
+//                           onClick={(e) => e.stopPropagation()}
+//                         >
+//                           <ExternalLink className="h-5 w-5 text-gray-800" />
+//                         </a>
+//                       )}
+//                       <button 
+//                         className="bg-amber-500 p-3 rounded-full hover:bg-amber-600 transition-colors shadow-lg transform hover:scale-110"
+//                         onClick={(e) => {
+//                           e.stopPropagation();
+//                           openProjectModal(project);
+//                         }}
+//                       >
+//                         <Eye className="h-5 w-5 text-white" />
+//                       </button>
+//                     </div>
+//                   </div>
+//                 </div>
+
+//                 {/* Project Content */}
+//                 <div className="p-6 flex-1 flex flex-col">
+//                   <div className="flex-1">
+//                     <h3 className="text-xl font-bold text-gray-900 mb-2 group-hover:text-amber-600 transition-colors">
+//                       {project.title}
+//                     </h3>
+//                     <p className="text-gray-600 text-sm mb-4 line-clamp-2">
+//                       {project.description}
+//                     </p>
+//                   </div>
+
+//                   {/* Technologies */}
+//                   <div className="mt-4">
+//                     <div className="flex flex-wrap gap-2 mb-4">
+//                       {project.technologies.slice(0, 3).map((tech, techIndex) => (
+//                         <span 
+//                           key={techIndex}
+//                           className="px-3 py-1 bg-amber-50 text-amber-700 text-xs font-medium rounded-full border border-amber-100"
+//                         >
+//                           {tech}
+//                         </span>
+//                       ))}
+//                       {project.technologies.length > 3 && (
+//                         <span className="px-3 py-1 bg-gray-100 text-gray-600 text-xs font-medium rounded-full">
+//                           +{project.technologies.length - 3}
+//                         </span>
+//                       )}
+//                     </div>
+
+//                     <div className="flex justify-between items-center pt-4 border-t border-gray-100">
+//                       <span className="text-xs text-gray-500">{project.features.length} Features</span>
+//                       <button 
+//                         className="text-sm font-medium text-amber-600 hover:text-amber-700 transition-colors flex items-center group/btn"
+//                         onClick={(e) => {
+//                           e.stopPropagation();
+//                           openProjectModal(project);
+//                         }}
+//                       >
+//                         View Details
+//                         <ArrowRight className="h-4 w-4 ml-1 transform group-hover/btn:translate-x-1 transition-transform" />
+//                       </button>
+//                     </div>
+//                   </div>
+//                 </div>
+//               </div>
+//             </motion.div>
+//           ))}
+//         </div>
+
+//         {/* Project Modal */}
+//         <AnimatePresence>
+//           {selectedProject && (
+//             <motion.div
+//               initial={{ opacity: 0 }}
+//               animate={{ opacity: 1 }}
+//               exit={{ opacity: 0 }}
+//               className="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4"
+//               onClick={closeProjectModal}
+//             >
+//               <motion.div
+//                 initial={{ opacity: 0, scale: 0.95, y: 20 }}
+//                 animate={{ opacity: 1, scale: 1, y: 0 }}
+//                 exit={{ opacity: 0, scale: 0.95, y: 20 }}
+//                 className="bg-white rounded-2xl max-w-5xl w-full max-h-[90vh] overflow-y-auto shadow-2xl"
+//                 onClick={(e) => e.stopPropagation()}
+//               >
+//                 <div className="relative">
+//                   <button
+//                     onClick={closeProjectModal}
+//                     className="absolute top-4 right-4 z-10 bg-white/90 backdrop-blur-sm rounded-full p-2 shadow-lg hover:bg-white transition-colors"
+//                   >
+//                     <X className="h-6 w-6 text-gray-600" />
+//                   </button>
+
+//                   {/* Modal Header with Image */}
+//                   <div className="relative h-80">
+//                     <img 
+//                       src={selectedProject.image} 
+//                       alt={selectedProject.title}
+//                       className="w-full h-full object-cover"
+//                     />
+//                     <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent" />
+//                     <div className="absolute bottom-0 left-0 right-0 p-8">
+//                       <div className="flex items-center space-x-3 mb-4">
+//                         <span className={`px-3 py-1 rounded-full text-sm font-medium ${
+//                           selectedProject.status === "Completed" 
+//                             ? "bg-green-500 text-white" 
+//                             : "bg-yellow-500 text-white"
+//                         }`}>
+//                           {selectedProject.status}
+//                         </span>
+//                         <span className="px-3 py-1 rounded-full text-sm font-medium bg-white/20 text-white backdrop-blur-sm">
+//                           {selectedProject.category}
+//                         </span>
+//                       </div>
+//                       <h3 className="text-3xl lg:text-4xl font-bold text-white mb-4">
+//                         {selectedProject.title}
+//                       </h3>
+//                       <div className="flex space-x-3">
+//                         <a 
+//                           href={selectedProject.github}
+//                           target="_blank"
+//                           rel="noopener noreferrer"
+//                           className="bg-white/20 hover:bg-white/30 backdrop-blur-sm text-white px-4 py-2 rounded-lg transition-colors flex items-center space-x-2 text-sm font-medium"
+//                         >
+//                           <Github className="h-4 w-4" />
+//                           <span>View Code</span>
+//                         </a>
+//                         {selectedProject.live !== '#' && (
+//                           <a 
+//                             href={selectedProject.live}
+//                             target="_blank"
+//                             rel="noopener noreferrer"
+//                             className="bg-amber-500 hover:bg-amber-600 text-white px-4 py-2 rounded-lg transition-colors flex items-center space-x-2 text-sm font-medium"
+//                           >
+//                             <ExternalLink className="h-4 w-4" />
+//                             <span>Live Demo</span>
+//                           </a>
+//                         )}
+//                       </div>
+//                     </div>
+//                   </div>
+
+//                   {/* Modal Content */}
+//                   <div className="p-8">
+//                     <div className="space-y-8">
+//                       <div>
+//                         <h4 className="text-2xl font-bold text-gray-900 mb-4">About This Project</h4>
+//                         <p className="text-gray-600 leading-relaxed text-lg">
+//                           {selectedProject.longDescription}
+//                         </p>
+//                       </div>
+
+//                       <div className="grid md:grid-cols-2 gap-8">
+//                         <div>
+//                           <h4 className="text-xl font-bold text-gray-900 mb-4 flex items-center">
+//                             <span className="w-1 h-6 bg-amber-500 mr-3 rounded-full"></span>
+//                             Key Features
+//                           </h4>
+//                           <ul className="space-y-3">
+//                             {selectedProject.features.map((feature, index) => (
+//                               <li key={index} className="flex items-start">
+//                                 <div className="bg-amber-100 p-1.5 rounded-full mr-3 mt-0.5">
+//                                   <div className="w-2 h-2 bg-amber-600 rounded-full"></div>
+//                                 </div>
+//                                 <span className="text-gray-700">{feature}</span>
+//                               </li>
+//                             ))}
+//                           </ul>
+//                         </div>
+
+//                         <div>
+//                           <h4 className="text-xl font-bold text-gray-900 mb-4 flex items-center">
+//                             <span className="w-1 h-6 bg-amber-500 mr-3 rounded-full"></span>
+//                             Technologies
+//                           </h4>
+//                           <div className="flex flex-wrap gap-3">
+//                             {selectedProject.technologies.map((tech, index) => (
+//                               <span 
+//                                 key={index}
+//                                 className="px-4 py-2 bg-gradient-to-r from-amber-50 to-orange-50 text-amber-700 text-sm font-medium rounded-lg border border-amber-200 hover:border-amber-300 transition-colors"
+//                               >
+//                                 {tech}
+//                               </span>
+//                             ))}
+//                           </div>
+//                         </div>
+//                       </div>
+//                     </div>
+//                   </div>
+//                 </div>
+//               </motion.div>
+//             </motion.div>
+//           )}
+//         </AnimatePresence>
+//       </div>
+//     </section>
+//   );
+// };
+
+
+
+// ==================== ACHIEVEMENTS SECTION COMPONENT ====================
 
 // ==================== ACHIEVEMENTS SECTION COMPONENT ====================
 const AchievementsSection: React.FC = () => {
   const achievements: Achievement[] = [
     {
       icon: Award,
-      title: "Projects Completed",
+      title: "",
       description: "Developed various projects across different technologies",
       value: "10+",
       color: "text-green-600",
@@ -1636,52 +2815,113 @@ const AchievementsSection: React.FC = () => {
     },
     {
       icon: Zap,
-      title: "Problems Solved",
+      title: "",
       description: "Algorithmic problems solved on various platforms",
       value: "300+",
       color: "text-purple-600",
       gradient: "from-purple-400 to-violet-500"
+    },
+    {
+      icon: Trophy,
+      title: "",
+      description: "Achieved top rankings in coding competitions",
+      value: "Top 10%",
+      color: "text-amber-600",
+      gradient: "from-amber-400 to-orange-500"
+    },
+    {
+      icon: Clock,
+      title: "",
+      description: "Total hours spent building and improving skills",
+      value: "1000+",
+      color: "text-blue-600",
+      gradient: "from-blue-400 to-cyan-500"
     }
   ];
 
   return (
-    <section className="py-12 sm:py-16 lg:py-20 px-4 sm:px-6 bg-white/50 backdrop-blur-sm">
-      <div className="container mx-auto">
-        <div className="text-center mb-10 sm:mb-12 lg:mb-16">
-          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold mb-3 sm:mb-4">Achievements</h2>
-          <p className="text-base sm:text-lg lg:text-xl text-gray-600 max-w-3xl mx-auto px-4">
-            Milestones and recognition in my programming journey
-          </p>
+    <section className="py-16 sm:py-20 lg:py-24 px-4 sm:px-6 bg-gradient-to-b from-white/50 to-amber-50">
+      <div className="container mx-auto max-w-7xl">
+        <div className="text-center mb-12 lg:mb-16">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+            viewport={{ once: true }}
+          >
+            <span className="text-amber-600 font-medium text-sm sm:text-base mb-2 inline-block tracking-wider">
+              MY JOURNEY
+            </span>
+            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold mb-4 text-gray-900">
+              My <span className="text-amber-600">Achievements</span>
+            </h2>
+            <p className="text-gray-600 max-w-2xl mx-auto text-base sm:text-lg">
+              Milestones and recognition in my programming journey
+            </p>
+          </motion.div>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8">
           {achievements.map((achievement, index) => (
-            <Card
+            <motion.div
               key={index}
-              className="bg-white/70 backdrop-blur-sm border border-amber-200 hover:shadow-xl transition-all duration-300 hover:scale-105 group"
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: index * 0.1 }}
+              viewport={{ once: true }}
+              whileHover={{ y: -10, scale: 1.03 }}
+              className="relative"
             >
-              <CardHeader className="text-center">
-                <div className={`w-16 h-16 sm:w-20 sm:h-20 bg-gradient-to-br ${achievement.gradient} rounded-2xl flex items-center justify-center mx-auto mb-3 sm:mb-4 group-hover:scale-110 transition-transform shadow-lg`}>
-                  <achievement.icon className="h-8 w-8 sm:h-10 sm:w-10 text-white" />
+              <motion.div
+                className="bg-white/70 backdrop-blur-sm border border-amber-200 rounded-2xl overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300 h-full flex flex-col"
+                whileHover={{ y: -5 }}
+              >
+                {/* Achievement Icon */}
+                <div className="p-6 text-center">
+                  <div className={`w-16 h-16 sm:w-20 sm:h-20 bg-gradient-to-br ${achievement.gradient} rounded-2xl flex items-center justify-center mx-auto mb-3 sm:mb-4 group-hover:scale-110 transition-transform shadow-lg`}>
+                    <achievement.icon className="h-8 w-8 sm:h-10 sm:w-10 text-white" />
+                  </div>
+                  
+                  {/* Value */}
+                  <div className="text-2xl sm:text-3xl font-bold text-gray-800 mb-1 sm:mb-2">{achievement.value}</div>
+                  
+                  {/* Title */}
+                  <div className="text-xs sm:text-sm text-gray-500 mb-1">{achievement.title}</div>
+                  
+                  {/* Description */}
+                  <p className="text-gray-600 text-xs sm:text-sm leading-relaxed">
+                    {achievement.description}
+                  </p>
                 </div>
-                <div className="text-2xl sm:text-3xl font-bold text-gray-800">{achievement.value}</div>
-                <div className="text-xs sm:text-sm text-gray-500">{achievement.title}</div>
-                <CardTitle className="text-base sm:text-lg group-hover:text-amber-600 transition-colors mt-1 sm:mt-2">
-                  {achievement.title}
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <CardDescription className="text-gray-600 leading-relaxed text-center text-xs sm:text-sm">
-                  {achievement.description}
-                </CardDescription>
-              </CardContent>
-            </Card>
+                
+                {/* Badge */}
+                <div className="absolute top-4 right-4">
+                  <span className={`px-3 py-1 rounded-full text-xs font-medium text-white ${achievement.color}`}>
+                    {achievement.title}
+                  </span>
+                </div>
+                
+                {/* Hover Overlay */}
+                <motion.div 
+                  className="absolute inset-0 bg-gradient-to-t from-black/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end p-6 pointer-events-none"
+                  initial={{ opacity: 0 }}
+                  whileHover={{ opacity: 0.1 }}
+                >
+                  <div className="text-white">
+                    <h4 className="text-lg font-bold mb-2">Key Achievement</h4>
+                    <p className="text-sm">{achievement.description}</p>
+                  </div>
+                </motion.div>
+              </motion.div>
+            </motion.div>
           ))}
         </div>
       </div>
     </section>
   );
 };
+
+
 
 // ==================== CONTACT SECTION COMPONENT ====================
 const ContactSection: React.FC = () => {
@@ -2116,7 +3356,11 @@ const ContactSection: React.FC = () => {
       </div>
     </section>
   );
+
+  
 };
+
+
 
 // ==================== MAIN INDEX COMPONENT ====================
 const Index: React.FC = () => {
