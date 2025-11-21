@@ -16,9 +16,83 @@ import {
   ChevronRight,
   Clock,
   Globe,
+  Play,
+  Pause,
+  SkipForward,
+  SkipBack,
+  Volume2,
+  VolumeX,
+  Music,
+  Shuffle,
+  Repeat,
+  Repeat1,
 } from "lucide-react";
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import confetti from 'canvas-confetti';
+
+// 🎵 Playlist Data (Local / Demo Tracks)
+const PLAYLIST = [
+  {
+    title: "Lofi Coding Night",
+    artist: "Chill Hop",
+    cover: "https://images.unsplash.com/photo-1516280440614-6697288d5d38?q=80&w=200&auto=format&fit=crop",
+    url: "https://cdn.pixabay.com/download/audio/2022/05/27/audio_1808fbf07a.mp3?filename=lofi-study-112191.mp3" 
+  },
+  {
+    title: "Deep Focus",
+    artist: "Brain Flow",
+    cover: "https://images.unsplash.com/photo-1518609878373-06d740f60d8b?q=80&w=200&auto=format&fit=crop",
+    url: "https://pixabay.com/music/beats-sweet-life-luxury-chill-438146/"
+  },
+  {
+    title: "Neon Cyberpunk",
+    artist: "Synth Wave",
+    cover: "https://images.unsplash.com/photo-1535443274868-756b0f070b6e?q=80&w=200&auto=format&fit=crop",
+    url: "/audio/track3.mp3"
+  },
+  {
+    title: "Morning Coffee",
+    artist: "Acoustic Vibes",
+    cover: "https://images.unsplash.com/photo-1497519098947-a305f29a43e7?q=80&w=200&auto=format&fit=crop",
+    url: "/audio/track4.mp3"
+  },
+  {
+    title: "Midnight Code",
+    artist: "Electro Beats",
+    cover: "https://images.unsplash.com/photo-1484069560501-5d1c9ca133f7?q=80&w=200&auto=format&fit=crop",
+    url: "/audio/track5.mp3"
+  },
+  {
+    title: "Sunset Drive",
+    artist: "Synthwave",
+    cover: "https://images.unsplash.com/photo-1470071459666-6e7b7b0bf3d6?q=80&w=200&auto=format&fit=crop",
+    url: "/audio/track6.mp3"
+  },
+  {
+    title: "Forest Walk",
+    artist: "Nature Sounds",
+    cover: "https://images.unsplash.com/photo-1418065464764-c1d025a2f6ea?q=80&w=200&auto=format&fit=crop",
+    url: "/audio/track7.mp3"
+  },
+  {
+    title: "City Nights",
+    artist: "Urban Beats",
+    cover: "https://images.unsplash.com/photo-1480714378408-67cf16c88b7b?q=80&w=200&auto=format&fit=crop",
+    url: "/audio/track8.mp3"
+  },
+  {
+    title: "Ocean Waves",
+    artist: "Ambient",
+    cover: "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?q=80&w=200&auto=format&fit=crop",
+    url: "/audio/track9.mp3"
+  },
+  {
+    title: "Mountain Peak",
+    artist: "Epic Soundscapes",
+    cover: "https://images.unsplash.com/photo-1573510619941-40d2c0b0cde1?q=80&w=200&auto=format&fit=crop",
+    url: "/audio/track10.mp3"
+  }
+];
 
 export default function Footer() {
   const year = new Date().getFullYear();
@@ -26,15 +100,171 @@ export default function Footer() {
   const [scrolled, setScrolled] = useState(false);
   const [hoveredStat, setHoveredStat] = useState<string | null>(null);
 
+  // 🎵 Music Player State
+  const audioRef = useRef<HTMLAudioElement | null>(null);
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [currentTrackIndex, setCurrentTrackIndex] = useState(0);
+  const [progress, setProgress] = useState(0);
+  const [isMuted, setIsMuted] = useState(false);
+  const [duration, setDuration] = useState(0);
+  
+  // New State for Playback Modes
+  const [isShuffling, setIsShuffling] = useState(false); 
+  const [repeatMode, setRepeatMode] = useState<'none' | 'all' | 'one'>('none'); 
+
+  // --- Initialization and Setup ---
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 120);
     window.addEventListener('scroll', onScroll);
-    return () => window.removeEventListener('scroll', onScroll);
-  }, []);
+    
+    // Initialize Audio Element
+    audioRef.current = new Audio(PLAYLIST[0].url);
+    audioRef.current.volume = 0.5;
+
+    const handleTimeUpdate = () => {
+      if (audioRef.current) {
+        const current = audioRef.current.currentTime;
+        const total = audioRef.current.duration;
+        
+        if (!isNaN(total) && total > 0) {
+            setDuration(total);
+            setProgress((current / total) * 100);
+        }
+      }
+    };
+
+    const handleEnded = () => {
+      handleNext(); 
+    };
+
+    audioRef.current.addEventListener('timeupdate', handleTimeUpdate);
+    audioRef.current.addEventListener('loadedmetadata', () => {
+        if (audioRef.current) {
+            setDuration(audioRef.current.duration);
+        }
+    });
+    audioRef.current.addEventListener('ended', handleEnded);
+
+    return () => {
+      window.removeEventListener('scroll', onScroll);
+      if (audioRef.current) {
+        audioRef.current.pause();
+        audioRef.current.removeEventListener('timeupdate', handleTimeUpdate);
+        audioRef.current.removeEventListener('ended', handleEnded);
+      }
+    };
+  }, []); 
+
+  // --- Player Controls ---
+  const togglePlay = () => {
+    if (audioRef.current) {
+      if (isPlaying) {
+        audioRef.current.pause();
+      } else {
+        audioRef.current.play().catch(error => console.error("Playback failed:", error));
+      }
+      setIsPlaying(!isPlaying);
+    }
+  };
+
+  const playTrack = (index: number) => {
+    if (audioRef.current) {
+      audioRef.current.src = PLAYLIST[index].url;
+      audioRef.current.load();
+      setCurrentTrackIndex(index);
+      setIsPlaying(false); 
+      
+      audioRef.current.play()
+        .then(() => {
+            setIsPlaying(true);
+        })
+        .catch(error => {
+            console.error("Playback failed for track:", PLAYLIST[index].title, error);
+            setIsPlaying(false);
+        });
+    }
+  };
+
+  // --- NEW: Seek functionality ---
+  const handleSeek = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (audioRef.current && duration > 0) {
+      const rect = e.currentTarget.getBoundingClientRect();
+      const clickX = e.clientX - rect.left;
+      const barWidth = rect.width;
+      
+      const newProgressPercent = (clickX / barWidth);
+      const newTime = duration * newProgressPercent;
+
+      audioRef.current.currentTime = newTime;
+      setProgress(newProgressPercent * 100); 
+    }
+  };
+
+
+  const handleNext = () => {
+    if (repeatMode === 'one') {
+        if (audioRef.current) {
+            audioRef.current.currentTime = 0;
+            audioRef.current.play().catch(e => console.error(e));
+        }
+        return;
+    }
+
+    let nextIndex;
+    if (isShuffling) {
+      let randomIndex;
+      do {
+        randomIndex = Math.floor(Math.random() * PLAYLIST.length);
+      } while (randomIndex === currentTrackIndex && PLAYLIST.length > 1);
+      nextIndex = randomIndex;
+    } else {
+      nextIndex = (currentTrackIndex + 1) % PLAYLIST.length;
+    }
+
+    playTrack(nextIndex);
+  };
+
+  const handlePrev = () => {
+    if (audioRef.current && audioRef.current.currentTime > 3) {
+        audioRef.current.currentTime = 0;
+        setProgress(0);
+        return;
+    }
+    
+    const prevIndex = (currentTrackIndex - 1 + PLAYLIST.length) % PLAYLIST.length;
+    playTrack(prevIndex);
+  };
+
+  const toggleMute = () => {
+    if (audioRef.current) {
+      audioRef.current.muted = !isMuted;
+      setIsMuted(!isMuted);
+    }
+  };
+  
+  // --- NEW: Shuffle/Repeat Toggles ---
+  const toggleShuffle = () => {
+    setIsShuffling(prev => !prev);
+  };
+
+  const toggleRepeat = () => {
+    setRepeatMode(prev => {
+      if (prev === 'none') return 'all';
+      if (prev === 'all') return 'one';
+      return 'none';
+    });
+  };
+
+  const formatTime = (time: number) => {
+    if(isNaN(time) || time < 0) return "0:00";
+    const minutes = Math.floor(time / 60);
+    const seconds = Math.floor(time % 60);
+    return `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+  };
 
   const scrollToTop = () => window.scrollTo({ top: 0, behavior: 'smooth' });
 
-  // 🎉 Enhanced Confetti function
+  // 🎉 Enhanced Confetti function (Existing)
   const triggerConfetti = () => {
     const duration = 2500;
     const animationEnd = Date.now() + duration;
@@ -152,6 +382,7 @@ export default function Footer() {
     { value: "1+", label: "Years Experience", icon: <Sparkles className="w-5 h-5" />, color: "from-amber-500 to-orange-500" },
   ];
 
+
   return (
     <footer className="relative bg-gradient-to-br from-white via-gray-50 to-amber-50 border-t border-gray-200 dark:from-neutral-900 dark:via-neutral-900 dark:to-neutral-800 dark:border-neutral-800 overflow-hidden">
       
@@ -171,7 +402,7 @@ export default function Footer() {
 
       <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         
-        {/* Stats Section with Enhanced Design */}
+        {/* Stats Section */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-16">
           {stats.map((stat) => (
             <div
@@ -180,7 +411,6 @@ export default function Footer() {
               onMouseLeave={() => setHoveredStat(null)}
               className="relative text-center p-6 bg-white dark:bg-neutral-800 rounded-2xl border border-gray-100 dark:border-neutral-700 hover:border-transparent hover:shadow-2xl transition-all duration-500 hover:scale-105 group overflow-hidden"
             >
-              {/* Gradient Background on Hover */}
               <div className={`absolute inset-0 bg-gradient-to-br ${stat.color} opacity-0 group-hover:opacity-10 transition-opacity duration-500`}></div>
               
               <div className="relative z-10">
@@ -194,8 +424,6 @@ export default function Footer() {
                   {stat.label}
                 </p>
               </div>
-              
-              {/* Shine Effect */}
               <div className="absolute inset-0 -translate-x-full group-hover:translate-x-full transition-transform duration-1000 bg-gradient-to-r from-transparent via-white/20 to-transparent"></div>
             </div>
           ))}
@@ -204,7 +432,7 @@ export default function Footer() {
         {/* Main Grid */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-12 mb-12">
           
-          {/* Brand Section - Enhanced */}
+          {/* Brand Section */}
           <div className="space-y-6">
             <div className="flex items-center gap-3 mb-5">
               <div className="relative p-3 bg-gradient-to-br from-amber-500 to-orange-500 rounded-2xl shadow-xl group-hover:shadow-2xl transition-shadow">
@@ -227,7 +455,6 @@ export default function Footer() {
               <span className="block mt-2 text-amber-600 dark:text-amber-400 font-medium">Let's create something amazing together!</span>
             </p>
             
-            {/* Contact Info - Enhanced */}
             <div className="space-y-3">
               <a 
                 href="tel:+919507272341" 
@@ -258,7 +485,6 @@ export default function Footer() {
               </a>
             </div>
 
-            {/* Hire Me Button - Enhanced with Confetti */}
             <button
               onClick={handleHireMe}
               className="relative w-full inline-flex items-center justify-center gap-2 px-6 py-4 bg-gradient-to-r from-amber-500 via-orange-500 to-red-500 text-white rounded-xl font-bold shadow-xl hover:shadow-2xl hover:shadow-amber-500/50 hover:scale-105 transition-all duration-300 group overflow-hidden"
@@ -267,22 +493,11 @@ export default function Footer() {
               <Sparkles className="w-5 h-5 group-hover:rotate-180 transition-transform duration-500 relative z-10" />
               <span className="relative z-10">Hire Me Now</span>
               <ChevronRight className="w-5 h-5 group-hover:translate-x-1 transition-transform relative z-10" />
-              
-              {/* Animated shine */}
               <div className="absolute inset-0 -translate-x-full group-hover:translate-x-full transition-transform duration-700 bg-gradient-to-r from-transparent via-white/30 to-transparent"></div>
             </button>
-
-            {/* Availability Badge */}
-            <div className="flex items-center gap-2 p-3 bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-lg">
-              <div className="relative flex h-3 w-3">
-                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
-                <span className="relative inline-flex rounded-full h-3 w-3 bg-green-500"></span>
-              </div>
-              <span className="text-xs font-medium text-green-700 dark:text-green-300">Available for freelance projects</span>
-            </div>
           </div>
 
-          {/* Quick Links - Enhanced */}
+          {/* Quick Links */}
           <div>
             <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-6 flex items-center gap-2">
               <div className="w-1 h-6 bg-gradient-to-b from-amber-500 to-orange-500 rounded-full"></div>
@@ -313,7 +528,7 @@ export default function Footer() {
             </ul>
           </div>
 
-          {/* Social Connect - Enhanced */}
+          {/* Social Connect */}
           <div>
             <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-6 flex items-center gap-2">
               <div className="w-1 h-6 bg-gradient-to-b from-amber-500 to-orange-500 rounded-full"></div>
@@ -333,13 +548,6 @@ export default function Footer() {
                   <div className="relative z-10">
                     {social.icon}
                   </div>
-                  
-                  {/* Tooltip */}
-                  <span className="absolute -top-10 left-1/2 -translate-x-1/2 px-2 py-1 bg-gray-900 text-white text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none">
-                    {social.label}
-                  </span>
-                  
-                  {/* Shine Effect */}
                   <div className="absolute inset-0 -translate-y-full group-hover:translate-y-0 transition-transform duration-500 bg-gradient-to-b from-transparent via-white/20 to-transparent"></div>
                 </a>
               ))}
@@ -361,7 +569,175 @@ export default function Footer() {
           </div>
         </div>
 
-        {/* Divider with Gradient */}
+        {/* 🎵 MUSIC PLAYER SECTION 🎵 */}
+        <div className="mb-10 relative group">
+          {/* Glassmorphism Card */}
+          <div className="relative overflow-hidden rounded-3xl bg-black/90 border border-white/10 shadow-2xl backdrop-blur-xl">
+            
+            {/* Background Ambient Glow */}
+            <div className="absolute -top-20 -right-20 w-64 h-64 bg-amber-400/20 rounded-full blur-3xl group-hover:bg-amber-400/30 transition-all duration-700"></div>
+            <div className="absolute -bottom-20 -left-20 w-64 h-64 bg-amber-900 rounded-full blur-3xl"></div>
+            
+            <div className="relative p-6 sm:p-8 flex flex-col md:flex-row items-center gap-6 sm:gap-8">
+              
+              {/* Album Art with Rotating Animation */}
+              <div className="relative shrink-0">
+                <div className={`w-24 h-24 sm:w-32 sm:h-32 rounded-full border-4 border-amber-400/30 shadow-[0_0_20px_rgba(245,158,11,0.3)] overflow-hidden ${isPlaying ? 'animate-[spin_8s_linear_infinite]' : ''}`}>
+                  <img 
+                    src={PLAYLIST[currentTrackIndex].cover} 
+                    alt="Album Art" 
+                    className="w-full h-full object-cover"
+                  />
+                  {/* Center Vinyl Hole */}
+                  <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-4 h-4 bg-amber-900 rounded-full border-2 border-amber-800"></div>
+                </div>
+                
+                {/* Playing Indicator */}
+                <div className="absolute -bottom-2 right-0 bg-amber-500 text-black text-[10px] font-bold px-2 py-1 rounded-full flex items-center gap-1 shadow-lg">
+                  <Music className="w-3 h-3" />
+                  {isPlaying ? 'Playing' : 'Paused'}
+                </div>
+              </div>
+
+              {/* Track Info & Controls */}
+              <div className="flex-1 w-full min-w-0">
+                {/* Header changed for Local Music Player */}
+                <div className="flex items-center justify-between mb-4">
+                  <div className="flex items-center gap-2 text-white/60 text-xs uppercase tracking-widest">
+                    <span className="w-2 h-2 rounded-full bg-amber-500 animate-pulse"></span>
+                    Local Music Player
+                  </div>
+                  <div className="flex items-center gap-1 text-white/80">
+                      <Music className="w-4 h-4"/>
+                      <span className='text-xs'>Track {currentTrackIndex + 1} of {PLAYLIST.length}</span>
+                  </div>
+                </div>
+
+                {/* Track Details */}
+                <div className="mb-6">
+                  <h4 className="text-white text-xl font-bold truncate">{PLAYLIST[currentTrackIndex].title}</h4>
+                  <p className="text-white/60 text-sm truncate">{PLAYLIST[currentTrackIndex].artist}</p>
+                </div>
+
+                {/* Controls Area */}
+                <div className="flex flex-col gap-4">
+                  
+                  {/* Progress Bar with Seeking functionality */}
+                  <div className="w-full group/progress cursor-pointer" onClick={handleSeek}>
+                    <div className="flex justify-between text-[10px] text-white/50 font-mono mb-1">
+                      <span>{audioRef.current ? formatTime(audioRef.current.currentTime) : "0:00"}</span>
+                      <span>{formatTime(duration)}</span>
+                    </div>
+                    <div className="h-1.5 w-full bg-white/10 rounded-full overflow-hidden relative">
+                      <div 
+                        className="h-full bg-amber-500 rounded-full transition-all duration-100 ease-linear relative group-hover/progress:bg-amber-400" 
+                        style={{ width: `${progress}%` }}
+                      >
+                        {/* Thumb for seeking */}
+                        <div className="absolute right-0 top-1/2 -translate-y-1/2 w-3 h-3 bg-white rounded-full opacity-0 group-hover/progress:opacity-100 shadow-lg transform scale-150"></div>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Main Buttons Row 1: Shuffle/Repeat & Prev/Next */}
+                  <div className="flex items-center justify-center gap-4 sm:gap-8 mb-2">
+                    
+                    {/* Shuffle Button */}
+                    <button 
+                      onClick={toggleShuffle} 
+                      className={`transition-colors p-2 rounded-full ${isShuffling ? 'text-amber-400 bg-white/10' : 'text-white/70 hover:text-white'}`}
+                      aria-label={isShuffling ? "Shuffle On" : "Shuffle Off"}
+                      title={isShuffling ? "Shuffle On" : "Turn Shuffle On"}
+                    >
+                      <Shuffle className="w-5 h-5" />
+                    </button>
+
+                    {/* Previous Button */}
+                    <button onClick={handlePrev} className="text-white/70 hover:text-white hover:scale-110 transition-all p-2">
+                        <SkipBack className="w-6 h-6" />
+                    </button>
+
+                    {/* Play/Pause Button */}
+                    <button 
+                        onClick={togglePlay}
+                        className="w-14 h-14 flex items-center justify-center bg-white rounded-full hover:scale-[1.08] hover:bg-amber-500 hover:text-black text-black transition-all shadow-[0_0_20px_rgba(255,255,255,0.3)]"
+                      >
+                        {isPlaying ? <Pause className="w-6 h-6 fill-current" /> : <Play className="w-6 h-6 fill-current ml-1" />}
+                    </button>
+                    
+                    {/* Next Button */}
+                    <button onClick={handleNext} className="text-white/70 hover:text-white hover:scale-110 transition-all p-2">
+                        <SkipForward className="w-6 h-6" />
+                    </button>
+                    
+                    {/* Repeat Button */}
+                    <button 
+                      onClick={toggleRepeat} 
+                      className={`transition-colors p-2 rounded-full ${repeatMode !== 'none' ? 'text-amber-400' : 'text-white/70 hover:text-white'}`}
+                      aria-label={`Repeat mode: ${repeatMode}`}
+                      title={
+                          repeatMode === 'none' ? "Turn Repeat All On" :
+                          repeatMode === 'all' ? "Turn Repeat One On" :
+                          "Turn Repeat Off"
+                      }
+                    >
+                      {repeatMode === 'one' ? 
+                        <Repeat1 className="w-5 h-5 text-amber-400" /> : 
+                        <Repeat className={`w-5 h-5 ${repeatMode === 'all' ? 'text-white' : 'text-white/70'}`} />
+                      }
+                    </button>
+                  </div>
+
+                  {/* Main Controls Row 2: Volume Control */}
+                  <div className="flex items-center justify-center gap-3 pt-2">
+                    <button onClick={toggleMute} className="text-white/60 hover:text-white transition-colors p-1">
+                      {isMuted || (audioRef.current && audioRef.current.volume === 0) ? <VolumeX className="w-5 h-5" /> : <Volume2 className="w-5 h-5" />}
+                    </button>
+                    
+                    {/* Volume Control (The improved slider) */}
+                    <div className="flex items-center gap-2 w-24">
+                        <Volume2 className="w-4 h-4 text-white/50" />
+                        <input 
+                            type="range" 
+                            min="0" 
+                            max="1" 
+                            step="0.05" 
+                            defaultValue={0.5} 
+                            onChange={(e) => {
+                                if (audioRef.current) {
+                                    const volumeValue = parseFloat(e.target.value);
+                                    audioRef.current.volume = volumeValue;
+                                    setIsMuted(volumeValue === 0);
+                                }
+                            }}
+                            // Use class name to target styling in the style block
+                            className="volume-slider w-full h-1 bg-white/20 rounded-lg appearance-none cursor-pointer"
+                        />
+                    </div>
+                    <div className='w-5'> {/* Spacer to balance icons if needed */}</div>
+
+                    
+                    {/* Fake Audio Visualizer */}
+                    <div className="flex gap-1 items-end h-5">
+                      {[...Array(4)].map((_, i) => (
+                        <div 
+                          key={i} 
+                          className={`w-1 bg-amber-500 rounded-t-sm transition-all duration-75 ${isPlaying ? 'animate-music-bar' : 'h-1'}`}
+                          style={{ 
+                            height: isPlaying ? `${(Math.sin((Date.now() / 1000) + i * 1.5) * 0.4 + 0.6) * 100}%` : '20%',
+                            animationDelay: `${i * 0.1}s` 
+                          }}
+                        ></div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Divider */}
         <div className="relative mb-8">
           <div className="absolute inset-0 flex items-center">
             <div className="w-full border-t border-gray-200 dark:border-neutral-800"></div>
@@ -373,10 +749,8 @@ export default function Footer() {
           </div>
         </div>
 
-        {/* Bottom Section - Enhanced */}
+        {/* Bottom Section */}
         <div className="flex flex-col md:flex-row justify-between items-center gap-4">
-          
-          {/* Copyright */}
           <div className="text-center md:text-left">
             <p className="text-sm text-gray-600 dark:text-gray-400">
               © {year} <span className="font-bold bg-gradient-to-r from-amber-600 to-orange-600 bg-clip-text text-transparent">SuraJz Kumar</span>. All rights reserved.
@@ -386,12 +760,10 @@ export default function Footer() {
             </p>
           </div>
           
-          {/* Made With Love */}
           <button
             type="button"
             onClick={scrollToTop}
             className="flex items-center gap-2 text-sm text-gray-600 hover:text-amber-600 dark:text-gray-400 dark:hover:text-amber-400 transition-all group cursor-pointer"
-            aria-label="Back to top"
           >
             <span className="font-medium">Made with</span>
             <Heart className="w-5 h-5 text-red-500 fill-red-500 group-hover:scale-125 transition-transform animate-pulse" />
@@ -405,6 +777,53 @@ export default function Footer() {
         .bg-grid-pattern {
           background-image: radial-gradient(circle, #00000008 1px, transparent 1px);
           background-size: 20px 20px;
+        }
+        @keyframes music-bar {
+          0% { height: 10%; }
+          50% { height: 100%; }
+          100% { height: 10%; }
+        }
+        .animate-music-bar {
+          animation: music-bar 0.8s ease-in-out infinite;
+        }
+        /* --- Improved Volume Slider Styling (Spotify Like) --- */
+        input[type=range].volume-slider {
+            height: 4px;
+        }
+        
+        input[type=range].volume-slider::-webkit-slider-runnable-track {
+            width: 100%;
+            height: 4px;
+            cursor: pointer;
+            background: rgba(255, 255, 255, 0.2); /* Background track color */
+            border-radius: 3px;
+        }
+        input[type=range].volume-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            background: #f59e0b; /* amber-500 for thumb */
+            border-radius: 9999px;
+            cursor: pointer;
+            width: 12px;
+            height: 12px;
+            margin-top: -4px; /* Center thumb on the track */
+            box-shadow: 0 0 3px rgba(0, 0, 0, 0.3);
+        }
+        
+        input[type=range].volume-slider::-moz-range-track {
+            width: 100%;
+            height: 4px;
+            cursor: pointer;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 3px;
+        }
+        input[type=range].volume-slider::-moz-range-thumb {
+            background: #f59e0b;
+            border-radius: 9999px;
+            cursor: pointer;
+            width: 12px;
+            height: 12px;
+            border: none;
         }
       `}</style>
     </footer>
