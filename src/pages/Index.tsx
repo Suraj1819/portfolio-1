@@ -1,18 +1,21 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Link, useNavigate } from 'react-router-dom';
+import confetti from 'canvas-confetti';
 import {
   ArrowRight, Code, Mail, Github, Linkedin, Phone, Star, Sparkles,
   Heart, ExternalLink, Menu, X, Calendar, MapPin, Award, Zap,
   Target, Globe, Lightbulb, CheckCircle, Clock, Users,
   Database, Brain, ChevronDown,
   Loader2, Send, Terminal, GraduationCap,
-  Facebook,
+  // Facebook,
+  MessageCircle,
   Code2,
   Instagram,
   School,
   School2,
-  AlertCircle,Trophy
+  AlertCircle,
+  Twitter
 } from "lucide-react";
 import { Button } from "../components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../components/ui/card";
@@ -692,15 +695,116 @@ const PremiumLoadingScreen: React.FC = () => {
 // ==================== HERO SECTION COMPONENT ====================
 
 const HeroSection: React.FC = () => {
+
+  const handleHireClick = (): void => {
+    // Confetti explosion effect
+    const duration = 3 * 1000;
+    const animationEnd = Date.now() + duration;
+    const defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 100 };
+
+    const randomInRange = (min: number, max: number) => {
+      return Math.random() * (max - min) + min;
+    };
+
+    const interval: any = setInterval(function() {
+      const timeLeft = animationEnd - Date.now();
+
+      if (timeLeft <= 0) {
+        return clearInterval(interval);
+      }
+
+      const particleCount = 50 * (timeLeft / duration);
+      
+      confetti({
+        ...defaults,
+        particleCount,
+        origin: { x: randomInRange(0.1, 0.3), y: Math.random() - 0.2 }
+      });
+      confetti({
+        ...defaults,
+        particleCount,
+        origin: { x: randomInRange(0.7, 0.9), y: Math.random() - 0.2 }
+      });
+    }, 250);
+    
+    // Navigate to contact page after a short delay to see the confetti
+    setTimeout(() => {
+      window.location.href = '/contact';
+    }, 800);
+  };
+
+  const socialLinks = [
+    { 
+      href: "https://github.com/Suraj1819", 
+      icon: Github, 
+      color: "text-[#2b3137] hover:text-[#24292e]", // GitHub Dark
+      bgColor: "hover:bg-gray-100",
+      borderColor: "hover:border-[#2b3137]/20",
+      title: "GitHub"
+    },
+    { 
+      href: "https://www.linkedin.com/in/suraj-kumar-72847b30a/", 
+      icon: Linkedin, 
+      color: "text-[#0077B5] hover:text-[#006396]", // LinkedIn Blue
+      bgColor: "hover:bg-blue-50",
+      borderColor: "hover:border-[#0077B5]/20",
+      title: "LinkedIn"
+    },
+    { 
+      href: "https://x.com/SuraJzRt", 
+      icon: X, 
+      color: "text-[#000000] hover:text-[#333333]", // X Black
+      bgColor: "hover:bg-gray-100",
+      borderColor: "hover:border-black/20",
+      title: "X (formerly Twitter)"
+    },
+    { 
+      href: "https://wa.me/919876543210", // Replace with actual number
+      icon: MessageCircle, 
+      color: "text-[#25D366] hover:text-[#128C7E]", // WhatsApp Green
+      bgColor: "hover:bg-green-50",
+      borderColor: "hover:border-[#25D366]/20",
+      title: "WhatsApp"
+    },
+    { 
+      href: "https://www.instagram.com/risu2948/", 
+      icon: Instagram, 
+      color: "text-[#E4405F] hover:text-[#C13584]", // Instagram Pink
+      bgColor: "hover:bg-pink-50",
+      borderColor: "hover:border-[#E4405F]/20",
+      title: "Instagram"
+    },
+    { 
+      href: "https://leetcode.com/u/Suraj_1819/", 
+      icon: Code, // Using Code for LeetCode
+      color: "text-[#FFA116] hover:text-[#D98200]", // LeetCode Orange
+      bgColor: "hover:bg-orange-50",
+      borderColor: "hover:border-[#FFA116]/20",
+      title: "LeetCode"
+    },
+    { 
+      href: "https://www.geeksforgeeks.org/user/surajkuma16ts/", 
+      icon: Code2, // Using Code2 for GeeksforGeeks
+      color: "text-[#2F8D46] hover:text-[#1e5c2e]", // GFG Green
+      bgColor: "hover:bg-green-50",
+      borderColor: "hover:border-[#2F8D46]/20",
+      title: "GeeksforGeeks"
+    },
+  ];
+
   return (
     <section id="home" className="relative pt-20 sm:pt-24 pb-12 sm:pb-16 px-4 sm:px-6 overflow-hidden min-h-screen flex items-center">
-      {/* Animated Background with Framer Motion */}
+      {/* --- DESKTOP HIRE BUTTON (Floating between text and image) --- */}
+      
+
+      {/* Animated Background with Framer Motion (existing) */}
       <motion.div
         className="absolute inset-0 overflow-hidden"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 1 }}
       >
+        {/* ... existing background blobs ... */}
         <motion.div
           className="absolute top-10 sm:top-20 left-5 sm:left-10 w-48 sm:w-72 h-48 sm:h-72 bg-amber-300/20 rounded-full blur-3xl"
           animate={{
@@ -743,13 +847,14 @@ const HeroSection: React.FC = () => {
         ></motion.div>
       </motion.div>
 
-      {/* Floating Elements with Framer Motion */}
+      {/* Floating Elements with Framer Motion (existing) */}
       <motion.div
         className="absolute inset-0 pointer-events-none hidden sm:block"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 0.8, delay: 0.5 }}
       >
+        {/* ... existing floating icons ... */}
         <motion.div
           className="absolute top-32 left-20"
           animate={{
@@ -932,34 +1037,28 @@ const HeroSection: React.FC = () => {
               </motion.div>
             </motion.div>
 
+            {/* Professional Social Links */}
             <motion.div
-              className="flex justify-center lg:justify-start space-x-3 sm:space-x-6"
+              className="flex justify-center lg:justify-start gap-3 flex-wrap mt-6"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ duration: 0.5, delay: 1.3 }}
             >
-              {[
-                { href: "https://github.com/Suraj1819", icon: Github },
-                { href: "https://www.linkedin.com/in/suraj-kumar-72847b30a/", icon: Linkedin },
-                { href: "https://leetcode.com/u/Suraj_1819/", icon: Code },
-                { href: "https://www.geeksforgeeks.org/user/surajkuma16ts/", icon: Code2 },
-                { href: "https://github.com/Suraj1819", icon: Facebook },
-                { href: "https://x.com/SuraJzRt", icon: X },
-                { href: "https://www.instagram.com/risu2948/", icon: Instagram },
-              ].map((social, index) => (
+              {socialLinks.map((social, index) => (
                 <motion.a
                   key={index}
                   href={social.href}
                   target="_blank"
                   rel="noopener noreferrer"
-                  whileHover={{ scale: 1.1 }}
+                  whileHover={{ scale: 1.1, y: -3 }} // Added y movement on hover
                   whileTap={{ scale: 0.9 }}
-                  className="text-gray-600 hover:text-amber-700 transition-all duration-300 hover:bg-amber-200 p-1.5 sm:p-2 rounded-full"
+                  className={`p-2.5 rounded-full border border-transparent transition-all duration-300 ${social.color} ${social.bgColor} ${social.borderColor} shadow-sm hover:shadow-md`}
                   initial={{ opacity: 0, x: -10 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ duration: 0.3, delay: 1.4 + index * 0.05 }}
+                  title={social.title}
                 >
-                  <social.icon className="h-4 w-4 sm:h-5 sm:w-5 lg:h-6 lg:w-6" />
+                  <social.icon className="h-5 w-5" /> {/* Increased icon size slightly for better visibility */}
                 </motion.a>
               ))}
             </motion.div>
@@ -973,7 +1072,21 @@ const HeroSection: React.FC = () => {
             transition={{ duration: 0.8, delay: 0.3 }}
           >
             <div className="relative">
-              {/* Glow Background */}
+              {/* --- MOBILE HIRE BUTTON (Floating above profile circle) --- */}
+              <motion.button
+                onClick={handleHireClick}
+                className="lg:hidden absolute -top-10  sm:-top-16 -left-10 transform -translate-x-1/2 z-30 flex items-center gap-2 
+                           bg-gradient-to-r from-green-500 to-emerald-600 text-white font-semibold py-4 px-5 rounded-full shadow-lg"
+                animate={{ y: [0, -8, 0] }} // Floating animation
+                transition={{ duration: 2.5, repeat: Infinity, repeatType: "reverse", ease: "easeInOut" }}
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+              >
+                <span>Hire Me</span>
+                <Sparkles className="h-4 w-4 ml-2" />
+              </motion.button>
+              
+              {/* Glow Background (existing) */}
               <motion.div
                 className="absolute inset-0 bg-gradient-to-r from-amber-400 via-orange-400 to-red-400 rounded-full blur-2xl opacity-30"
                 animate={{
@@ -987,7 +1100,7 @@ const HeroSection: React.FC = () => {
                 }}
               />
 
-              {/* Profile Circle */}
+              {/* Profile Circle (existing) */}
               <motion.div
                 className="relative w-64 h-64 sm:w-80 sm:h-80 lg:w-96 lg:h-96 bg-gradient-to-br from-amber-400 via-orange-400 to-red-400 rounded-full flex items-center justify-center shadow-2xl"
                 whileHover={{ 
@@ -1005,7 +1118,7 @@ const HeroSection: React.FC = () => {
                 </div>
               </motion.div>
 
-              {/* Year Badge */}
+              {/* Year Badge (existing) */}
               <motion.div
                 className="absolute -top-2 sm:-top-4 -right-2 sm:-right-4 w-14 h-14 sm:w-20 sm:h-20 bg-gradient-to-r from-yellow-400 to-orange-400 rounded-full flex items-center justify-center shadow-lg font-bold"
                 animate={{
@@ -1024,7 +1137,7 @@ const HeroSection: React.FC = () => {
                 </span>
               </motion.div>
 
-              {/* Orbital Elements - Integrated with proper centering */}
+              {/* Orbital Elements (existing) */}
               <motion.div
                 className="absolute top-1/2 left-1/2 w-[130%] h-[130%] -translate-x-1/2 -translate-y-1/2 hidden sm:block"
                 initial={{ opacity: 0 }}
@@ -1171,300 +1284,6 @@ const HeroSection: React.FC = () => {
     </section>
   );
 }
-
-
-// ==================== ABOUT SECTION COMPONENT ====================
-//   const containerVariants = {
-//     hidden: { opacity: 0 },
-//     visible: {
-//       opacity: 1,
-//       transition: {
-//         staggerChildren: 0.2,
-//         delayChildren: 0.3,
-//       },
-//     },
-//   };
-
-//   const itemVariants = {
-//     hidden: { opacity: 0, y: 20 },
-//     visible: {
-//       opacity: 1,
-//       y: 0,
-//       transition: { duration: 0.8, ease: "easeOut" },
-//     },
-//   };
-
-//   const floatingVariants = {
-//     animate: {
-//       y: [0, -20, 0],
-//       transition: {
-//         duration: 3,
-//         repeat: Infinity,
-//         ease: "easeInOut",
-//       },
-//     },
-//   };
-
-//   const pulseVariants = {
-//     animate: {
-//       opacity: [0.5, 1, 0.5],
-//       transition: {
-//         duration: 2,
-//         repeat: Infinity,
-//       },
-//     },
-//   };
-
-//   const rotateVariants = {
-//     animate: {
-//       rotate: 360,
-//       transition: {
-//         duration: 20,
-//         repeat: Infinity,
-//         ease: "linear",
-//       },
-//     },
-//   };
-
-//   return (
-//     <section id="home" className="relative pt-20 sm:pt-24 pb-12 sm:pb-16 px-4 sm:px-6 overflow-hidden min-h-screen flex items-center">
-//       {/* Animated Background */}
-//       <div className="absolute inset-0 overflow-hidden">
-//         <motion.div
-//           className="absolute top-10 sm:top-20 left-5 sm:left-10 w-48 sm:w-72 h-48 sm:h-72 bg-amber-300/20 rounded-full blur-3xl"
-//           variants={pulseVariants}
-//           animate="animate"
-//         />
-//         <motion.div
-//           className="absolute top-20 sm:top-40 right-5 sm:right-10 w-64 sm:w-96 h-64 sm:h-96 bg-orange-300/20 rounded-full blur-3xl"
-//           variants={pulseVariants}
-//           animate="animate"
-//           transition={{ delay: 1 }}
-//         />
-//         <motion.div
-//           className="absolute bottom-10 sm:bottom-20 left-1/4 sm:left-1/3 w-56 sm:w-80 h-56 sm:h-80 bg-yellow-300/20 rounded-full blur-3xl"
-//           variants={pulseVariants}
-//           animate="animate"
-//           transition={{ delay: 2 }}
-//         />
-//       </div>
-
-//       {/* Floating Elements */}
-//       <div className="absolute inset-0 pointer-events-none hidden sm:block">
-//         <motion.div
-//           className="absolute top-32 left-20"
-//           variants={floatingVariants}
-//           animate="animate"
-//           transition={{ delay: 0.3 }}
-//         >
-//           <div className="w-12 sm:w-16 h-12 sm:h-16 bg-gradient-to-r from-amber-400 to-orange-400 rounded-lg flex items-center justify-center shadow-lg">
-//             <Code className="h-6 sm:h-8 w-6 sm:w-8 text-white" />
-//           </div>
-//         </motion.div>
-
-//         <motion.div
-//           className="absolute top-48 right-32"
-//           variants={floatingVariants}
-//           animate="animate"
-//           transition={{ delay: 0.7 }}
-//         >
-//           <div className="w-10 sm:w-12 h-10 sm:h-12 bg-gradient-to-r from-orange-400 to-red-400 rounded-full flex items-center justify-center shadow-lg">
-//             <Sparkles className="h-5 sm:h-6 w-5 sm:w-6 text-white" />
-//           </div>
-//         </motion.div>
-
-//         <motion.div
-//           className="absolute bottom-40 left-16"
-//           variants={floatingVariants}
-//           animate="animate"
-//           transition={{ delay: 1 }}
-//         >
-//           <div className="w-12 sm:w-14 h-12 sm:h-14 bg-gradient-to-r from-yellow-400 to-amber-400 rounded-lg rotate-12 flex items-center justify-center shadow-lg">
-//             <Star className="h-6 sm:h-7 w-6 sm:w-7 text-white" />
-//           </div>
-//         </motion.div>
-//       </div>
-
-//       <div className="container mx-auto relative z-10">
-//         <div className="flex flex-col lg:flex-row items-center justify-between gap-8 sm:gap-12">
-//           {/* Left Content */}
-//           <motion.div
-//             className="w-full lg:w-1/2 space-y-6 sm:space-y-8 text-center lg:text-left"
-//             variants={containerVariants}
-//             initial="hidden"
-//             animate="visible"
-//           >
-//             <motion.div
-//               className="inline-flex items-center space-x-2 bg-white/80 backdrop-blur-sm border border-amber-200 rounded-full px-3 sm:px-4 py-1.5 sm:py-2 text-xs sm:text-sm shadow-sm"
-//               variants={itemVariants}
-//             >
-//               <div className="w-1.5 sm:w-2 h-1.5 sm:h-2 bg-green-500 rounded-full animate-pulse" />
-//               <span className="text-gray-700">Available for opportunities</span>
-//             </motion.div>
-
-//             <div className="space-y-4 sm:space-y-6">
-//               <motion.h1
-//                 className="text-3xl sm:text-4xl md:text-5xl lg:text-7xl font-bold leading-tight tracking-tight"
-//                 variants={itemVariants}
-//               >
-//                 <span className="block text-gray-800 mb-1 sm:mb-2">Hello,</span>
-//                 <span className="block bg-gradient-to-r from-amber-600 via-orange-600 to-red-500 bg-clip-text text-transparent">
-//                   I'm SuraJz
-//                 </span>
-//               </motion.h1>
-
-//               <motion.div className="space-y-3 sm:space-y-4" variants={itemVariants}>
-//                 <p className="text-xl sm:text-2xl lg:text-3xl font-semibold text-gray-800">
-//                   Aspiring Software Engineer
-//                 </p>
-//                 <div className="flex flex-wrap justify-center lg:justify-start gap-2 sm:gap-3">
-//                   {['C++', 'Python', 'JavaScript', 'DSA', 'MERN', 'Tailwindcss'].map((skill, index) => (
-//                     <motion.div
-//                       key={index}
-//                       whileHover={{ y: -4 }}
-//                       transition={{ duration: 0.2 }}
-//                     >
-//                       <Badge className="bg-amber-100 text-red-700 border-amber-200 px-2 sm:px-3 py-0.5 sm:py-1 text-xs sm:text-sm cursor-pointer">
-//                         {skill}
-//                       </Badge>
-//                     </motion.div>
-//                   ))}
-//                 </div>
-//               </motion.div>
-
-//               <motion.p
-//                 className="text-sm sm:text-base lg:text-xl text-gray-700 leading-relaxed max-w-2xl mx-auto lg:mx-0"
-//                 variants={itemVariants}
-//               >
-//                 I'm a <span className='bg-amber-200 rounded-lg px-1 sm:px-2 text-red-600 font-semibold text-xs sm:text-sm lg:text-base'>3<sup>rd</sup> Year B.Tech</span> student passionate about coding, problem-solving, and full-stack development. Skilled in
-//                 <span className='text-red-600 font-semibold bg-amber-200 px-1 sm:px-2 rounded-lg ml-1 mr-1 text-xs sm:text-sm lg:text-base'>MERN</span>,
-//                 <span className='text-red-600 font-semibold bg-amber-200 px-1 sm:px-2 rounded-md ml-1 mr-1 text-xs sm:text-sm lg:text-base'>TailwindCss</span>,
-//                 <span className='text-red-600 font-semibold bg-amber-200 px-1 sm:px-2 rounded-md text-xs sm:text-sm lg:text-base'>PostgreSQL</span>,
-//                 <span className='text-red-600 font-semibold bg-amber-200 px-1 sm:px-2 rounded-md text-xs sm:text-sm lg:text-base'>C++</span>, and
-//                 <span className='text-red-600 font-semibold bg-amber-200 px-1 sm:px-2 rounded-md text-xs sm:text-sm lg:text-base'>Python</span>.
-//               </motion.p>
-//             </div>
-
-//             <motion.div
-//               className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center lg:justify-start"
-//               variants={itemVariants}
-//             >
-//               <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-//                 <Button
-//                   size="lg"
-//                   className="w-full sm:w-auto bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white border-0 shadow-lg text-sm sm:text-base"
-//                   onClick={() => document.getElementById('projects')?.scrollIntoView({ behavior: 'smooth' })}
-//                 >
-//                   <span>Explore My Work</span>
-//                   <ArrowRight className="ml-2 h-3 w-3 sm:h-4 sm:w-4" />
-//                 </Button>
-//               </motion.div>
-//               <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-//                 <Button
-//                   size="lg"
-//                   variant="outline"
-//                   className="w-full sm:w-auto border-amber-300 text-gray-700 hover:bg-amber-50 backdrop-blur-sm bg-white/50 hover:border-amber-400 text-sm sm:text-base"
-//                   onClick={() => document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' })}
-//                 >
-//                   Let's Connect
-//                   <ExternalLink className='ml-2 h-3 w-3 sm:h-4 sm:w-4'/>
-//                 </Button>
-//               </motion.div>
-//             </motion.div>
-
-//             <motion.div
-//               className="flex justify-center lg:justify-start space-x-3 sm:space-x-6"
-//               variants={itemVariants}
-//             >
-//               {[
-//                 { href: "https://github.com/Suraj1819", icon: Github },
-//                 { href: "https://www.linkedin.com/in/suraj-kumar-72847b30a/", icon: Linkedin },
-//                 { href: "https://leetcode.com/u/Suraj_1819/", icon: Code },
-//                 { href: "https://www.geeksforgeeks.org/user/surajkuma16ts/", icon: Code2 },
-//                 { href: "https://github.com/Suraj1819", icon: Facebook },
-//                 { href: "https://x.com/SuraJzRt", icon: X },
-//                 { href: "https://www.instagram.com/risu2948/", icon: Instagram },
-//               ].map((social, index) => (
-//                 <motion.a
-//                   key={index}
-//                   href={social.href}
-//                   target="_blank"
-//                   rel="noopener noreferrer"
-//                   className="text-gray-600 hover:text-amber-700 p-1.5 sm:p-2 rounded-full hover:bg-amber-200 transition-colors"
-//                   whileHover={{ scale: 1.1 }}
-//                   whileTap={{ scale: 0.95 }}
-//                 >
-//                   <social.icon className="h-4 w-4 sm:h-5 sm:w-5 lg:h-6 lg:w-6" />
-//                 </motion.a>
-//               ))}
-//             </motion.div>
-//           </motion.div>
-
-//           {/* Right Content - Profile Image */}
-//           <motion.div
-//             className="w-full lg:w-1/2 flex justify-center mt-8 lg:mt-0"
-//             initial={{ opacity: 0, scale: 0.8 }}
-//             animate={{ opacity: 1, scale: 1 }}
-//             transition={{ duration: 0.8, delay: 0.3 }}
-//           >
-//             <div className="relative">
-//               <motion.div
-//                 className="absolute inset-0 bg-gradient-to-r from-amber-400 via-orange-400 to-red-400 rounded-full blur-xl opacity-30"
-//                 variants={pulseVariants}
-//                 animate="animate"
-//               />
-//               <div className="relative w-64 h-64 sm:w-80 sm:h-80 lg:w-96 lg:h-96 bg-gradient-to-br from-amber-400 via-orange-400 to-red-400 rounded-full flex items-center justify-center shadow-2xl">
-//                 <div className="w-56 h-56 sm:w-72 sm:h-72 lg:w-88 lg:h-88 bg-white rounded-full flex items-center justify-center border border-amber-200 overflow-hidden">
-//                   <img
-//                     src="https://wallpapercave.com/wp/wp6690023.jpg"
-//                     alt="Profile Picture"
-//                     className="w-full h-full object-cover"
-//                   />
-//                 </div>
-//               </div>
-
-//               <motion.div
-//                 className="absolute -top-2 sm:-top-4 -right-2 sm:-right-4 w-14 h-14 sm:w-20 sm:h-20 bg-gradient-to-r from-yellow-400 to-orange-400 rounded-full flex items-center justify-center shadow-lg"
-//                 animate={{ y: [-10, 10, -10] }}
-//                 transition={{ duration: 2, repeat: Infinity }}
-//               >
-//                 <span className="text-white font-bold text-xs sm:text-sm lg:text-md">2027</span>
-//               </motion.div>
-
-//               <motion.div
-//                 className="absolute top-1/2 left-1/2 w-[120%] h-[120%] -translate-x-1/2 -translate-y-1/2 hidden sm:block"
-//                 variants={rotateVariants}
-//                 animate="animate"
-//               >
-//                 <div className="relative w-full h-full">
-//                   <div className="absolute top-0 left-1/2 w-3 h-3 sm:w-4 sm:h-4 bg-amber-400 rounded-full -translate-x-1/2 -translate-y-1/2 shadow-lg" />
-//                   <div className="absolute bottom-0 left-1/2 w-3 h-3 sm:w-4 sm:h-4 bg-orange-400 rounded-full -translate-x-1/2 translate-y-1/2 shadow-lg" />
-//                   <div className="absolute left-0 top-1/2 w-3 h-3 sm:w-4 sm:h-4 bg-red-400 rounded-full -translate-x-1/2 -translate-y-1/2 shadow-lg" />
-//                   <div className="absolute right-0 top-1/2 w-3 h-3 sm:w-4 sm:h-4 bg-yellow-400 rounded-full translate-x-1/2 -translate-y-1/2 shadow-lg" />
-//                 </div>
-//               </motion.div>
-//             </div>
-//           </motion.div>
-//         </div>
-
-//         {/* Scroll Indicator */}
-//         <motion.div
-//           className="absolute bottom-4 sm:bottom-8 left-1/2 transform -translate-x-1/2 hidden sm:block"
-//           animate={{ y: [0, 8, 0] }}
-//           transition={{ duration: 1.5, repeat: Infinity }}
-//         >
-//           <div className="w-5 h-8 sm:w-6 sm:h-10 border-2 border-amber-400 rounded-full flex justify-center">
-//             <motion.div
-//               className="w-1 h-2 sm:h-3 bg-amber-400 rounded-full mt-2"
-//               animate={{ opacity: [0.3, 1, 0.3] }}
-//               transition={{ duration: 1.5, repeat: Infinity }}
-//             />
-//           </div>
-//         </motion.div>
-//       </div>
-//     </section>
-//   );
-// };
 
 // ==================== ABOUT SECTION COMPONENT ====================
 const AboutSection: React.FC = () => {
@@ -1945,8 +1764,6 @@ const SkillsSection: React.FC = () => {
   );
 };
 
-
-
 // ==================== SERVICES SECTION COMPONENT ====================
 const ServicesSection: React.FC = () => {
   const services: Service[] = [
@@ -2083,7 +1900,7 @@ const ProjectsSection: React.FC = () => {
       technologies: ["React", "API Integration", "Geolocation", "Tailwind CSS", "Axios"],
       features: ["Real-time Weather Data", "City Search", "Geolocation Support", "7-Day Forecast", "Dynamic Backgrounds"],
       status: "Completed",
-      github: "#",
+      github: "https://github.com/Suraj1819",
       live: "#",
       image: "https://via.placeholder.com/400x250",
       gradient: "from-cyan-400 to-light-blue-600",
@@ -2096,7 +1913,7 @@ const ProjectsSection: React.FC = () => {
       technologies: ["React", "Node.js", "Express", "MongoDB", "Socket.IO", "JWT"],
       features: ["Real-time Messaging", "User Authentication", "Multiple Chat Rooms", "Online User List", "Typing Indicators"],
       status: "In Progress",
-      github: "#",
+      github: "https://github.com/Suraj1819",
       live: "#",
       image: "https://via.placeholder.com/400x250",
       gradient: "from-teal-400 to-cyan-500",
@@ -2109,7 +1926,7 @@ const ProjectsSection: React.FC = () => {
       technologies: ["React", "Chart.js", "Data Handling", "UI/UX Design", "REST API"],
       features: ["Interactive Charts", "Data Filtering", "Exportable Reports", "Customizable Widgets", "Real-time Data Sync"],
       status: "Completed",
-      github: "#",
+      github: "https://github.com/Suraj1819",
       live: "#",
       image: "https://via.placeholder.com/400x250",
       gradient: "from-indigo-400 to-purple-500",
@@ -2382,425 +2199,6 @@ const ProjectsSection: React.FC = () => {
   );
 };
 
-//   const [selectedProject, setSelectedProject] = useState<Project | null>(null);
-//   const [filter, setFilter] = useState<string>('all');
-//   // const [hoveredProject, setHoveredProject] = useState<number | null>(null);
-
-//   const projects: Project[] = [
-//     {
-//       title: "Calculator App",
-//       description: "A functional calculator application built using Python. Performs basic arithmetic operations with a clean user interface.",
-//       longDescription: "A comprehensive calculator application with advanced mathematical operations, memory functions, and a clean, intuitive interface. Built with Python and Tkinter, this project demonstrates my understanding of GUI development and mathematical operations in programming.",
-//       technologies: ["Python", "Tkinter", "Math Logic", "UI Design"],
-//       features: ["Basic Arithmetic", "Memory Functions", "History", "Keyboard Support"],
-//       status: "Completed",
-//       github: "https://github.com/Suraj1819/SimpleCalculator",
-//       live: "#",
-//       image: "https://images.unsplash.com/photo-1587145820266-a5951ee6f620?w=500&h=300&fit=crop",
-//       gradient: "from-amber-400 to-orange-600",
-//       category: "utility"
-//     },
-//     {
-//       title: "Portfolio Website",
-//       description: "Modern responsive portfolio built with React and Tailwind CSS.",
-//       longDescription: "A stunning portfolio website showcasing projects, skills, and professional experience with smooth animations and modern design. This project demonstrates my expertise in React, TypeScript, and responsive design principles.",
-//       technologies: ["React", "Tailwind CSS", "TypeScript", "Responsive Design"],
-//       features: ["Responsive Design", "Smooth Animations", "Contact Form", "Project Showcase", "Resume Download"],
-//       status: "Completed",
-//       github: "https://github.com/Suraj1819",
-//       live: "https://surajzxrt.netlify.app/",
-//       image: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=500&h=300&fit=crop",
-//       gradient: "from-blue-400 to-purple-600",
-//       category: "web development"
-//     },
-//     {
-//       title: "E-commerce Platform",
-//       description: "Full-stack e-commerce solution with product management and payment integration.",
-//       longDescription: "A complete e-commerce platform with user authentication, product catalog, shopping cart, and payment processing. Built with the MERN stack, this project showcases my full-stack development skills and understanding of modern web applications.",
-//       technologies: ["MongoDB", "Express", "React", "Node.js", "Stripe API"],
-//       features: ["User Authentication", "Product Management", "Shopping Cart", "Payment Processing"],
-//       status: "Completed",
-//       github: "#",
-//       live: "#",
-//       image: "https://images.unsplash.com/photo-1557821552-17105176677c?w=500&h=300&fit=crop",
-//       gradient: "from-green-400 to-emerald-600",
-//       category: "e-commerce"
-//     },
-//     {
-//       title: "Weather Forecast App",
-//       description: "A sleek weather app providing real-time forecasts using the OpenWeatherMap API.",
-//       longDescription: "A beautifully designed weather application that delivers current weather conditions, hourly forecasts, and a 7-day outlook. It uses geolocation to provide local weather data or allows users to search for any city worldwide. The interface changes dynamically based on the weather conditions.",
-//       technologies: ["React", "API Integration", "Geolocation", "Tailwind CSS", "Axios"],
-//       features: ["Real-time Weather Data", "City Search", "Geolocation Support", "7-Day Forecast", "Dynamic Backgrounds"],
-//       status: "Completed",
-//       github: "#",
-//       live: "#",
-//       image: "https://images.unsplash.com/photo-1592210454359-9043f067919b?w=500&h=300&fit=crop",
-//       gradient: "from-cyan-400 to-blue-600",
-//       category: "weather"
-//     },
-//     {
-//       title: "Real-Time Chat App",
-//       description: "A full-stack real-time chat application built with Socket.IO and the MERN stack.",
-//       longDescription: "A real-time messaging application that allows users to join chat rooms, send messages, and see who is currently online. It features a persistent message history stored in MongoDB and uses WebSockets for instant communication.",
-//       technologies: ["React", "Node.js", "Express", "MongoDB", "Socket.IO", "JWT"],
-//       features: ["Real-time Messaging", "User Authentication", "Multiple Chat Rooms", "Online User List", "Typing Indicators"],
-//       status: "Completed",
-//       github: "#",
-//       live: "#",
-//       image: "https://images.unsplash.com/photo-1611606063065-ee7946f0787a?w=500&h=300&fit=crop",
-//       gradient: "from-teal-400 to-cyan-500",
-//       category: "communication"
-//     },
-//     {
-//       title: "Analytics Dashboard",
-//       description: "An interactive dashboard for visualizing complex datasets using Chart.js.",
-//       longDescription: "This project is a powerful analytics dashboard that transforms raw data into beautiful and interactive charts and graphs. It allows users to filter data by date ranges and other parameters, providing insightful visualizations of key metrics. Built with React and Chart.js.",
-//       technologies: ["React", "Chart.js", "Data Handling", "UI/UX Design", "REST API"],
-//       features: ["Interactive Charts", "Data Filtering", "Exportable Reports", "Customizable Widgets", "Real-time Data Sync"],
-//       status: "Completed",
-//       github: "#",
-//       live: "#",
-//       image: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=500&h=300&fit=crop",
-//       gradient: "from-indigo-400 to-purple-500",
-//       category: "data visualization"
-//     },
-//     {
-//       title: "Blog Platform (CMS)",
-//       description: "A full-featured blog platform with a Markdown editor and user management.",
-//       longDescription: "A complete Content Management System (CMS) for bloggers. It features a rich Markdown editor for writing posts, user authentication for authors, a comment system, and an admin panel for managing content. The frontend is server-side rendered for better SEO.",
-//       technologies: ["Next.js", "React", "Prisma", "PostgreSQL", "Tailwind CSS", "NextAuth.js"],
-//       features: ["Markdown Editor", "User Authentication", "SEO-Friendly", "Comment System", "Admin Dashboard", "Post Categories & Tags"],
-//       status: "Completed",
-//       github: "#",
-//       live: "#",
-//       image: "https://images.unsplash.com/photo-1499750310107-5fef28a66643?w=500&h=300&fit=crop",
-//       gradient: "from-rose-400 to-red-500",
-//       category: "content management"
-//     }
-//   ];
-
-//   const statusFilters = ['all', 'completed', 'in progress'];
-
-//   const filteredProjects = filter === 'all' 
-//     ? projects 
-//     : projects.filter(project => 
-//         project.status.toLowerCase() === filter.toLowerCase()
-//       );
-
-//   const openProjectModal = (project: Project) => {
-//     setSelectedProject(project);
-//     document.body.style.overflow = 'hidden';
-//   };
-
-//   const closeProjectModal = () => {
-//     setSelectedProject(null);
-//     document.body.style.overflow = 'auto';
-//   };
-
-//   return (
-//     <section id="projects" className="py-16 sm:py-20 lg:py-24 px-4 sm:px-6 bg-gradient-to-b from-white to-amber-50">
-//       <div className="container mx-auto max-w-7xl">
-//         <div className="text-center mb-12 lg:mb-16">
-//           <motion.div
-//             initial={{ opacity: 0, y: 20 }}
-//             whileInView={{ opacity: 1, y: 0 }}
-//             transition={{ duration: 0.5 }}
-//             viewport={{ once: true }}
-//           >
-//             <span className="text-amber-600 font-medium text-sm sm:text-base mb-2 inline-block">
-//               PORTFOLIO
-//             </span>
-//             <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold mb-4 text-gray-900">
-//               Featured Projects
-//             </h2>
-//             <p className="text-gray-600 max-w-2xl mx-auto text-base sm:text-lg">
-//               Explore my collection of projects that demonstrate my skills and expertise in modern web development
-//             </p>
-//           </motion.div>
-
-//           <div className="flex justify-center mt-6">
-//             <div className="inline-flex bg-white rounded-lg p-1 border border-gray-200 shadow-sm">
-//               {statusFilters.map((status) => (
-//                 <button
-//                   key={status}
-//                   onClick={() => setFilter(status)}
-//                   className={`px-4 py-2 text-sm font-medium rounded-md capitalize transition-colors ${
-//                     filter === status
-//                       ? 'bg-amber-500 text-white'
-//                       : 'text-gray-600 hover:text-amber-600'
-//                   }`}
-//                 >
-//                   {status}
-//                 </button>
-//               ))}
-//             </div>
-//           </div>
-//         </div>
-
-//         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
-//           {filteredProjects.map((project, index) => (
-//             <motion.div
-//               key={index}
-//               initial={{ opacity: 0, y: 30 }}
-//               whileInView={{ opacity: 1, y: 0 }}
-//               transition={{ duration: 0.5, delay: index * 0.1 }}
-//               viewport={{ once: true }}
-//               whileHover={{ y: -8 }}
-//               onMouseEnter={() => setHoveredProject(index)}
-//               onMouseLeave={() => setHoveredProject(null)}
-//               className="group"
-//             >
-//               <div 
-//                 className="bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 h-full flex flex-col cursor-pointer border border-gray-100"
-//                 onClick={() => openProjectModal(project)}
-//               >
-//                 {/* Project Image */}
-//                 <div className="relative h-56 overflow-hidden">
-//                   <img 
-//                     src={project.image} 
-//                     alt={project.title}
-//                     className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
-//                   />
-//                   <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                  
-//                   {/* Status Badge */}
-//                   <div className="absolute top-4 right-4">
-//                     <span className={`px-3 py-1 rounded-full text-xs font-medium backdrop-blur-sm ${
-//                       project.status === "Completed" 
-//                         ? "bg-green-500/90 text-white" 
-//                         : "bg-yellow-500/90 text-white"
-//                     }`}>
-//                       {project.status}
-//                     </span>
-//                   </div>
-
-//                   {/* Category Badge */}
-//                   <div className="absolute top-4 left-4">
-//                     <span className="px-3 py-1 rounded-full text-xs font-medium bg-white/90 text-gray-800 backdrop-blur-sm">
-//                       {project.category}
-//                     </span>
-//                   </div>
-
-//                   {/* Hover Overlay */}
-//                   <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-//                     <div className="flex space-x-3">
-//                       <a 
-//                         href={project.github}
-//                         target="_blank"
-//                         rel="noopener noreferrer"
-//                         className="bg-white p-3 rounded-full hover:bg-gray-100 transition-colors shadow-lg transform hover:scale-110"
-//                         onClick={(e) => e.stopPropagation()}
-//                       >
-//                         <Github className="h-5 w-5 text-gray-800" />
-//                       </a>
-//                       {project.live !== '#' && (
-//                         <a 
-//                           href={project.live}
-//                           target="_blank"
-//                           rel="noopener noreferrer"
-//                           className="bg-white p-3 rounded-full hover:bg-gray-100 transition-colors shadow-lg transform hover:scale-110"
-//                           onClick={(e) => e.stopPropagation()}
-//                         >
-//                           <ExternalLink className="h-5 w-5 text-gray-800" />
-//                         </a>
-//                       )}
-//                       <button 
-//                         className="bg-amber-500 p-3 rounded-full hover:bg-amber-600 transition-colors shadow-lg transform hover:scale-110"
-//                         onClick={(e) => {
-//                           e.stopPropagation();
-//                           openProjectModal(project);
-//                         }}
-//                       >
-//                         <Eye className="h-5 w-5 text-white" />
-//                       </button>
-//                     </div>
-//                   </div>
-//                 </div>
-
-//                 {/* Project Content */}
-//                 <div className="p-6 flex-1 flex flex-col">
-//                   <div className="flex-1">
-//                     <h3 className="text-xl font-bold text-gray-900 mb-2 group-hover:text-amber-600 transition-colors">
-//                       {project.title}
-//                     </h3>
-//                     <p className="text-gray-600 text-sm mb-4 line-clamp-2">
-//                       {project.description}
-//                     </p>
-//                   </div>
-
-//                   {/* Technologies */}
-//                   <div className="mt-4">
-//                     <div className="flex flex-wrap gap-2 mb-4">
-//                       {project.technologies.slice(0, 3).map((tech, techIndex) => (
-//                         <span 
-//                           key={techIndex}
-//                           className="px-3 py-1 bg-amber-50 text-amber-700 text-xs font-medium rounded-full border border-amber-100"
-//                         >
-//                           {tech}
-//                         </span>
-//                       ))}
-//                       {project.technologies.length > 3 && (
-//                         <span className="px-3 py-1 bg-gray-100 text-gray-600 text-xs font-medium rounded-full">
-//                           +{project.technologies.length - 3}
-//                         </span>
-//                       )}
-//                     </div>
-
-//                     <div className="flex justify-between items-center pt-4 border-t border-gray-100">
-//                       <span className="text-xs text-gray-500">{project.features.length} Features</span>
-//                       <button 
-//                         className="text-sm font-medium text-amber-600 hover:text-amber-700 transition-colors flex items-center group/btn"
-//                         onClick={(e) => {
-//                           e.stopPropagation();
-//                           openProjectModal(project);
-//                         }}
-//                       >
-//                         View Details
-//                         <ArrowRight className="h-4 w-4 ml-1 transform group-hover/btn:translate-x-1 transition-transform" />
-//                       </button>
-//                     </div>
-//                   </div>
-//                 </div>
-//               </div>
-//             </motion.div>
-//           ))}
-//         </div>
-
-//         {/* Project Modal */}
-//         <AnimatePresence>
-//           {selectedProject && (
-//             <motion.div
-//               initial={{ opacity: 0 }}
-//               animate={{ opacity: 1 }}
-//               exit={{ opacity: 0 }}
-//               className="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4"
-//               onClick={closeProjectModal}
-//             >
-//               <motion.div
-//                 initial={{ opacity: 0, scale: 0.95, y: 20 }}
-//                 animate={{ opacity: 1, scale: 1, y: 0 }}
-//                 exit={{ opacity: 0, scale: 0.95, y: 20 }}
-//                 className="bg-white rounded-2xl max-w-5xl w-full max-h-[90vh] overflow-y-auto shadow-2xl"
-//                 onClick={(e) => e.stopPropagation()}
-//               >
-//                 <div className="relative">
-//                   <button
-//                     onClick={closeProjectModal}
-//                     className="absolute top-4 right-4 z-10 bg-white/90 backdrop-blur-sm rounded-full p-2 shadow-lg hover:bg-white transition-colors"
-//                   >
-//                     <X className="h-6 w-6 text-gray-600" />
-//                   </button>
-
-//                   {/* Modal Header with Image */}
-//                   <div className="relative h-80">
-//                     <img 
-//                       src={selectedProject.image} 
-//                       alt={selectedProject.title}
-//                       className="w-full h-full object-cover"
-//                     />
-//                     <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent" />
-//                     <div className="absolute bottom-0 left-0 right-0 p-8">
-//                       <div className="flex items-center space-x-3 mb-4">
-//                         <span className={`px-3 py-1 rounded-full text-sm font-medium ${
-//                           selectedProject.status === "Completed" 
-//                             ? "bg-green-500 text-white" 
-//                             : "bg-yellow-500 text-white"
-//                         }`}>
-//                           {selectedProject.status}
-//                         </span>
-//                         <span className="px-3 py-1 rounded-full text-sm font-medium bg-white/20 text-white backdrop-blur-sm">
-//                           {selectedProject.category}
-//                         </span>
-//                       </div>
-//                       <h3 className="text-3xl lg:text-4xl font-bold text-white mb-4">
-//                         {selectedProject.title}
-//                       </h3>
-//                       <div className="flex space-x-3">
-//                         <a 
-//                           href={selectedProject.github}
-//                           target="_blank"
-//                           rel="noopener noreferrer"
-//                           className="bg-white/20 hover:bg-white/30 backdrop-blur-sm text-white px-4 py-2 rounded-lg transition-colors flex items-center space-x-2 text-sm font-medium"
-//                         >
-//                           <Github className="h-4 w-4" />
-//                           <span>View Code</span>
-//                         </a>
-//                         {selectedProject.live !== '#' && (
-//                           <a 
-//                             href={selectedProject.live}
-//                             target="_blank"
-//                             rel="noopener noreferrer"
-//                             className="bg-amber-500 hover:bg-amber-600 text-white px-4 py-2 rounded-lg transition-colors flex items-center space-x-2 text-sm font-medium"
-//                           >
-//                             <ExternalLink className="h-4 w-4" />
-//                             <span>Live Demo</span>
-//                           </a>
-//                         )}
-//                       </div>
-//                     </div>
-//                   </div>
-
-//                   {/* Modal Content */}
-//                   <div className="p-8">
-//                     <div className="space-y-8">
-//                       <div>
-//                         <h4 className="text-2xl font-bold text-gray-900 mb-4">About This Project</h4>
-//                         <p className="text-gray-600 leading-relaxed text-lg">
-//                           {selectedProject.longDescription}
-//                         </p>
-//                       </div>
-
-//                       <div className="grid md:grid-cols-2 gap-8">
-//                         <div>
-//                           <h4 className="text-xl font-bold text-gray-900 mb-4 flex items-center">
-//                             <span className="w-1 h-6 bg-amber-500 mr-3 rounded-full"></span>
-//                             Key Features
-//                           </h4>
-//                           <ul className="space-y-3">
-//                             {selectedProject.features.map((feature, index) => (
-//                               <li key={index} className="flex items-start">
-//                                 <div className="bg-amber-100 p-1.5 rounded-full mr-3 mt-0.5">
-//                                   <div className="w-2 h-2 bg-amber-600 rounded-full"></div>
-//                                 </div>
-//                                 <span className="text-gray-700">{feature}</span>
-//                               </li>
-//                             ))}
-//                           </ul>
-//                         </div>
-
-//                         <div>
-//                           <h4 className="text-xl font-bold text-gray-900 mb-4 flex items-center">
-//                             <span className="w-1 h-6 bg-amber-500 mr-3 rounded-full"></span>
-//                             Technologies
-//                           </h4>
-//                           <div className="flex flex-wrap gap-3">
-//                             {selectedProject.technologies.map((tech, index) => (
-//                               <span 
-//                                 key={index}
-//                                 className="px-4 py-2 bg-gradient-to-r from-amber-50 to-orange-50 text-amber-700 text-sm font-medium rounded-lg border border-amber-200 hover:border-amber-300 transition-colors"
-//                               >
-//                                 {tech}
-//                               </span>
-//                             ))}
-//                           </div>
-//                         </div>
-//                       </div>
-//                     </div>
-//                   </div>
-//                 </div>
-//               </motion.div>
-//             </motion.div>
-//           )}
-//         </AnimatePresence>
-//       </div>
-//     </section>
-//   );
-// };
-
-
-
-// ==================== ACHIEVEMENTS SECTION COMPONENT ====================
 
 // ==================== ACHIEVEMENTS SECTION COMPONENT ====================
 const AchievementsSection: React.FC = () => {
@@ -2821,19 +2219,19 @@ const AchievementsSection: React.FC = () => {
       color: "text-purple-600",
       gradient: "from-purple-400 to-violet-500"
     },
-    {
-      icon: Trophy,
-      title: "",
-      description: "Achieved top rankings in coding competitions",
-      value: "Top 10%",
-      color: "text-amber-600",
-      gradient: "from-amber-400 to-orange-500"
-    },
+    // {
+    //   icon: Trophy,
+    //   title: "",
+    //   description: "Achieved top rankings in coding competitions",
+    //   value: "Top 10%",
+    //   color: "text-amber-600",
+    //   gradient: "from-amber-400 to-orange-500"
+    // },
     {
       icon: Clock,
       title: "",
       description: "Total hours spent building and improving skills",
-      value: "1000+",
+      value: "400+",
       color: "text-blue-600",
       gradient: "from-blue-400 to-cyan-500"
     }
@@ -2922,9 +2320,8 @@ const AchievementsSection: React.FC = () => {
 };
 
 
-
 // ==================== CONTACT SECTION COMPONENT ====================
-const ContactSection: React.FC = () => {
+  const ContactSection: React.FC = () => {
   const { toast } = useToast();
   const navigate = useNavigate();
   const [isSending, setIsSending] = useState<boolean>(false);
@@ -3045,20 +2442,11 @@ const ContactSection: React.FC = () => {
 
       const response: AxiosResponse<ContactSuccessResponse> = await axiosInstance.post('/contact/send', submitData);
 
-      console.log('Contact form response:', response.data);
-
       if (response.data && response.data.success) {
         navigate('/thankyou');
         toast({
           title: "Message Sent!",
           description: "Thank you for your message. I'll get back to you soon.",
-        });
-
-        console.log('Contact form submitted successfully:', {
-          messageId: response.data.data?.id,
-          category: response.data.data?.category,
-          priority: response.data.data?.priority,
-          status: response.data.data?.status
         });
 
         setAlertMessage({
@@ -3076,72 +2464,66 @@ const ContactSection: React.FC = () => {
 
       if (axios.isAxiosError(error)) {
         const axiosError = error as AxiosError<ContactErrorResponse>;
-
         if (axiosError.response) {
           const { status, data } = axiosError.response;
-          console.log('Error status:', status);
-          console.log('Error data:', data);
-
           if (status === 422 && data && Array.isArray(data.data)) {
             const serverErrors: FormErrors = { name: '', email: '', subject: '', message: '' };
-
             data.data.forEach((errorObj: ContactValidationError) => {
               const fieldName = Object.keys(errorObj)[0];
-              const errorMessage = errorObj[fieldName];
-              if (Object.prototype.hasOwnProperty.call(serverErrors, fieldName)) {
-                serverErrors[fieldName as keyof FormErrors] = errorMessage;
-              }
+              serverErrors[fieldName as keyof FormErrors] = errorObj[fieldName];
             });
-
             setErrors(serverErrors);
-            setAlertMessage({
-              type: 'error',
-              message: 'Please fix the validation errors and try again.'
-            });
+            setAlertMessage({ type: 'error', message: 'Please fix the validation errors and try again.' });
           } else if (status === 429) {
-            setAlertMessage({
-              type: 'error',
-              message: 'Too many messages sent. Please wait before sending another message.'
-            });
-          } else if (status === 400) {
-            setAlertMessage({
-              type: 'error',
-              message: data?.message || 'Invalid request. Please check your input and try again.'
-            });
-          } else if (status === 500) {
-            setAlertMessage({
-              type: 'error',
-              message: 'Server error. Please try again later or contact support.'
-            });
+            setAlertMessage({ type: 'error', message: 'Too many messages sent. Please wait before sending another message.' });
           } else {
-            setAlertMessage({
-              type: 'error',
-              message: data?.message || `Server error (${status}). Please try again later.`
-            });
+            setAlertMessage({ type: 'error', message: data?.message || `Server error (${status}). Please try again later.` });
           }
-        } else if (axiosError.request) {
-          console.error('Network error:', axiosError.request);
-          setAlertMessage({
-            type: 'error',
-            message: 'Network error. Please check your internet connection and try again.'
-          });
-        } else if (axiosError.code === 'ECONNABORTED') {
-          setAlertMessage({
-            type: 'error',
-            message: 'Request timeout. Please try again.'
-          });
+        } else {
+          setAlertMessage({ type: 'error', message: 'Network error. Please check your internet connection.' });
         }
       } else {
-        console.error('Unknown error:', error);
-        setAlertMessage({
-          type: 'error',
-          message: 'An unexpected error occurred. Please try again.'
-        });
+        setAlertMessage({ type: 'error', message: 'An unexpected error occurred. Please try again.' });
       }
     } finally {
       setIsSending(false);
     }
   };
+
+  const socialLinks = [
+    {
+      href: "https://wa.me/919507272341",
+      label: "WhatsApp",
+      hoverColor: "hover:bg-[#25D366]",
+      icon: (props: React.SVGProps<SVGSVGElement>) => (
+        <svg viewBox="0 0 24 24" fill="currentColor" {...props}>
+          <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.890-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z" />
+        </svg>
+      )
+    },
+    {
+      href: "https://x.com/SuraJzRt",
+      label: "X (Twitter)",
+      hoverColor: "hover:bg-black",
+      icon: (props: React.SVGProps<SVGSVGElement>) => (
+        <svg viewBox="0 0 24 24" fill="currentColor" {...props}>
+          <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
+        </svg>
+      )
+    },
+    {
+      href: "https://github.com/Suraj1819",
+      label: "GitHub",
+      hoverColor: "hover:bg-[#24292e]",
+      icon: Github
+    },
+    {
+      href: "https://www.linkedin.com/in/suraj-kumar-72847b30a/",
+      label: "LinkedIn",
+      hoverColor: "hover:bg-[#0077b5]",
+      icon: Linkedin
+    }
+  ];
 
   return (
     <section id="contact" className="py-12 sm:py-16 lg:py-20 px-4 sm:px-6">
@@ -3186,18 +2568,13 @@ const ContactSection: React.FC = () => {
             <div className="space-y-3 sm:space-y-4">
               <h4 className="text-base sm:text-lg font-semibold text-orange-600">Connect With Me</h4>
               <div className="flex flex-wrap gap-2 sm:gap-3">
-                {[
-                  { href: "https://github.com/Suraj1819", icon: Github, label: "GitHub" },
-                  { href: "https://www.linkedin.com/in/suraj-kumar-72847b30a/", icon: Linkedin, label: "LinkedIn" },
-                  { href: "https://leetcode.com/u/Suraj_1819/", icon: Code, label: "LeetCode" },
-                  { href: "https://www.geeksforgeeks.org/user/surajkuma16ts/", icon: Code2, label: "GeeksforGeeks" }
-                ].map((social, index) => (
+                {socialLinks.map((social, index) => (
                   <a
                     key={index}
                     href={social.href}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white rounded-full flex items-center justify-center transition-all duration-300 hover:scale-110"
+                    className={`w-10 h-10 sm:w-12 sm:h-12 bg-gray-100/0 text-gray-500 rounded-full flex items-center justify-center transition-all duration-300 hover:scale-110 shadow-sm hover:shadow-md hover:text-white ${social.hoverColor}`}
                     title={social.label}
                   >
                     <social.icon className="h-4 w-4 sm:h-5 sm:w-5" />
@@ -3284,7 +2661,7 @@ const ContactSection: React.FC = () => {
                     id="subject"
                     name="subject"
                     type="text"
-                    placeholder="e.g., Project Collaboration or Tutoring Inquiry"
+                    placeholder="e.g., Project Collaboration "
                     value={formData.subject}
                     onChange={handleChange}
                     required
@@ -3331,7 +2708,7 @@ const ContactSection: React.FC = () => {
                     <p className="text-xs text-gray-500 ml-auto">{formData.message.length}/1000</p>
                   </div>
                 </div>
-                <p className="text-[10px] sm:text-xs text-gray-500">* Required fields. Your information is kept confidential and used only for responding to your inquiry.</p>
+                <p className="text-[10px] sm:text-xs text-gray-500"></p>
                 <Button
                   type="submit"
                   disabled={isSending}
@@ -3356,11 +2733,7 @@ const ContactSection: React.FC = () => {
       </div>
     </section>
   );
-
-  
 };
-
-
 
 // ==================== MAIN INDEX COMPONENT ====================
 const Index: React.FC = () => {
@@ -3391,80 +2764,199 @@ const Index: React.FC = () => {
       <style>{customStyles}</style>
       <div className="min-h-screen bg-gradient-to-br from-amber-50 via-orange-50 to-yellow-50 text-foreground">
         {/* Navigation */}
-        <nav className="fixed top-0 w-full bg-white/90 backdrop-blur-md z-50 border-b border-amber-200 shadow-sm">
-          <div className="container mx-auto px-3 sm:px-4 lg:px-6 py-2.5 sm:py-3 lg:py-4">
-            <div className="flex items-center justify-between">
-              {/* Logo and Brand Name */}
-              <div className="flex items-center space-x-2 sm:space-x-3">
-                <div className="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-r from-amber-500 to-orange-500 rounded-full flex items-center justify-center shadow-md hover:shadow-lg transition-all duration-300 hover:scale-105">
-                  <Code className="h-4 w-4 sm:h-5 sm:w-5 text-white" />
-                </div>
+        <nav className="fixed top-0 w-full bg-white/90 backdrop-blur-md z-50 border-b border-amber-200 shadow-sm py-1.5">
+      <div className="container mx-auto px-3 sm:px-4 lg:px-6 py-2.5 sm:py-3 lg:py-4">
+        <div className="flex items-center justify-between">
+          {/* Logo and Brand Name */}
+          <div className="flex items-center space-x-2 sm:space-x-3">
+            <div className="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-r from-amber-500 to-orange-500 rounded-full flex items-center justify-center shadow-md hover:shadow-lg transition-all duration-300 hover:scale-105">
+              <Code className="h-4 w-4 sm:h-5 sm:w-5 text-white" />
+            </div>
 
-                <Link
-                  to="/home"
-                  className="text-lg sm:text-xl lg:text-2xl font-bold bg-gradient-to-r from-amber-600 to-orange-600 bg-clip-text text-transparent flex items-center space-x-1 sm:space-x-2 hover:scale-105 transition-transform duration-300"
-                  onClick={closeMobileMenu}
+            <Link
+              to="/home"
+              className="text-lg sm:text-xl lg:text-2xl font-bold bg-gradient-to-r from-amber-600 to-orange-600 bg-clip-text text-transparent flex items-center space-x-1 sm:space-x-2 hover:scale-105 transition-transform duration-300"
+              onClick={closeMobileMenu}
+            >
+              <span>SuraJz</span>
+              <Sparkles className="h-3 w-3 sm:h-4 sm:w-4 lg:h-5 lg:w-5 text-orange-500 animate-pulse" />
+            </Link>
+          </div>
+
+          {/* Desktop Navigation */}
+          <div className="hidden md:flex items-center space-x-4 lg:space-x-6 xl:space-x-8">
+            {["home", "about", "skills", "services", "projects", "contact"].map(
+              (item) => (
+                <a
+                  key={item}
+                  href={`#${item}`}
+                  className="relative py-2 px-2 lg:px-3 rounded-lg transition-all duration-300 hover:scale-105 text-gray-700 hover:text-amber-600 hover:bg-amber-50 font-medium capitalize text-sm lg:text-base"
                 >
-                  <span>SuraJz</span>
-                  <Sparkles className="h-3 w-3 sm:h-4 sm:w-4 lg:h-5 lg:w-5 text-orange-500 animate-pulse" />
-                </Link>
-              </div>
+                  {item}
+                </a>
+              )
+            )}
 
-              {/* Desktop Navigation */}
-              <div className="hidden md:flex items-center space-x-4 lg:space-x-6 xl:space-x-8">
-                {["home", "about", "skills", "services", "projects", "contact"].map((item) => (
-                  <a
-                    key={item}
-                    href={`#${item}`}
-                    className="relative py-2 px-2 lg:px-3 rounded-lg transition-all duration-300 hover:scale-105 text-gray-700 hover:text-amber-600 hover:bg-amber-50 font-medium capitalize text-sm lg:text-base"
-                  >
-                    {item}
-                  </a>
-                ))}
-                <Link to="/home" className="p-2 rounded-full bg-gradient-to-r from-red-400 to-pink-500 hover:from-red-500 hover:to-pink-600 transition-all hover:scale-110">
-                  <Heart className="h-4 w-4 lg:h-5 lg:w-5 text-white fill-white" />
-                </Link>
-              </div>
+            {/* Hire Me Button - Desktop */}
+            <Link
+              to="/contact"
+              onClick={closeMobileMenu}
+              className="px-4 py-2 text-sm lg:text-base font-semibold rounded-full bg-gradient-to-r from-green-500 to-emerald-600 text-white hover:scale-110 transition-transform duration-300"
+            >
+              Hire Me
+            </Link>
 
-              {/* Mobile Menu Button */}
-              <div className="md:hidden">
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={toggleMobileMenu}
-                  className="p-1.5 sm:p-2 hover:bg-amber-50 rounded-lg transition-colors"
-                >
-                  {isMobileMenuOpen ? <X className="h-5 w-5 sm:h-6 sm:w-6" /> : <Menu className="h-5 w-5 sm:h-6 sm:w-6" />}
-                </Button>
-              </div>
+            {/* Heart Link (kept from original) */}
+            <Link
+              to="/home"
+              className="p-2 rounded-full bg-gradient-to-r from-red-400 to-pink-500 hover:from-red-500 hover:to-pink-600 transition-all hover:scale-110"
+            >
+              <Heart className="h-4 w-4 lg:h-5 lg:w-5 text-white fill-white" />
+            </Link>
+
+            {/* Social Icons */}
+            <div className="flex items-center space-x-2 ml-2 pl-2 border-l border-amber-200">
+              {/* GitHub */}
+              <a
+                href="https://github.com/your-profile"
+                target="_blank"
+                rel="noreferrer"
+                className="p-2 rounded-full text-gray-700 hover:text-black hover:bg-gray-200 transition-all duration-300 hover:scale-110"
+                aria-label="GitHub"
+              >
+                <Github className="h-5 w-5" />
+              </a>
+
+              {/* LinkedIn */}
+              <a
+                href="https://linkedin.com/in/your-profile"
+                target="_blank"
+                rel="noreferrer"
+                className="p-2 rounded-full text-blue-700 hover:text-white hover:bg-blue-700 transition-all duration-300 hover:scale-110"
+                aria-label="LinkedIn"
+              >
+                <Linkedin className="h-5 w-5" />
+              </a>
+
+              {/* Twitter */}
+              <a
+                href="https://twitter.com/your-profile"
+                target="_blank"
+                rel="noreferrer"
+                className="p-2 rounded-full text-sky-500 hover:text-white hover:bg-sky-500 transition-all duration-300 hover:scale-110"
+                aria-label="Twitter"
+              >
+                <Twitter className="h-5 w-5" />
+              </a>
+
+              {/* Mail */}
+              <a
+                href="mailto:your-email@example.com"
+                className="p-2 rounded-full text-red-500 hover:text-white hover:bg-red-500 transition-all duration-300 hover:scale-110"
+                aria-label="Email"
+              >
+                <Mail className="h-5 w-5" />
+              </a>
             </div>
           </div>
 
-          {/* Mobile Menu */}
-          {isMobileMenuOpen && (
-            <div className="md:hidden bg-white/95 backdrop-blur-md border-t border-amber-200 animate-fade-in">
-              <div className="px-3 sm:px-4 lg:px-6 py-3 sm:py-4 space-y-1">
-                {["home", "about", "skills", "services", "projects", "contact"].map((item) => (
-                  <a
-                    key={item}
-                    href={`#${item}`}
-                    className="block py-2.5 sm:py-3 px-3 sm:px-4 rounded-lg transition-all duration-300 hover:scale-105 text-gray-700 hover:text-amber-600 hover:bg-amber-50 font-medium text-sm sm:text-base capitalize"
-                    onClick={closeMobileMenu}
-                  >
-                    {item}
-                  </a>
-                ))}
-                <Link
-                  to="/home"
-                  className="flex items-center justify-center p-2.5 sm:p-3 rounded-full bg-gradient-to-r from-red-400 to-pink-500 hover:from-red-500 hover:to-pink-600 transition-all hover:scale-110 mt-2"
+          {/* Mobile Menu Button */}
+          <div className="md:hidden">
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={toggleMobileMenu}
+              className="p-1.5 sm:p-2 hover:bg-amber-50 rounded-lg transition-colors"
+            >
+              {isMobileMenuOpen ? (
+                <X className="h-5 w-5 sm:h-6 sm:w-6" />
+              ) : (
+                <Menu className="h-5 w-5 sm:h-6 sm:w-6" />
+              )}
+            </Button>
+          </div>
+        </div>
+      </div>
+
+      {/* Mobile Menu */}
+      {isMobileMenuOpen && (
+        <div className="md:hidden bg-white/95 backdrop-blur-md border-t border-amber-200 animate-fade-in">
+          <div className="px-3 sm:px-4 lg:px-6 py-3 sm:py-4 space-y-1">
+            {["home", "about", "skills", "services", "projects", "contact"].map(
+              (item) => (
+                <a
+                  key={item}
+                  href={`#${item}`}
+                  className="block py-2.5 sm:py-3 px-3 sm:px-4 rounded-lg transition-all duration-300 hover:scale-105 text-gray-700 hover:text-amber-600 hover:bg-amber-50 font-medium text-sm sm:text-base capitalize"
                   onClick={closeMobileMenu}
                 >
-                  <Heart className="h-4 w-4 sm:h-5 sm:w-5 text-white fill-white" />
-                </Link>
-              </div>
+                  {item}
+                </a>
+              )
+            )}
+
+            {/* Hire Me Button - Mobile */}
+            <Link
+              to="/contact"
+              onClick={closeMobileMenu}
+              className="block w-full text-center mt-2 px-4 py-3 rounded-full bg-gradient-to-r from-green-500 to-emerald-600 text-white font-semibold text-sm sm:text-base hover:scale-105 transition-transform duration-300"
+            >
+              Hire Me
+            </Link>
+
+            {/* Heart Link (kept from original) */}
+            <Link
+              to="/home"
+              className="flex items-center justify-center p-2.5 sm:p-3 rounded-full bg-gradient-to-r from-red-400 to-pink-500 hover:from-red-500 hover:to-pink-600 transition-all hover:scale-110 mt-4"
+              onClick={closeMobileMenu}
+            >
+              <Heart className="h-4 w-4 sm:h-5 sm:w-5 text-white fill-white" />
+            </Link>
+
+            {/* Social Icons - Mobile */}
+            <div className="flex items-center justify-center space-x-3 mt-4">
+              <a
+                href="https://github.com/your-profile"
+                target="_blank"
+                rel="noreferrer"
+                className="p-2 rounded-full text-gray-700 hover:text-black hover:bg-gray-200 transition-all duration-300 hover:scale-110"
+                aria-label="GitHub"
+              >
+                <Github className="h-5 w-5" />
+              </a>
+
+              <a
+                href="https://linkedin.com/in/your-profile"
+                target="_blank"
+                rel="noreferrer"
+                className="p-2 rounded-full text-blue-700 hover:text-white hover:bg-blue-700 transition-all duration-300 hover:scale-110"
+                aria-label="LinkedIn"
+              >
+                <Linkedin className="h-5 w-5" />
+              </a>
+
+              <a
+                href="https://twitter.com/your-profile"
+                target="_blank"
+                rel="noreferrer"
+                className="p-2 rounded-full text-sky-500 hover:text-white hover:bg-sky-500 transition-all duration-300 hover:scale-110"
+                aria-label="Twitter"
+              >
+                <Twitter className="h-5 w-5" />
+              </a>
+
+              <a
+                href="mailto:your-email@example.com"
+                className="p-2 rounded-full text-red-500 hover:text-white hover:bg-red-500 transition-all duration-300 hover:scale-110"
+                aria-label="Email"
+              >
+                <Mail className="h-5 w-5" />
+              </a>
             </div>
-          )}
-        </nav>
+          </div>
+        </div>
+      )}
+    </nav>
 
         {/* Main Content */}
         <main>

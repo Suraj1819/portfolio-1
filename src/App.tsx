@@ -67,8 +67,6 @@ const App = () => (
              <Route path="/your-feedback" element={<PortfolioFeedback />} />
              <Route path="/sitemap" element={<Sitemap />} />
              <Route path="/porto-feedback" element={<PortfolioFeedback />} />
-
-
             
           </Routes>
         </div>

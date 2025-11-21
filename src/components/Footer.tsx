@@ -1,86 +1,30 @@
-import { Link, useNavigate, useLocation } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import {
-  // Brand + UI
   Code,
   Heart,
-  ChevronRight,
-  ChevronDown,
-  ArrowUp,
-
-  // Social
   Github,
   Linkedin,
   Mail,
   Twitter,
-
-  // Contact
   Phone,
   MapPin,
-  Copy,
-
-  // Content
-  BookOpen,
+  ArrowUp,
+  Briefcase,
   Award,
   Users,
-  Star,
-
-  // Tech
-  Terminal,
+  Sparkles,
+  ChevronRight,
+  Clock,
   Globe,
-  Database,
-  Cpu,
-  Palette,
-  Server,
-  GitBranch,
-
-  // Actions
-  ExternalLink,
-  Download,
-  Eye,
-  Send,
-  CheckCircle,
-  AlertCircle,
-  X,
-
 } from "lucide-react";
 import { useState, useEffect } from 'react';
-
-// Define the footer section type
-type FooterSection = 'brand' | 'quick' | 'resources' | 'services' | 'contact';
-
-// Define the open state interface
-interface FooterOpenState {
-  brand: boolean;
-  quick: boolean;
-  resources: boolean;
-  services: boolean;
-  contact: boolean;
-}
+import confetti from 'canvas-confetti';
 
 export default function Footer() {
   const year = new Date().getFullYear();
   const navigate = useNavigate();
-  const location = useLocation();
-
-  // UI states
-  const [email, setEmail] = useState('');
-  const [emailError, setEmailError] = useState('');
-  const [subscribed, setSubscribed] = useState(false);
-  const [subscribing, setSubscribing] = useState(false);
   const [scrolled, setScrolled] = useState(false);
-  const [showResumePreview, setShowResumePreview] = useState(false);
-  const [copySuccess, setCopySuccess] = useState(false);
-  // New state for the extra collapsible button in quick links
-  const [extraOpen, setExtraOpen] = useState(false);
-
-  // Collapsible sections (mobile)
-  const [open, setOpen] = useState<FooterOpenState>({
-    brand: true,
-    quick: true,
-    resources: true,
-    services: true,
-    contact: true,
-  });
+  const [hoveredStat, setHoveredStat] = useState<string | null>(null);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 120);
@@ -88,756 +32,381 @@ export default function Footer() {
     return () => window.removeEventListener('scroll', onScroll);
   }, []);
 
-  const toggle = (key: FooterSection) => 
-    setOpen((prev) => ({ ...prev, [key]: !prev[key] }));
+  const scrollToTop = () => window.scrollTo({ top: 0, behavior: 'smooth' });
+
+  // 🎉 Enhanced Confetti function
+  const triggerConfetti = () => {
+    const duration = 2500;
+    const animationEnd = Date.now() + duration;
+    const colors = ["#9400D3", "#4B0082", "#1E40AF", "#10B981", "#FACC15", "#F97316", "#DC2626"];
+
+    const shoot = (particleCount: number, angle: number, origin: { x: number; y: number }, drift: number) => {
+      confetti({
+        particleCount,
+        angle,
+        spread: 60,
+        origin,
+        colors,
+        shapes: ["circle", "square"],
+        scalar: 1,
+        drift,
+        startVelocity: 60,
+        gravity: 1,
+        ticks: 100,
+        disableForReducedMotion: true,
+      });
+    };
+
+    const frame = () => {
+      const timeLeft = animationEnd - Date.now();
+      if (timeLeft <= 0) return;
+
+      const baseCount = 4;
+      shoot(baseCount, 70, { x: 0.1, y: 0.9 }, 0.4);
+      shoot(baseCount, 110, { x: 0.9, y: 0.9 }, -0.4);
+      shoot(baseCount * 0.5, 90, { x: 0.5, y: 0.85 }, 0);
+
+      requestAnimationFrame(frame);
+    };
+
+    frame();
+  };
+
+  const handleHireMe = () => {
+    triggerConfetti();
+    setTimeout(() => navigate('/contact'), 800);
+  };
+
+  const socialLinks = [
+    { 
+      name: "GitHub", 
+      href: "https://github.com/Suraj1819", 
+      icon: <Github className="w-5 h-5" />,
+      hoverColor: "hover:bg-gray-800 hover:text-white hover:border-gray-800",
+      bgColor: "bg-gray-100 text-gray-700 border-gray-200",
+      label: "Follow on GitHub"
+    },
+    { 
+      name: "LinkedIn", 
+      href: "https://www.linkedin.com/in/suraj-kumar-72847b30a/", 
+      icon: <Linkedin className="w-5 h-5" />,
+      hoverColor: "hover:bg-blue-600 hover:text-white hover:border-blue-600",
+      bgColor: "bg-blue-50 text-blue-600 border-blue-200",
+      label: "Connect on LinkedIn"
+    },
+    { 
+      name: "Twitter", 
+      href: "https://x.com/SuraJzRt", 
+      icon: <Twitter className="w-5 h-5" />,
+      hoverColor: "hover:bg-sky-500 hover:text-white hover:border-sky-500",
+      bgColor: "bg-sky-50 text-sky-600 border-sky-200",
+      label: "Follow on Twitter"
+    },
+    { 
+      name: "Email", 
+      href: "mailto:surajkumarraj8888@gmail.com", 
+      icon: <Mail className="w-5 h-5" />,
+      hoverColor: "hover:bg-red-500 hover:text-white hover:border-red-500",
+      bgColor: "bg-red-50 text-red-600 border-red-200",
+      label: "Send an Email"
+    },
+    { 
+      name: "WhatsApp", 
+      href: "https://wa.me/919507272341", 
+      icon: (
+        <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+          <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.890-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/>
+        </svg>
+      ),
+      hoverColor: "hover:bg-green-500 hover:text-white hover:border-green-500",
+      bgColor: "bg-green-50 text-green-600 border-green-200",
+      label: "Chat on WhatsApp"
+    },
+    { 
+      name: "Telegram", 
+      href: "https://t.me/surajkumar", 
+      icon: (
+        <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+          <path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/>
+        </svg>
+      ),
+      hoverColor: "hover:bg-blue-500 hover:text-white hover:border-blue-500",
+      bgColor: "bg-blue-50 text-blue-500 border-blue-200",
+      label: "Message on Telegram"
+    },
+  ];
 
   const quickLinks = [
-    { label: "Home", href: "/", icon: <Globe className="w-4 h-4" />, description: "Welcome to my portfolio" },
-    { label: "About", href: "/about", icon: <Users className="w-4 h-4" />, description: "Learn more about me" },
-    { label: "Skills", href: "/skills", icon: <Award className="w-4 h-4" />, description: "Technical expertise" },
-    { label: "Projects", href: "/projects", icon: <Code className="w-4 h-4" />, description: "My work showcase" },
-    { label: "Services", href: "/services", icon: <Cpu className="w-4 h-4" />, description: "What I offer" },
-    { label: "Blog", href: "/blog", icon: <BookOpen className="w-4 h-4" />, description: "Latest articles" },
-  ];
-
-
-  const myExpertise = [
-    { name: 'C++', href: '/cplusplus', icon: <Terminal className="w-4 h-4" /> },
-    { name: 'Python', href: '/python', icon: <Terminal className="w-4 h-4" /> },
-    { name: 'DSA', href: '/dsa', icon: <GitBranch className="w-4 h-4" /> },
-    { name: 'Web Dev', href: '/webdev', icon: <Globe className="w-4 h-4" /> },
-  ];
-
-  const techStack = [
-    // { name: 'C++', level: 90, color: 'bg-blue-500', href: '/cplusplus', icon: <Terminal className="w-4 h-4" />, internal: true },
-    // { name: 'Python', level: 85, color: 'bg-green-500', href: '/python', icon: <Terminal className="w-4 h-4" />, internal: true },
-    // { name: 'DSA', level: 88, color: 'bg-purple-500', href: '/dsa', icon: <Award className="w-4 h-4" />, internal: true },
-    // { name: 'WebDev', level: 85, color: 'bg-indigo-500', href: '/webdev', icon: <Globe className="w-4 h-4" />, internal: true },
-      { name: 'C++', level: 88, color: 'bg-yellow-500', officialLink: 'https://cplusplus.com/', icon: <Globe className="w-4 h-4" />, internal: false },
-        { name: 'Python', level: 88, color: 'bg-yellow-500', officialLink: 'https://www.python.org/', icon: <Globe className="w-4 h-4" />, internal: false },
-    { name: 'DSA', level: 88, color: 'bg-yellow-500', officialLink: 'https://the-algorithms.com/', icon: <Globe className="w-4 h-4" />, internal: false },
-    { name: 'WevDev', level: 88, color: 'bg-yellow-500', officialLink: 'https://web.dev/', icon: <Globe className="w-4 h-4" />, internal: false },
-
-    // { name: 'WevDev', level: 88, color: 'bg-yellow-500', officialLink: 'https://web.dev/', icon: <Globe className="w-4 h-4" />, internal: false },
-    
-      { name: 'JavaScript', level: 88, color: 'bg-yellow-500', officialLink: 'https://developer.mozilla.org/en-US/docs/Web/JavaScript', icon: <Globe className="w-4 h-4" />, internal: false },
-    { name: 'React', level: 85, color: 'bg-cyan-500', officialLink: 'https://react.dev/', icon: <Code className="w-4 h-4" />, internal: false },
-    { name: 'Node.js', level: 80, color: 'bg-green-600', officialLink: 'https://nodejs.org/', icon: <Server className="w-4 h-4" />, internal: false },
-    { name: 'Tailwind CSS', level: 85, color: 'bg-teal-500', officialLink: 'https://tailwindcss.com/', icon: <Palette className="w-4 h-4" />, internal: false },
-    { name: 'MongoDB', level: 75, color: 'bg-green-700', officialLink: 'https://www.mongodb.com/', icon: <Database className="w-4 h-4" />, internal: false },
-    { name: 'Git', level: 88, color: 'bg-orange-600', officialLink: 'https://git-scm.com/', icon: <GitBranch className="w-4 h-4" />, internal: false },
-  ];
-
-  const learningResources = [
-    { label: "C++ Documentation", href: "https://isocpp.org/", icon: <Terminal className="w-4 h-4" />, description: "ISO C++ official site", external: true },
-    { label: "Python.org", href: "https://www.python.org/", icon: <Terminal className="w-4 h-4" />, description: "Python official website", external: true },
-    { label: "MDN Web Docs", href: "https://developer.mozilla.org/", icon: <Globe className="w-4 h-4" />, description: "Web technology docs", external: true },
-    { label: "React Docs", href: "https://react.dev/learn", icon: <Code className="w-4 h-4" />, description: "React official docs", external: true },
-    { label: "Node.js Docs", href: "https://nodejs.org/en/docs", icon: <Server className="w-4 h-4" />, description: "Node.js documentation", external: true },
-    { label: "LeetCode", href: "https://leetcode.com/problemset/", icon: <Star className="w-4 h-4" />, description: "Practice coding problems", external: true },
-  ];
-
-  const services = [
-    { label: "Web Development", icon: <Code className="w-4 h-4" />, description: "Full-stack web solutions" },
-    { label: "Mobile Apps", icon: <Cpu className="w-4 h-4" />, description: "iOS & Android development" },
-    { label: "Mentoring", icon: <Users className="w-4 h-4" />, description: "1-on-1 programming guidance" },
-    { label: "Consulting", icon: <Award className="w-4 h-4" />, description: "Technical consulting services" },
-  ];
-
-  const socials = [
-    { icon: <Github className="w-5 h-5" />, href: "https://github.com/Suraj1819", label: "GitHub" },
-    { icon: <Linkedin className="w-5 h-5" />, href: "https://www.linkedin.com/in/suraj-kumar-72847b30a/", label: "LinkedIn" },
-    { icon: <Twitter className="w-5 h-5" />, href: "https://x.com/SuraJzRt", label: "Twitter" },
-    { icon: <Mail className="w-5 h-5" />, href: "mailto:surajkumarraj8888@gmail.com", label: "Email" },
-  ];
-
-  const testimonials = [
-    { name: "Rahul Sharma", role: "B.Tech Student", quote: "Excellent mentoring! Helped me understand complex DSA concepts easily.", rating: 5 },
-    { name: "Priya Singh", role: "Developer", quote: "Great guidance for web development. Very patient and knowledgeable.", rating: 5 },
-  ];
-
-  const legalLinks = [
-    { label: "Privacy Policy", href: "/privacy" },
-    { label: "Accessibility", href: "/access" },
-    { label: "Terms of Service", href: "/terms" },
-    { label: "Cookie Policy", href: "/cookies" },
-    { label: "Sitemap", href: "/sitemap" },
+    { label: "Home", href: "/", icon: <Code className="w-4 h-4" />, desc: "Back to homepage" },
+    { label: "About", href: "/about", icon: <Users className="w-4 h-4" />, desc: "Learn about me" },
+    { label: "Skills", href: "/skills", icon: <Award className="w-4 h-4" />, desc: "Technical expertise" },
+    { label: "Projects", href: "/projects", icon: <Briefcase className="w-4 h-4" />, desc: "View my work" },
+    { label: "Services", href: "/services", icon: <Sparkles className="w-4 h-4" />, desc: "What I offer" },
+    { label: "Contact", href: "/contact", icon: <Mail className="w-4 h-4" />, desc: "Get in touch" },
   ];
 
   const stats = [
-    { value: "10+", label: "Students tutored", icon: <Users className="w-4 h-4" /> },
-    { value: "300+", label: "Problems Solved", icon: <CheckCircle className="w-4 h-4" /> },
-    { value: "10+", label: "Projects", icon: <Code className="w-4 h-4" /> },
-    { value: "1+", label: "Years Experience", icon: <Award className="w-4 h-4" /> },
+    { value: "10+", label: "Students Tutored", icon: <Users className="w-5 h-5" />, color: "from-blue-500 to-cyan-500" },
+    { value: "300+", label: "Problems Solved", icon: <Award className="w-5 h-5" />, color: "from-purple-500 to-pink-500" },
+    { value: "10+", label: "Projects Completed", icon: <Briefcase className="w-5 h-5" />, color: "from-green-500 to-emerald-500" },
+    { value: "1+", label: "Years Experience", icon: <Sparkles className="w-5 h-5" />, color: "from-amber-500 to-orange-500" },
   ];
 
-  const scrollToTop = () => window.scrollTo({ top: 0, behavior: 'smooth' });
-
-  const validateEmail = (val : string) : boolean => {
-    const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return re.test(val);
-  };
-
-  const handleSubscribe = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    
-    if (!validateEmail(email)) {
-      setEmailError('Please enter a valid email address.');
-      return;
-    }
-    
-    setEmailError('');
-    setSubscribing(true);
-    
-    // Simulate API call
-    await new Promise(resolve => setTimeout(resolve, 2000));
-    
-    setSubscribing(false);
-    setSubscribed(true);
-    
-    // Navigate to thank you page after showing success
-    setTimeout(() => {
-      navigate('/subscribe');
-    }, 1500);
-  };
-
-  const copyEmailToClipboard = async () => {
-    try {
-      await navigator.clipboard.writeText('surajkumarraj8888@gmail.com');
-      setEmailError('');
-      setCopySuccess(true);
-      setTimeout(() => setCopySuccess(false), 2000);
-    } catch {
-      setEmailError('Could not copy email. Please try manually.');
-    }
-  };
-
   return (
-    <footer className="bg-white border-t border-gray-200 dark:bg-neutral-900 dark:border-neutral-800">
-      {/* Back to top */}
+    <footer className="relative bg-gradient-to-br from-white via-gray-50 to-amber-50 border-t border-gray-200 dark:from-neutral-900 dark:via-neutral-900 dark:to-neutral-800 dark:border-neutral-800 overflow-hidden">
+      
+      {/* Decorative Elements */}
+      <div className="absolute inset-0 bg-grid-pattern opacity-5 dark:opacity-10 pointer-events-none"></div>
+      
+      {/* Back to Top Button */}
       {scrolled && (
         <button
           onClick={scrollToTop}
-          className="fixed bottom-6 right-6 p-3 bg-amber-500 text-white rounded-full shadow-lg hover:bg-amber-600 focus:outline-none focus:ring-2 focus:ring-amber-400 transition-all z-50"
+          className="fixed bottom-6 right-6 p-3 bg-gradient-to-r from-amber-500 to-orange-500 text-white rounded-full shadow-2xl hover:shadow-amber-500/50 hover:scale-110 focus:outline-none focus:ring-2 focus:ring-amber-400 transition-all z-50 group"
           aria-label="Back to top"
         >
-          <ArrowUp className="w-5 h-5" />
+          <ArrowUp className="w-5 h-5 group-hover:-translate-y-1 transition-transform" />
         </button>
       )}
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-14">
-        {/* Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-10 mb-12">
-          {/* Brand */}
-          <section aria-labelledby="footer-brand" className="lg:col-span-2">
-            <button
-              type="button"
-              onClick={() => toggle('brand')}
-              className="flex w-full items-center justify-between md:justify-start md:pointer-events-none"
-              aria-controls="footer-brand-panel"
-              aria-expanded={open.brand}
+      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        
+        {/* Stats Section with Enhanced Design */}
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-16">
+          {stats.map((stat) => (
+            <div
+              key={stat.label}
+              onMouseEnter={() => setHoveredStat(stat.label)}
+              onMouseLeave={() => setHoveredStat(null)}
+              className="relative text-center p-6 bg-white dark:bg-neutral-800 rounded-2xl border border-gray-100 dark:border-neutral-700 hover:border-transparent hover:shadow-2xl transition-all duration-500 hover:scale-105 group overflow-hidden"
             >
-              <div className="flex items-center gap-3">
-                <span className="p-3 bg-amber-100 rounded-xl shadow-sm dark:bg-amber-900/30">
-                  <Code className="h-6 w-6 text-amber-600 dark:text-amber-400" />
-                </span>
-                <h2 id="footer-brand" className="text-2xl font-bold text-gray-900 dark:text-white">
+              {/* Gradient Background on Hover */}
+              <div className={`absolute inset-0 bg-gradient-to-br ${stat.color} opacity-0 group-hover:opacity-10 transition-opacity duration-500`}></div>
+              
+              <div className="relative z-10">
+                <div className={`flex justify-center mb-3 text-amber-600 dark:text-amber-400 group-hover:scale-125 transition-all duration-500 ${hoveredStat === stat.label ? 'animate-bounce' : ''}`}>
+                  {stat.icon}
+                </div>
+                <p className="text-4xl font-extrabold bg-gradient-to-r from-gray-900 to-gray-600 dark:from-white dark:to-gray-300 bg-clip-text text-transparent mb-2">
+                  {stat.value}
+                </p>
+                <p className="text-xs font-medium text-gray-600 dark:text-gray-400 uppercase tracking-wide">
+                  {stat.label}
+                </p>
+              </div>
+              
+              {/* Shine Effect */}
+              <div className="absolute inset-0 -translate-x-full group-hover:translate-x-full transition-transform duration-1000 bg-gradient-to-r from-transparent via-white/20 to-transparent"></div>
+            </div>
+          ))}
+        </div>
+
+        {/* Main Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-12 mb-12">
+          
+          {/* Brand Section - Enhanced */}
+          <div className="space-y-6">
+            <div className="flex items-center gap-3 mb-5">
+              <div className="relative p-3 bg-gradient-to-br from-amber-500 to-orange-500 rounded-2xl shadow-xl group-hover:shadow-2xl transition-shadow">
+                <Code className="h-7 w-7 text-white" />
+                <div className="absolute -inset-1 bg-gradient-to-r from-amber-500 to-orange-500 rounded-2xl blur opacity-30 group-hover:opacity-50 transition-opacity"></div>
+              </div>
+              <div>
+                <span className="text-2xl font-bold bg-gradient-to-r from-amber-600 via-orange-600 to-red-600 bg-clip-text text-transparent block">
                   SuraJz.dev
-                </h2>
-              </div>
-              <ChevronDown
-                className={`w-5 h-5 text-gray-500 md:hidden transition-transform ${open.brand ? 'rotate-180' : ''}`}
-                aria-hidden="true"
-              />
-            </button>
-
-            <div id="footer-brand-panel" className={`mt-4 ${open.brand ? 'block' : 'hidden md:block'}`}>
-              <p className="text-gray-600 text-sm dark:text-gray-300">
-                Passionate Software Engineer dedicated to creating elegant solutions and empowering others
-                through programming education and mentorship.
-              </p>
-              {/* MODIFICATION : My Created page links */}
-              <div className="mt-5">
-                <h4 className="text-sm font-semibold text-gray-900 dark:text-white mb-2 flex items-center gap-2">
-                  <Cpu className="w-4 h-4 text-amber-600 dark:text-amber-400" />
-                  My Expertise
-                </h4>
-                {/*TODO:Use myExpertise*/}
-                <div className="grid grid-cols-2 gap-2">
-                  {myExpertise.map((tech) => (
-                    <Link
-                      key={tech.name}
-                      to={tech.href}
-                      className="group relative flex items-center p-2 bg-gray-50 rounded-lg hover:bg-amber-50 transition-colors dark:bg-neutral-800 dark:hover:bg-neutral-700"
-                      aria-label={`Learn more about ${tech.name}`}
-                    >
-                      <div className="flex items-center gap-2">
-                        <span className="text-amber-600 dark:text-amber-400">{tech.icon}</span>
-                        <span className="text-xs font-medium text-gray-700 group-hover:text-amber-700 dark:text-gray-200 dark:group-hover:text-amber-300">
-                          {tech.name}
-                        </span>
-                      </div>
-                      <div className="absolute bottom-0 left-0 w-full h-0.5 bg-amber-500 transform origin-left scale-x-0 group-hover:scale-x-100 transition-transform"></div>
-                    </Link>
-                  ))}
-                </div>
-              </div>
-
-              {/* Tech stack (internal and external links) */}
-              <div className="mt-5">
-                <h4 className="text-sm font-semibold text-gray-900 dark:text-white mb-2 flex items-center gap-2">
-                  <Cpu className="w-4 h-4 text-amber-600 dark:text-amber-400" />
-                  Tech Stack
-                  <span className="text-xs text-gray-500 dark:text-gray-400">(Navigate to official docs)</span>
-                </h4>
-                <div className="grid grid-cols-2 gap-2">
-                  {techStack.map((tech) => (
-                    tech.internal ? (
-                      <Link
-                        key={tech.name}
-                        to={tech.officialLink}
-                        className="group relative flex items-center justify-between p-2 bg-gray-50 rounded-lg hover:bg-amber-50 transition-colors dark:bg-neutral-800 dark:hover:bg-neutral-700"
-                        aria-label={`Navigate to ${tech.name} page`}
-                      >
-                        <div className="flex items-center gap-2">
-                          <span className="text-amber-600 dark:text-amber-400">{tech.icon}</span>
-                          <span className="text-xs font-medium text-gray-700 group-hover:text-amber-700 dark:text-gray-200 dark:group-hover:text-amber-300">
-                            {tech.name}
-                          </span>
-                        </div>
-                        <ChevronRight className="w-3 h-3 text-gray-400 group-hover:text-amber-600 dark:text-gray-500" />
-                        <div className="absolute bottom-0 left-0 w-full h-0.5 bg-amber-500 transform origin-left scale-x-0 group-hover:scale-x-100 transition-transform"></div>
-                      </Link>
-                    ) : (
-                      <a
-                        key={tech.name}
-                        href={tech.officialLink}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="group relative flex items-center justify-between p-2 bg-gray-50 rounded-lg hover:bg-amber-50 transition-colors dark:bg-neutral-800 dark:hover:bg-neutral-700"
-                        aria-label={`Open official ${tech.name} documentation`}
-                      >
-                        <div className="flex items-center gap-2">
-                          <span className="text-amber-600 dark:text-amber-400">{tech.icon}</span>
-                          <span className="text-xs font-medium text-gray-700 group-hover:text-amber-700 dark:text-gray-200 dark:group-hover:text-amber-300">
-                            {tech.name}
-                          </span>
-                        </div>
-                        <ExternalLink className="w-3 h-3 text-gray-400 group-hover:text-amber-600 dark:text-gray-500" />
-                        <div className="absolute bottom-0 left-0 w-full h-0.5 bg-amber-500 transform origin-left scale-x-0 group-hover:scale-x-100 transition-transform"></div>
-                      </a>
-                    )
-                  ))}
-                </div>
-              </div>
-
-              {/* Socials */}
-              <div className="mt-5 flex gap-3">
-                {socials.map((social) => (
-                  <a
-                    key={social.label}
-                    href={social.href}
-                    target={social.label !== 'Email' ? '_blank' : undefined}
-                    rel="noopener noreferrer"
-                    className="p-2.5 text-gray-500 bg-white border border-gray-200 rounded-lg hover:text-amber-700 hover:border-amber-300 focus:outline-none focus:ring-2 focus:ring-amber-300 transition-all dark:text-gray-300 dark:bg-neutral-800 dark:border-neutral-700 dark:hover:text-amber-300 hover:scale-125 duration-300"
-                  >
-                    {social.icon}
-                    <span className="sr-only">{social.label}</span>
-                  </a>
-                ))}
-              </div>
-
-              {/* Testimonials */}
-              <div className="mt-6 grid grid-cols-1 sm:grid-cols-2 gap-3">
-                {testimonials.map((t) => (
-                  <figure key={t.name} className="p-3 bg-gray-50 rounded-lg border border-gray-100 dark:bg-neutral-800 dark:border-neutral-700">
-                    <figcaption className="flex items-center gap-2 mb-1">
-                      <Users className="w-4 h-4 text-amber-600 dark:text-amber-400" />
-                      <span className="text-sm font-medium text-gray-900 dark:text-white">{t.name}</span>
-                      <span className="text-xs text-gray-500 dark:text-gray-400">• {t.role}</span>
-                    </figcaption>
-                    <blockquote className="text-sm text-gray-600 dark:text-gray-300">"{t.quote}"</blockquote>
-                    <div className="mt-2 flex">
-                      {[...Array(5)].map((_, i) => (
-                        <Star
-                          key={i}
-                          className={`w-3 h-3 ${i < t.rating ? 'text-amber-500 fill-amber-500' : 'text-gray-300 dark:text-gray-600'}`}
-                          aria-hidden="true"
-                        />
-                      ))}
-                      <span className="sr-only">Rating: {t.rating} out of 5</span>
-                    </div>
-                  </figure>
-                ))}
+                </span>
+                <span className="text-xs text-gray-500 dark:text-gray-400 flex items-center gap-1">
+                  <Globe className="w-3 h-3" />
+                  Available Worldwide
+                </span>
               </div>
             </div>
-          </section>
+            
+            <p className="text-sm text-gray-600 dark:text-gray-400 leading-relaxed">
+              Full-stack developer passionate about building elegant solutions and mentoring future developers. 
+              <span className="block mt-2 text-amber-600 dark:text-amber-400 font-medium">Let's create something amazing together!</span>
+            </p>
+            
+            {/* Contact Info - Enhanced */}
+            <div className="space-y-3">
+              <a 
+                href="tel:+919507272341" 
+                className="flex items-center gap-3 text-sm text-gray-600 hover:text-amber-600 dark:text-gray-400 dark:hover:text-amber-400 transition-all group"
+              >
+                <div className="p-2.5 bg-gradient-to-br from-gray-100 to-gray-50 dark:from-neutral-800 dark:to-neutral-700 rounded-xl group-hover:from-amber-50 group-hover:to-orange-50 dark:group-hover:from-amber-900/30 dark:group-hover:to-orange-900/30 transition-all group-hover:scale-110 shadow-sm">
+                  <Phone className="w-4 h-4" />
+                </div>
+                <div>
+                  <span className="font-medium">+91 9507272341</span>
+                  <span className="block text-xs text-gray-400">Available 24/7</span>
+                </div>
+              </a>
+              
+              <a 
+                href="https://maps.app.goo.gl/pZJYM4rZkzg4TRSD6" 
+                target="_blank" 
+                rel="noopener noreferrer" 
+                className="flex items-center gap-3 text-sm text-gray-600 hover:text-amber-600 dark:text-gray-400 dark:hover:text-amber-400 transition-all group"
+              >
+                <div className="p-2.5 bg-gradient-to-br from-gray-100 to-gray-50 dark:from-neutral-800 dark:to-neutral-700 rounded-xl group-hover:from-amber-50 group-hover:to-orange-50 dark:group-hover:from-amber-900/30 dark:group-hover:to-orange-900/30 transition-all group-hover:scale-110 shadow-sm">
+                  <MapPin className="w-4 h-4" />
+                </div>
+                <div>
+                  <span className="font-medium">Vaishali, Bihar, India</span>
+                  <span className="block text-xs text-gray-400">Remote Friendly</span>
+                </div>
+              </a>
+            </div>
 
-          <section aria-labelledby="footer-quick">
+            {/* Hire Me Button - Enhanced with Confetti */}
             <button
-              type="button"
-              onClick={() => toggle('quick')}
-              className="flex w-full items-center justify-between md:justify-start md:pointer-events-none"
-              aria-controls="footer-quick-panel"
-              aria-expanded={open.quick}
+              onClick={handleHireMe}
+              className="relative w-full inline-flex items-center justify-center gap-2 px-6 py-4 bg-gradient-to-r from-amber-500 via-orange-500 to-red-500 text-white rounded-xl font-bold shadow-xl hover:shadow-2xl hover:shadow-amber-500/50 hover:scale-105 transition-all duration-300 group overflow-hidden"
             >
-              <h3 id="footer-quick" className="text-lg font-bold text-gray-800 dark:text-white">Quick Links</h3>
-              <ChevronDown className={`w-5 h-5 text-gray-500 md:hidden transition-transform ${open.quick ? 'rotate-180' : ''}`} />
+              <div className="absolute inset-0 bg-gradient-to-r from-amber-400 via-orange-400 to-red-400 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+              <Sparkles className="w-5 h-5 group-hover:rotate-180 transition-transform duration-500 relative z-10" />
+              <span className="relative z-10">Hire Me Now</span>
+              <ChevronRight className="w-5 h-5 group-hover:translate-x-1 transition-transform relative z-10" />
+              
+              {/* Animated shine */}
+              <div className="absolute inset-0 -translate-x-full group-hover:translate-x-full transition-transform duration-700 bg-gradient-to-r from-transparent via-white/30 to-transparent"></div>
             </button>
-            <nav id="footer-quick-panel" className={`mt-3 ${open.quick ? 'block' : 'hidden md:block'}`} aria-label="Footer Quick Links">
-              <ul className="space-y-2">
-                {quickLinks.map((link) => {
-                  const isActive = location.pathname === link.href;
-                  return (
-                    <li key={link.label}>
-                      <Link
-                        to={link.href}
-                        className={`group flex items-center p-2 rounded-lg transition-all focus:outline-none focus:ring-2 focus:ring-amber-300 duration-300 hover:scale-105  ${
-                          isActive
-                            ? 'bg-amber-50 text-amber-700 dark:bg-neutral-800 dark:text-amber-300'
-                            : 'hover:bg-amber-50 text-gray-700 dark:text-gray-300 dark:hover:bg-neutral-800'
-                        }`}
-                        aria-current={isActive ? 'page' : undefined}
-                      >
-                        <span className="text-amber-600 mr-3">
-                          <ChevronRight className="w-4 h-4" />
-                        </span>
-                        <div>
-                          <span className={`font-medium text-sm ${isActive ? 'text-amber-700 dark:text-amber-300' : ''}`}>
-                            {link.label}
-                          </span>
-                          <p className="text-xs text-gray-500 dark:text-gray-400 opacity-0 group-hover:opacity-100 transition-opacity">
-                            {link.description}
-                          </p>
-                        </div>
-                      </Link>
-                    </li>
-                  );
-                })}
-                {/* New button "More" with sub-buttons */}
-                <li key="extra">
-                  <button
-                    onClick={() => setExtraOpen(!extraOpen)}
-                    className="group flex items-center p-2 rounded-lg transition-all focus:outline-none focus:ring-2 focus:ring-amber-300 hover:bg-amber-50 text-gray-700 dark:text-gray-300 w-full duration-300 hover:scale-105"
+
+            {/* Availability Badge */}
+            <div className="flex items-center gap-2 p-3 bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-lg">
+              <div className="relative flex h-3 w-3">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
+                <span className="relative inline-flex rounded-full h-3 w-3 bg-green-500"></span>
+              </div>
+              <span className="text-xs font-medium text-green-700 dark:text-green-300">Available for freelance projects</span>
+            </div>
+          </div>
+
+          {/* Quick Links - Enhanced */}
+          <div>
+            <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-6 flex items-center gap-2">
+              <div className="w-1 h-6 bg-gradient-to-b from-amber-500 to-orange-500 rounded-full"></div>
+              Quick Links
+            </h3>
+            <ul className="space-y-3">
+              {quickLinks.map((link) => (
+                <li key={link.label}>
+                  <Link 
+                    to={link.href} 
+                    className="group flex items-center gap-3 p-3 rounded-xl hover:bg-amber-50 dark:hover:bg-neutral-800 transition-all duration-300"
                   >
-                    <span className="text-amber-600 mr-3">
-                      <ChevronRight className={`w-4 h-4 transition-transform ${extraOpen ? 'rotate-90' : ''}`} />
-                    </span>
-                    <div>
-                      <span className="font-medium text-sm  mr-32">More</span>
-                      <p className="text-xs text-gray-500 opacity-0 group-hover:opacity-100 transition-opacity">
-                        Explore more pages
-                      </p>
+                    <div className="p-2 bg-gradient-to-br from-gray-100 to-gray-50 dark:from-neutral-800 dark:to-neutral-700 rounded-lg group-hover:from-amber-100 group-hover:to-orange-100 dark:group-hover:from-amber-900/30 dark:group-hover:to-orange-900/30 transition-all group-hover:scale-110 shadow-sm">
+                      {link.icon}
                     </div>
-                  </button>
-                  {extraOpen && (
-                    <ul className="mt-2 ml-6 space-y-2 ">
-                      <li>
-                        <Link
-                          to="/cplusplus"
-                          className="flex items-center p-2 rounded-lg hover:bg-amber-50 text-gray-700 dark:text-gray-300 transition-all duration-300 hover:scale-105"
-                        >
-                          <span className="mr-3"><ChevronRight className="w-4 h-4" /></span>
-                          <span className="font-medium text-sm">C++</span>
-                        </Link>
-                      </li>
-                      <li>
-                        <Link
-                          to="/python"
-                          className="flex items-center p-2 rounded-lg hover:bg-amber-50 text-gray-700 dark:text-gray-300 transition-all duration-300 hover:scale-105"
-                        >
-                          <span className="mr-3"><ChevronRight className="w-4 h-4" /></span>
-                          <span className="font-medium text-sm">Python</span>
-                        </Link>
-                      </li>
-                      <li>
-                        <Link
-                          to="/dsa"
-                          className="flex items-center p-2 rounded-lg hover:bg-amber-50 text-gray-700 dark:text-gray-300 transition-all duration-300 hover:scale-105"
-                        >
-                          <span className="mr-3"><ChevronRight className="w-4 h-4" /></span>
-                          <span className="font-medium text-sm">DSA</span>
-                        </Link>
-                      </li>
-                      <li>
-                        <Link
-                          to="/webdev"
-                          className="flex items-center p-2 rounded-lg hover:bg-amber-50 text-gray-700 dark:text-gray-300 transition-all duration-300 hover:scale-105"
-                        >
-                          <span className="mr-3"><ChevronRight className="w-4 h-4" /></span>
-                          <span className="font-medium text-sm">WebDev</span>
-                        </Link>
-                      </li>
-                    </ul>
-                  )}
+                    <div className="flex-1">
+                      <span className="block text-sm font-medium text-gray-700 dark:text-gray-300 group-hover:text-amber-600 dark:group-hover:text-amber-400">
+                        {link.label}
+                      </span>
+                      <span className="text-xs text-gray-500 dark:text-gray-500 opacity-0 group-hover:opacity-100 transition-opacity">
+                        {link.desc}
+                      </span>
+                    </div>
+                    <ChevronRight className="w-4 h-4 text-gray-400 group-hover:text-amber-600 group-hover:translate-x-1 transition-all" />
+                  </Link>
                 </li>
-              </ul>
-            </nav>
-          </section>
-          
+              ))}
+            </ul>
+          </div>
 
-          {/* Learning Resources */}
-          <section aria-labelledby="footer-resources">
-            <button
-              type="button"
-              onClick={() => toggle('resources')}
-              className="flex w-full items-center justify-between md:justify-start md:pointer-events-none "
-              aria-controls="footer-resources-panel"
-              aria-expanded={open.resources}
-            >
-              <h3 id="footer-resources" className="text-lg font-bold text-gray-800 dark:text-white">Learning Resources</h3>
-              <ChevronDown className={`w-5 h-5 text-gray-500 md:hidden transition-transform ${open.resources ? 'rotate-180' : ''}`} />
-            </button>
-
-            <div id="footer-resources-panel" className={`mt-3 ${open.resources ? 'block' : 'hidden md:block'}`}>
-              <ul className="space-y-2">
-                {learningResources.map((resource) => (
-                  <li key={resource.label}>
-                    <a
-                      href={resource.href}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="group flex items-start gap-3 p-2 rounded-lg hover:bg-amber-50  focus:outline-none focus:ring-2 focus:ring-amber-300 dark:hover:bg-neutral-800 duration-300 hover:scale-105 transition-all"
-                      aria-label={`${resource.label} — opens in a new tab`}
-                    >
-                      <span className="text-amber-600 mt-0.5">{resource.icon}</span>
-                      <div className="flex-1">
-                        <div className="flex items-center gap-1">
-                          <span className="text-gray-700 group-hover:text-amber-700 font-medium text-sm dark:text-gray-200 dark:group-hover:text-amber-300">
-                            {resource.label}
-                          </span>
-                          {resource.external && <ExternalLink className="w-3 h-3 text-gray-400 dark:text-gray-500" />}
-                        </div>
-                        <p className="text-xs text-gray-500 dark:text-gray-400 opacity-0 group-hover:opacity-100 transition-opacity">
-                          {resource.description}
-                        </p>
-                      </div>
-                    </a>
-                  </li>
-                ))}
-              </ul>
-
-              {/* Helpful alternates */}
-              <div className="mt-4 text-xs text-gray-500 dark:text-gray-400 ">
-                <p>
-                  Tip: For deep C++ references, visit{' '}
-                  <a href="https://en.cppreference.com/w/" target="_blank" rel="noopener noreferrer" className="text-amber-700 hover:underline dark:text-amber-300">
-                    cppreference.com
-                  </a>
-                  . For JavaScript APIs, explore{' '}
-                  <a href="https://developer.mozilla.org/docs/Web/JavaScript" target="_blank" rel="noopener noreferrer" className="text-amber-700 hover:underline dark:text-amber-300">
-                    MDN JavaScript
-                  </a>
-                  .
+          {/* Social Connect - Enhanced */}
+          <div>
+            <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-6 flex items-center gap-2">
+              <div className="w-1 h-6 bg-gradient-to-b from-amber-500 to-orange-500 rounded-full"></div>
+              Connect With Me
+            </h3>
+            <div className="grid grid-cols-3 gap-3 mb-6">
+              {socialLinks.map((social) => (
+                <a
+                  key={social.name}
+                  href={social.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className={`relative group p-4 rounded-xl border ${social.bgColor} ${social.hoverColor} transition-all duration-300 flex flex-col items-center justify-center hover:scale-110 hover:shadow-xl overflow-hidden`}
+                  aria-label={social.label}
+                  title={social.label}
+                >
+                  <div className="relative z-10">
+                    {social.icon}
+                  </div>
+                  
+                  {/* Tooltip */}
+                  <span className="absolute -top-10 left-1/2 -translate-x-1/2 px-2 py-1 bg-gray-900 text-white text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none">
+                    {social.label}
+                  </span>
+                  
+                  {/* Shine Effect */}
+                  <div className="absolute inset-0 -translate-y-full group-hover:translate-y-0 transition-transform duration-500 bg-gradient-to-b from-transparent via-white/20 to-transparent"></div>
+                </a>
+              ))}
+            </div>
+            
+            {/* CTA Box */}
+            <div className="relative p-5 bg-gradient-to-br from-amber-50 via-orange-50 to-red-50 dark:from-neutral-800 dark:via-neutral-800 dark:to-neutral-700 rounded-2xl border border-amber-200 dark:border-neutral-600 shadow-lg overflow-hidden">
+              <div className="absolute top-0 right-0 w-24 h-24 bg-gradient-to-br from-amber-400/20 to-orange-400/20 rounded-full blur-2xl"></div>
+              <div className="relative z-10">
+                <div className="flex items-center gap-2 mb-2">
+                  <Clock className="w-4 h-4 text-amber-600 dark:text-amber-400" />
+                  <span className="font-bold text-amber-700 dark:text-amber-300 text-sm">Open to Opportunities!</span>
+                </div>
+                <p className="text-xs text-gray-600 dark:text-gray-400 leading-relaxed">
+                  Looking for a dedicated developer? Let's discuss your next project and bring your ideas to life.
                 </p>
               </div>
             </div>
-          </section>
-
-          {/* Services + Contact */}
-          <section aria-labelledby="footer-services" className="space-y-6">
-            {/* Services - Now behaves like Quick Links */}
-            <div>
-              <button
-                type="button"
-                onClick={() => toggle('services')}
-                className="flex w-full items-center justify-between md:justify-start md:pointer-events-none"
-                aria-controls="footer-services-panel"
-                aria-expanded={open.services}
-              >
-                <h3 id="footer-services" className="text-lg font-bold text-gray-800 dark:text-white">Services</h3>
-                <ChevronDown className={`w-5 h-5 text-gray-500 md:hidden transition-transform ${open.services ? 'rotate-180' : ''}`} />
-              </button>
-              <nav id="footer-services-panel" className={`mt-3 ${open.services ? 'block' : 'hidden md:block'}`} aria-label="Footer Services">
-                <ul className="space-y-2">
-                  {services.map((service) => (
-                    <li key={service.label}>
-                      <Link
-                        to="/services"
-                        className="group flex items-center p-2 rounded-lg transition-all focus:outline-none focus:ring-2 focus:ring-amber-300 hover:bg-amber-50 text-gray-700 dark:text-gray-300 dark:hover:bg-neutral-800 duration-300 hover:scale-105"
-                      >
-                        <span className="text-amber-600 mr-3">
-                          <ChevronRight className="w-4 h-4" />
-                        </span>
-                        <div>
-                          <span className="font-medium text-sm">
-                            {service.label}
-                          </span>
-                          <p className="text-xs text-gray-500 dark:text-gray-400 opacity-0 group-hover:opacity-100 transition-opacity">
-                            {service.description}
-                          </p>
-                        </div>
-                      </Link>
-                    </li>
-                  ))}
-                </ul>
-              </nav>
-            </div>
-
-            {/* Contact */}
-            <div>
-              <button
-                type="button"
-                onClick={() => toggle('contact')}
-                className="flex w-full items-center justify-between md:justify-start md:pointer-events-none"
-                aria-controls="footer-contact-panel"
-                aria-expanded={open.contact}
-              >
-                <h3 id="footer-contact" className="text-lg font-bold text-gray-800 dark:text-white">Contact</h3>
-                <ChevronDown className={`w-5 h-5 text-gray-500 md:hidden transition-transform ${open.contact ? 'rotate-180' : ''}`} />
-              </button>
-              <div id="footer-contact-panel" className={`mt-3 ${open.contact ? 'block' : 'hidden md:block'}`}>
-                <div className="space-y-3">
-                  {/* Email Section - Fixed overflow issue */}
-                  <div className="group relative">
-                    <div className="flex items-center gap-2 p-3 bg-amber-50 rounded-lg border-2 border-amber-200 hover:border-amber-400  dark:bg-neutral-800 dark:border-neutral-700 dark:hover:border-amber-600 duration-300 hover:scale-105 transition-all">
-                      <Mail className="w-5 h-5 text-amber-600 dark:text-amber-400 flex-shrink-0" />
-                      <div className="flex-1 min-w-0">
-                        <a
-                          href="mailto:surajkumarraj8888@gmail.com"
-                          className="text-sm font-medium text-gray-800 hover:text-amber-700 transition-colors dark:text-gray-200 dark:hover:text-amber-300 truncate block "
-                        >
-                          surajkumarraj8888@gmail.com
-                        </a>
-                      </div>
-                      <button
-                        type="button"
-                        onClick={copyEmailToClipboard}
-                        className={`p-2 rounded-md transition-all duration-300 flex-shrink-0 ${
-                          copySuccess 
-                            ? 'bg-green-500 text-white' 
-                            : 'bg-white hover:bg-amber-100 text-gray-600 hover:text-amber-700 border border-amber-300'
-                        } focus:outline-none focus:ring-2 focus:ring-amber-400`}
-                        aria-label="Copy email address"
-                        title="Copy email"
-                      >
-                        {copySuccess ? (
-                          <CheckCircle className="w-4 h-4" />
-                        ) : (
-                          <Copy className="w-4 h-4" />
-                        )}
-                      </button>
-                    </div>
-                    {copySuccess && (
-                      <div className="absolute -top-8 left-1/2 transform -translate-x-1/2 bg-green-600 text-white text-xs px-3 py-1 rounded-full whitespace-nowrap animate-fade-in">
-                        Email copied!
-                      </div>
-                    )}
-                  </div>
-
-                  {/* Phone */}
-                  <a
-                    href="tel:+919507272341"
-                    className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg border border-gray-200 hover:bg-amber-50 hover:border-amber-300 transition-all group dark:bg-neutral-800 dark:border-neutral-700 dark:hover:bg-neutral-700 dark:hover:border-amber-600 duration-300 hover:scale-105"
-                  >
-                    <Phone className="w-5 h-5 text-gray-500 group-hover:text-amber-600 dark:text-gray-400 dark:group-hover:text-amber-400" />
-                    <span className="text-sm font-medium text-gray-700 group-hover:text-amber-700 dark:text-gray-300 dark:group-hover:text-amber-300">
-                      +91 9507272341
-                    </span>
-                  </a>
-
-                  {/* Location */}
-                  <a
-                    href="https://maps.app.goo.gl/pZJYM4rZkzg4TRSD6" target='_blank'
-                    className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg border border-gray-200 hover:bg-amber-50 hover:border-amber-300 transition-all group dark:bg-neutral-800 dark:border-neutral-700 dark:hover:bg-neutral-700 dark:hover:border-amber-600 duration-300 hover:scale-105"
-                  >
-                    <MapPin className="w-5 h-5 text-gray-500 group-hover:text-amber-600 dark:text-gray-400 dark:group-hover:text-amber-400" />
-                    <span className="text-sm font-medium text-gray-700 group-hover:text-amber-700 dark:text-gray-300 dark:group-hover:text-amber-300">
-                      Vaishali, Bihar, India
-                    </span>
-                  </a>
-                </div>
-
-                {/* Resume Section */}
-                <div className="mt-6">
-                  <h4 className="text-sm font-semibold text-gray-900 dark:text-white mb-3 flex items-center gap-2">
-                    <Award className="w-4 h-4 text-amber-600 dark:text-amber-400" />
-                    Resume
-                  </h4>
-                  <div className="flex gap-3">
-                    <button
-                      type="button"
-                      onClick={() => setShowResumePreview(true)}
-                      className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-blue-600 bg-blue-50 hover:bg-blue-100 rounded-lg transition-all focus:outline-none focus:ring-2 focus:ring-blue-300 dark:bg-blue-900/30 dark:text-blue-400 dark:hover:bg-blue-900/50"
-                    >
-                      <Eye className="w-4 h-4" />
-                      Preview Resume
-                    </button>
-                    <a
-                      href="resume.pdf"
-                      download = "Suraj_Kumar_Resume.pdf"
-                      className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 hover:bg-amber-50 hover:text-amber-700 rounded-lg transition-all focus:outline-none focus:ring-2 focus:ring-amber-300 dark:bg-neutral-700 dark:text-gray-300 dark:hover:bg-neutral-600 dark:hover:text-amber-300"
-                    >
-                      <Download className="w-4 h-4" />
-                      Download PDF
-                    </a>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </section>
+          </div>
         </div>
 
-        {/* Resume Preview Modal - Shows Local Image */}
-        {showResumePreview && (
-          <div 
-            className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4"
-            onClick={() => setShowResumePreview(false)}
+        {/* Divider with Gradient */}
+        <div className="relative mb-8">
+          <div className="absolute inset-0 flex items-center">
+            <div className="w-full border-t border-gray-200 dark:border-neutral-800"></div>
+          </div>
+          <div className="relative flex justify-center">
+            <span className="px-4 bg-gradient-to-r from-amber-500 to-orange-500 text-white text-xs font-medium rounded-full py-1">
+              Portfolio © {year}
+            </span>
+          </div>
+        </div>
+
+        {/* Bottom Section - Enhanced */}
+        <div className="flex flex-col md:flex-row justify-between items-center gap-4">
+          
+          {/* Copyright */}
+          <div className="text-center md:text-left">
+            <p className="text-sm text-gray-600 dark:text-gray-400">
+              © {year} <span className="font-bold bg-gradient-to-r from-amber-600 to-orange-600 bg-clip-text text-transparent">SuraJz Kumar</span>. All rights reserved.
+            </p>
+            <p className="text-xs text-gray-500 dark:text-gray-500 mt-1">
+              Crafted with dedication and passion for excellence
+            </p>
+          </div>
+          
+          {/* Made With Love */}
+          <button
+            type="button"
+            onClick={scrollToTop}
+            className="flex items-center gap-2 text-sm text-gray-600 hover:text-amber-600 dark:text-gray-400 dark:hover:text-amber-400 transition-all group cursor-pointer"
+            aria-label="Back to top"
           >
-            <div 
-              className="bg-white rounded-xl shadow-2xl max-w-5xl w-full max-h-[90vh] overflow-hidden dark:bg-neutral-900"
-              onClick={(e) => e.stopPropagation()}
-            >
-              <div className="flex items-center justify-between p-4 border-b border-gray-200 dark:border-neutral-700 bg-gray-50 dark:bg-neutral-800">
-                <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Resume Preview</h3>
-                <div className="flex items-center gap-2">
-                  <a
-                    href="/resume.pdf"
-                    download
-                    className="px-3 py-1.5 text-sm bg-amber-500 text-white rounded-md hover:bg-amber-600 transition-colors flex items-center gap-1"
-                  >
-                    <Download className="w-4 h-4" />
-                    Download
-                  </a>
-                  <button
-                    onClick={() => setShowResumePreview(false)}
-                    className="p-2 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-amber-300 dark:text-gray-400 dark:hover:text-gray-200 dark:hover:bg-neutral-700"
-                    aria-label="Close preview"
-                  >
-                    <X className="w-5 h-5" />
-                  </button>
-                </div>
-              </div>
-              <div className="overflow-auto" style={{ height: 'calc(90vh - 73px)' }}>
-                <div className="flex justify-center items-center p-8 bg-white dark:bg-neutral-900">
-                  <img 
-                    src="https://cdn.pixabay.com/photo/2018/08/13/22/53/resume-3604240_1280.jpg" 
-                    alt="Resume Preview" 
-                    className="max-w-full h-auto rounded-lg shadow-lg"
-                  />
-                </div>
-              </div>
-            </div>
-          </div>
-        )}
-
-        {/* Newsletter */}
-        <section aria-labelledby="footer-newsletter" className="bg-gradient-to-r from-amber-50 to-orange-50 rounded-xl p-6 mb-12 dark:from-neutral-800 dark:to-neutral-800">
-          <div className="text-center mb-4">
-            <h3 id="footer-newsletter" className="text-lg font-bold text-gray-800 dark:text-white mb-1">Stay Updated</h3>
-            <p className="text-sm text-gray-600 dark:text-gray-300">Get the latest tutorials and updates delivered to your inbox</p>
-          </div>
-          <form onSubmit={handleSubscribe} noValidate className="flex flex-col sm:flex-row gap-3 max-w-md mx-auto">
-            <label htmlFor="newsletter-email" className="sr-only">Email address</label>
-            <input
-              id="newsletter-email"
-              type="email"
-              value={email}
-              onChange={(e) => {
-                setEmail(e.target.value);
-                setEmailError('');
-              }}
-              placeholder="Enter your email"
-              className="flex-1 px-4 py-2 rounded-lg border border-amber-300 focus:outline-none focus:ring-2 focus:ring-amber-500 transition-all duration-300 dark:bg-neutral-900 dark:border-neutral-700 dark:text-gray-200"
-              required
-              disabled={subscribing || subscribed}
-              aria-invalid={!!emailError}
-              aria-describedby={emailError ? 'newsletter-error' : undefined}
-            />
-            <button
-              type="submit"
-              disabled={subscribing || subscribed}
-              className="px-6 py-2 bg-gradient-to-r from-amber-500 to-orange-500 text-white rounded-lg hover:from-amber-600 hover:to-orange-600 transition-all duration-300 flex items-center justify-center gap-2 focus:outline-none focus:ring-2 focus:ring-amber-400 disabled:opacity-70 disabled:cursor-not-allowed"
-            >
-              {subscribing ? (
-                <>
-                  <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-                  Subscribing...
-                </>
-              ) : subscribed ? (
-                <>
-                  <CheckCircle className="w-4 h-4" />
-                  Subscribed!
-                </>
-              ) : (
-                <>
-                  <Send className="w-4 h-4" />
-                  Subscribe
-                </>
-              )}
-            </button>
-          </form>
-
-          <div className="mt-3 flex justify-center">
-            {emailError && (
-              <div id="newsletter-error" className="flex items-center gap-2 text-red-600 text-sm" role="alert">
-                <AlertCircle className="w-4 h-4" />
-                {emailError}
-              </div>
-            )}
-            {subscribed && !emailError && (
-              <div className="flex items-center gap-2 text-amber-600 text-sm" role="status" aria-live="polite">
-                <CheckCircle className="w-4 h-4" />
-                Redirecting to subscription page...
-              </div>
-            )}
-          </div>
-        </section>
-
-        {/* Stats */}
-        <section aria-labelledby="footer-stats" className="mb-12">
-          <h3 id="footer-stats" className="sr-only">Quick Stats</h3>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            {stats.map((stat) => (
-              <div
-                key={stat.label}
-                className="text-center p-4 bg-white rounded-lg border border-gray-100 hover:border-amber-200 hover:shadow-md transition-all hover:scale-105 duration-300 dark:bg-neutral-800 dark:border-neutral-700 hover:cursor-pointer"
-              >
-                <div className="flex justify-center mb-2 text-amber-600 dark:text-amber-400">
-                  {stat.icon}
-                </div>
-                <p className="text-2xl font-bold text-gray-900 dark:text-white">{stat.value}</p>
-                <p className="text-sm text-gray-600 dark:text-gray-300">{stat.label}</p>
-              </div>
-            ))}
-          </div>
-        </section>
-
-        {/* Footer Bottom */}
-        <div className="border-t border-gray-200 dark:border-neutral-800 pt-8">
-          <div className="flex flex-col md:flex-row justify-between items-center gap-6">
-            {/* Legal */}
-            <div className="text-center md:text-left">
-              <p className="text-sm text-gray-600 dark:text-gray-300 mb-2">
-                © {year} SuraJz Kumar. All rights reserved.
-              </p>
-              <nav aria-label="Legal links" className="flex flex-wrap gap-4 justify-center md:justify-start">
-                {legalLinks.map((link) => (
-                  <Link
-                    key={link.label}
-                    to={link.href}
-                    className="text-xs text-gray-500 hover:text-amber-700 transition-colors focus:outline-none focus:ring-2 focus:ring-amber-300 rounded dark:text-gray-400 dark:hover:text-amber-300"
-                  >
-                    {link.label}
-                  </Link>
-                ))}
-              </nav>
-            </div>
-
-            {/* Made with */}
-            <button
-              type="button"
-              onClick={scrollToTop}
-              className="flex items-center gap-2 text-sm text-gray-600 hover:text-amber-700 transition-colors focus:outline-none focus:ring-2 focus:ring-amber-300 rounded dark:text-gray-300 dark:hover:text-amber-300"
-              aria-label="Back to top"
-            >
-              <span>Made with</span>
-              <Heart className="w-4 h-4 text-red-500 fill-current animate-bounce" />
-              <span>by SuraJz Kumar • Back to top</span>
-            </button>
-          </div>
+            <span className="font-medium">Made with</span>
+            <Heart className="w-5 h-5 text-red-500 fill-red-500 group-hover:scale-125 transition-transform animate-pulse" />
+            <span className="font-bold bg-gradient-to-r from-amber-600 to-orange-600 bg-clip-text text-transparent">by SuraJz</span>
+            <ArrowUp className="w-4 h-4 group-hover:-translate-y-1 transition-transform" />
+          </button>
         </div>
       </div>
+
+      <style>{`
+        .bg-grid-pattern {
+          background-image: radial-gradient(circle, #00000008 1px, transparent 1px);
+          background-size: 20px 20px;
+        }
+      `}</style>
     </footer>
   );
 }
