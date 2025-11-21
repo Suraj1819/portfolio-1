@@ -15,7 +15,6 @@ import {
   School,
   School2,
   AlertCircle,
-  Twitter
 } from "lucide-react";
 import { Button } from "../components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../components/ui/card";
@@ -2764,7 +2763,7 @@ const Index: React.FC = () => {
       <style>{customStyles}</style>
       <div className="min-h-screen bg-gradient-to-br from-amber-50 via-orange-50 to-yellow-50 text-foreground">
         {/* Navigation */}
-        <nav className="fixed top-0 w-full bg-white/90 backdrop-blur-md z-50 border-b border-amber-200 shadow-sm py-1.5">
+        <nav className="fixed top-0 w-full bg-white/90 backdrop-blur-md z-50 border-b border-amber-200 shadow-sm py-1">
       <div className="container mx-auto px-3 sm:px-4 lg:px-6 py-2.5 sm:py-3 lg:py-4">
         <div className="flex items-center justify-between">
           {/* Logo and Brand Name */}
@@ -2818,7 +2817,7 @@ const Index: React.FC = () => {
             <div className="flex items-center space-x-2 ml-2 pl-2 border-l border-amber-200">
               {/* GitHub */}
               <a
-                href="https://github.com/your-profile"
+                href="https://github.com/suraj1819"
                 target="_blank"
                 rel="noreferrer"
                 className="p-2 rounded-full text-gray-700 hover:text-black hover:bg-gray-200 transition-all duration-300 hover:scale-110"
@@ -2829,7 +2828,7 @@ const Index: React.FC = () => {
 
               {/* LinkedIn */}
               <a
-                href="https://linkedin.com/in/your-profile"
+                href="https://www.linkedin.com/in/suraj-kumar-72847b30a/"
                 target="_blank"
                 rel="noreferrer"
                 className="p-2 rounded-full text-blue-700 hover:text-white hover:bg-blue-700 transition-all duration-300 hover:scale-110"
@@ -2840,23 +2839,44 @@ const Index: React.FC = () => {
 
               {/* Twitter */}
               <a
-                href="https://twitter.com/your-profile"
+                href="https://x.com/SuraJzRt"
                 target="_blank"
                 rel="noreferrer"
-                className="p-2 rounded-full text-sky-500 hover:text-white hover:bg-sky-500 transition-all duration-300 hover:scale-110"
+                className="p-2 rounded-full text-black hover:text-white hover:bg-gray-800 transition-all duration-300 hover:scale-110"
                 aria-label="Twitter"
               >
-                <Twitter className="h-5 w-5" />
+                <X className="h-5 w-5" />
               </a>
 
               {/* Mail */}
               <a
-                href="mailto:your-email@example.com"
+                href="mailto:surajkumarraj8888@gmail.com.com"
                 className="p-2 rounded-full text-red-500 hover:text-white hover:bg-red-500 transition-all duration-300 hover:scale-110"
                 aria-label="Email"
               >
                 <Mail className="h-5 w-5" />
               </a>
+
+              {/*WhatsApp */}
+                  <a
+                    href="https://wa.me/9507272341"
+                    target="_blank"
+                    rel="noreferrer"
+                    className="p-2 rounded-full text-[#25D366] hover:text-white hover:bg-[#25D366] transition-all duration-300 hover:scale-110"
+                    aria-label="WhatsApp"
+                  >
+                    {/* WhatsApp SVG */}
+                    <svg
+                      viewBox="0 0 24 24"
+                      fill="currentColor"
+                      className="h-5 w-5"
+                      aria-hidden="true"
+                    >
+                      <path d="M20.52 3.48A11.72 11.72 0 0 0 12.06.01C5.51.01.2 5.32.2 11.87c0 2.09.55 4.15 1.6 5.95L.02 24l6.35-1.64a11.7 11.7 0 0 0 5.69 1.45h.01c6.55 0 11.86-5.31 11.86-11.86 0-3.17-1.24-6.16-3.41-8.32Zm-8.46 18.1h-.01a9.86 9.86 0 0 1-5.02-1.37l-.36-.21-3.6.93.96-3.51-.24-.36a9.83 9.83 0 0 1-1.43-5.23c0-5.43 4.42-9.85 9.86-9.85 2.63 0 5.11 1.02 6.97 2.88 1.86 1.86 2.88 4.34 2.88 6.97 0 5.44-4.42 9.86-9.89 9.86Z" />
+                      <path d="M17.51 14.19c-.3-.15-1.75-.87-2.02-.97-.27-.1-.47-.15-.67.15-.2.3-.77.97-.95 1.16-.17.2-.35.22-.65.07-.3-.15-1.26-.46-2.41-1.49-.89-.79-1.49-1.76-1.66-2.06-.17-.3-.02-.46.13-.61.13-.13.3-.35.45-.52.15-.17.2-.3.3-.5.1-.2.05-.37-.03-.52-.08-.15-.67-1.63-.92-2.23-.24-.58-.49-.5-.67-.51-.17-.01-.37-.01-.57-.01-.2 0-.52.07-.8.37-.27.3-1.04 1.03-1.04 2.51s1.07 2.91 1.22 3.1c.15.2 2.11 3.23 5.11 4.53.72.31 1.27.49 1.71.63.72.23 1.37.2 1.88.12.57-.09 1.75-.72 2-1.42.25-.7.25-1.29.17-1.41-.08-.12-.27-.2-.57-.35Z" />
+                    </svg>
+                  </a>
+              
             </div>
           </div>
 
@@ -2926,7 +2946,7 @@ const Index: React.FC = () => {
               </a>
 
               <a
-                href="https://linkedin.com/in/your-profile"
+                href="https://www.linkedin.com/in/suraj-kumar-72847b30a/"
                 target="_blank"
                 rel="noreferrer"
                 className="p-2 rounded-full text-blue-700 hover:text-white hover:bg-blue-700 transition-all duration-300 hover:scale-110"
@@ -2939,10 +2959,10 @@ const Index: React.FC = () => {
                 href="https://twitter.com/your-profile"
                 target="_blank"
                 rel="noreferrer"
-                className="p-2 rounded-full text-sky-500 hover:text-white hover:bg-sky-500 transition-all duration-300 hover:scale-110"
+                className="p-2 rounded-full text-black hover:text-white hover:bg-gray-800 transition-all duration-300 hover:scale-110"
                 aria-label="Twitter"
               >
-                <Twitter className="h-5 w-5" />
+                <X className="h-5 w-5" />
               </a>
 
               <a
@@ -2952,6 +2972,26 @@ const Index: React.FC = () => {
               >
                 <Mail className="h-5 w-5" />
               </a>
+
+              {/*WhatsApp */}
+                  <a
+                    href="https://wa.me/9507272341"
+                    target="_blank"
+                    rel="noreferrer"
+                    className="p-2 rounded-full text-[#25D366] hover:text-white hover:bg-[#25D366] transition-all duration-300 hover:scale-110"
+                    aria-label="WhatsApp"
+                  >
+                    {/* WhatsApp SVG */}
+                    <svg
+                      viewBox="0 0 24 24"
+                      fill="currentColor"
+                      className="h-5 w-5"
+                      aria-hidden="true"
+                    >
+                      <path d="M20.52 3.48A11.72 11.72 0 0 0 12.06.01C5.51.01.2 5.32.2 11.87c0 2.09.55 4.15 1.6 5.95L.02 24l6.35-1.64a11.7 11.7 0 0 0 5.69 1.45h.01c6.55 0 11.86-5.31 11.86-11.86 0-3.17-1.24-6.16-3.41-8.32Zm-8.46 18.1h-.01a9.86 9.86 0 0 1-5.02-1.37l-.36-.21-3.6.93.96-3.51-.24-.36a9.83 9.83 0 0 1-1.43-5.23c0-5.43 4.42-9.85 9.86-9.85 2.63 0 5.11 1.02 6.97 2.88 1.86 1.86 2.88 4.34 2.88 6.97 0 5.44-4.42 9.86-9.89 9.86Z" />
+                      <path d="M17.51 14.19c-.3-.15-1.75-.87-2.02-.97-.27-.1-.47-.15-.67.15-.2.3-.77.97-.95 1.16-.17.2-.35.22-.65.07-.3-.15-1.26-.46-2.41-1.49-.89-.79-1.49-1.76-1.66-2.06-.17-.3-.02-.46.13-.61.13-.13.3-.35.45-.52.15-.17.2-.3.3-.5.1-.2.05-.37-.03-.52-.08-.15-.67-1.63-.92-2.23-.24-.58-.49-.5-.67-.51-.17-.01-.37-.01-.57-.01-.2 0-.52.07-.8.37-.27.3-1.04 1.03-1.04 2.51s1.07 2.91 1.22 3.1c.15.2 2.11 3.23 5.11 4.53.72.31 1.27.49 1.71.63.72.23 1.37.2 1.88.12.57-.09 1.75-.72 2-1.42.25-.7.25-1.29.17-1.41-.08-.12-.27-.2-.57-.35Z" />
+                    </svg>
+                  </a>
             </div>
           </div>
         </div>
