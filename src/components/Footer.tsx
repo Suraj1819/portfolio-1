@@ -38,59 +38,61 @@ const PLAYLIST = [
     cover: "https://images.unsplash.com/photo-1516280440614-6697288d5d38?q=80&w=200&auto=format&fit=crop",
     url: "https://cdn.pixabay.com/download/audio/2022/05/27/audio_1808fbf07a.mp3?filename=lofi-study-112191.mp3" 
   },
+  
+   {
+    title: "Dilbar Dilbar",
+    artist: "Synthwave",
+    cover: "./images/dilbar.jpg",
+    url: "/audio/track1.mp3"
+  },
+
   {
     title: "Deep Focus",
     artist: "Brain Flow",
     cover: "https://images.unsplash.com/photo-1518609878373-06d740f60d8b?q=80&w=200&auto=format&fit=crop",
-    url: "https://pixabay.com/music/beats-sweet-life-luxury-chill-438146/"
+    url: "https://cdn.pixabay.com/download/audio/2022/01/18/audio_d0a13f69d2.mp3?filename=blossom-of-life-132865.mp3"
   },
   {
     title: "Neon Cyberpunk",
     artist: "Synth Wave",
     cover: "https://images.unsplash.com/photo-1535443274868-756b0f070b6e?q=80&w=200&auto=format&fit=crop",
-    url: "/audio/track3.mp3"
+    url: "https://cdn.pixabay.com/download/audio/2023/02/19/audio_a3f1560c35.mp3?filename=futuristic-beat-146661.mp3"
   },
   {
     title: "Morning Coffee",
     artist: "Acoustic Vibes",
     cover: "https://images.unsplash.com/photo-1497519098947-a305f29a43e7?q=80&w=200&auto=format&fit=crop",
-    url: "/audio/track4.mp3"
+    url: "https://cdn.pixabay.com/download/audio/2022/05/05/audio_2b1f3e0c8e.mp3?filename=acoustic-guitar-11291.mp3"
   },
   {
     title: "Midnight Code",
     artist: "Electro Beats",
     cover: "https://images.unsplash.com/photo-1484069560501-5d1c9ca133f7?q=80&w=200&auto=format&fit=crop",
-    url: "/audio/track5.mp3"
-  },
-  {
-    title: "Sunset Drive",
-    artist: "Synthwave",
-    cover: "https://images.unsplash.com/photo-1470071459666-6e7b7b0bf3d6?q=80&w=200&auto=format&fit=crop",
-    url: "/audio/track6.mp3"
+    url: "https://cdn.pixabay.com/download/audio/2022/05/05/audio_2b1f3e0c8e.mp3?filename=acoustic-guitar-11291.mp3"
   },
   {
     title: "Forest Walk",
     artist: "Nature Sounds",
     cover: "https://images.unsplash.com/photo-1418065464764-c1d025a2f6ea?q=80&w=200&auto=format&fit=crop",
-    url: "/audio/track7.mp3"
+    url: "https://cdn.pixabay.com/download/audio/2022/05/05/audio_2b1f3e0c8e.mp3?filename=acoustic-guitar-11291.mp3"
   },
   {
     title: "City Nights",
     artist: "Urban Beats",
     cover: "https://images.unsplash.com/photo-1480714378408-67cf16c88b7b?q=80&w=200&auto=format&fit=crop",
-    url: "/audio/track8.mp3"
+    url: "https://cdn.pixabay.com/download/audio/2022/05/05/audio_2b1f3e0c8e.mp3?filename=acoustic-guitar-11291.mp3"
   },
   {
     title: "Ocean Waves",
     artist: "Ambient",
     cover: "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?q=80&w=200&auto=format&fit=crop",
-    url: "/audio/track9.mp3"
+    url: "https://cdn.pixabay.com/download/audio/2022/05/05/audio_2b1f3e0c8e.mp3?filename=acoustic-guitar-11291.mp3"
   },
   {
     title: "Mountain Peak",
     artist: "Epic Soundscapes",
     cover: "https://images.unsplash.com/photo-1573510619941-40d2c0b0cde1?q=80&w=200&auto=format&fit=crop",
-    url: "/audio/track10.mp3"
+    url: "https://cdn.pixabay.com/download/audio/2022/05/05/audio_2b1f3e0c8e.mp3?filename=acoustic-guitar-11291.mp3"
   }
 ];
 
