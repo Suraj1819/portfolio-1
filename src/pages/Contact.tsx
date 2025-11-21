@@ -3,7 +3,7 @@ import axios, { AxiosError } from 'axios'; // Import Axios types
 import Footer from '../components/Footer';
 import type { AxiosResponse, AxiosInstance } from 'axios'; // Import AxiosResponse type
 import {
-  Mail, PhoneCall, MapPinHouse, Github, Linkedin, X, Code2, Instagram, Facebook, Disc2, Twitch, ArrowRight, MessageCircle, ExternalLink, AlertCircle, CheckCircle,Star,Share2,Zap,Shield,Clock,Send
+  Mail, PhoneCall, MapPinHouse, Github, Linkedin, X, Code2, Instagram, Facebook,ArrowRight, MessageCircle, ExternalLink, AlertCircle, CheckCircle,Star,Share2,Zap,Shield,Clock,Send
 } from 'lucide-react';
 import ThankYou from './Thankyou'; // Assuming ThankYou is a React component
 import { Button } from '../components/ui/button';
